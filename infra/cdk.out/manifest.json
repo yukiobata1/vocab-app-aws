@@ -1,0 +1,1189 @@
+{
+  "version": "38.0.1",
+  "artifacts": {
+    "VocabAppDevStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "VocabAppDevStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "VocabAppDevStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://982722143806/ap-northeast-1",
+      "properties": {
+        "templateFile": "VocabAppDevStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-deploy-role-982722143806-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-cfn-exec-role-982722143806-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/d76c7d3df49ca796698bbf986cda735341173574f44e816f26c1eb6666dfee4f.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "VocabAppDevStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-lookup-role-982722143806-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "VocabAppDevStack.assets"
+      ],
+      "metadata": {
+        "/VocabAppDevStack/VocabApp-VPC-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevE2CE4C6E"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet1Subnet8A118423"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet1RouteTableB4D88526"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet1RouteTableAssociation876E3CF0"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet1DefaultRoute171FA194"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet1EIPCF7EB6A0"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet1NATGatewayD28E58C0"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet2SubnetBF4C9D46"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet2RouteTableCEA66A6D"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet2RouteTableAssociation03814661"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet2DefaultRouteBF00E508"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet2EIP6AD822AD"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPublicdevSubnet2NATGateway9DBB34FA"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableF39DE0FB"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableF37206D1"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppDBdevSubnet1SubnetF25191DB"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppDBdevSubnet1RouteTable4B858B63"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppDBdevSubnet1RouteTableAssociation685C1EB2"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppDBdevSubnet2SubnetBE7CB347"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppDBdevSubnet2RouteTable4C40D5DC"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVocabAppDBdevSubnet2RouteTableAssociation5C6ABC55"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevIGWF95117FE"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-VPC-dev/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCdevVPCGWAA4DC7D9"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DB-SG-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSGdev1A788973"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DB-SG-dev/from VocabAppDevStackVocabAppDBSGdevC87B6EC4:{IndirectPort}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSGdevfromVocabAppDevStackVocabAppDBSGdevC87B6EC4IndirectPort5E8F8D77"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DB-SG-dev/to VocabAppDevStackVocabAppDBSGdevC87B6EC4:{IndirectPort}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSGdevtoVocabAppDevStackVocabAppDBSGdevC87B6EC4IndirectPortE65E8084"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DB-Secret-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSecretdev9198F524"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DB-Secret-dev/Attachment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSecretdevAttachmentFE768768"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DB-SubnetGroup-dev/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSubnetGroupdev"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Aurora-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAuroradevF5E41487"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Aurora-dev/VocabApp-Writer-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAuroradevVocabAppWriterdev24906A17"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Proxy-Role-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxyRoledev45F6AF8A"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Proxy-Role-dev/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxyRoledevDefaultPolicyBA361176"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Proxy-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxydevF5DC84E5"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Proxy-dev/ProxyTargetGroup": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxydevProxyTargetGroupDE815E1A"
+          }
+        ],
+        "/VocabAppDevStack/DBEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DBEndpoint"
+          }
+        ],
+        "/VocabAppDevStack/DBReadEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DBReadEndpoint"
+          }
+        ],
+        "/VocabAppDevStack/DBSecret": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DBSecret"
+          }
+        ],
+        "/VocabAppDevStack/VPCId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VPCId"
+          }
+        ],
+        "/VocabAppDevStack/ProxyEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProxyEndpoint"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Lambda-SG-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppLambdaSGdev3845940D"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Psycopg2-Layer-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppPsycopg2Layerdev518B3A39"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetVocab-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetVocabdevServiceRoleB64E7564"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetVocab-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetVocabdevServiceRoleDefaultPolicy2649F4B4"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetVocab-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetVocabdev80DF46FE"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-CreateVocab-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateVocabdevServiceRole325A2397"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-CreateVocab-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateVocabdevServiceRoleDefaultPolicyF3C5A3B8"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-CreateVocab-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateVocabdev9461C9BD"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-UpdateVocab-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppUpdateVocabdevServiceRole8FFAD12E"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-UpdateVocab-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppUpdateVocabdevServiceRoleDefaultPolicyF79CB354"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-UpdateVocab-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppUpdateVocabdev90D29C34"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Migrate-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppMigratedevServiceRole482FDE98"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Migrate-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppMigratedevServiceRoleDefaultPolicyEACFB654"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Migrate-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppMigratedev0322AA86"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Import-Lambda-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppImportLambdadevServiceRoleF172E2E2"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Import-Lambda-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppImportLambdadevServiceRoleDefaultPolicyF5407E33"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Import-Lambda-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppImportLambdadevB6F1B00E"
+          }
+        ],
+        "/VocabAppDevStack/ImportLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ImportLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/GetVocabLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetVocabLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/CreateVocabLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateVocabLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/UpdateVocabLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UpdateVocabLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/MigrateLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MigrateLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevFCF0C3BB"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevDeployment3FD8245775a91e5660432a3ea78591655f4aaf72"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/DeploymentStage.dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevDeploymentStagedevF1405917"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevEndpointA7C9D19F"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevOPTIONSA05D093B"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocab750E82A8"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabOPTIONS2AF4C645"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/GET/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabGETApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7GETvocab5AB26FFD"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/GET/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabGETApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7GETvocab9CBB416B"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabGET8E6DF0D7"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/POST/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabPOSTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7POSTvocab4A94763A"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/POST/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabPOSTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7POSTvocab180C71F3"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabPOST0BCBD4BD"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/PUT/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.PUT..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabPUTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7PUTvocabCB682B57"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/PUT/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.PUT..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabPUTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7PUTvocab96C91BA6"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/vocab/PUT/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevvocabPUT759CC023"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/migrate/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevmigrateDC36582A"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/migrate/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevmigrateOPTIONS10018BBF"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/migrate/POST/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..migrate": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevmigratePOSTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7POSTmigrateF9E44A1E"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/migrate/POST/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..migrate": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevmigratePOSTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7POSTmigrateB1508131"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/migrate/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevmigratePOST4FA0A364"
+          }
+        ],
+        "/VocabAppDevStack/APIGatewayURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APIGatewayURL"
+          }
+        ],
+        "/VocabAppDevStack/APIGatewayId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APIGatewayId"
+          }
+        ],
+        "/VocabAppDevStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/VocabAppDevStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/VocabAppDevStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "VocabAppDevStack"
+    },
+    "VocabAppProdStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "VocabAppProdStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "VocabAppProdStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://982722143806/ap-northeast-1",
+      "properties": {
+        "templateFile": "VocabAppProdStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-deploy-role-982722143806-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-cfn-exec-role-982722143806-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/58d1b532a8de7ae97eb669f1ada256c6940c5bbad0349cfcdc386f8fe9137306.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "VocabAppProdStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-lookup-role-982722143806-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "VocabAppProdStack.assets"
+      ],
+      "metadata": {
+        "/VocabAppProdStack/VocabApp-VPC-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodD92DC1A9"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet1Subnet23E922FF"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet1RouteTable643E022C"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet1RouteTableAssociation1A307E00"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet1DefaultRoute2ECDEEA6"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet1EIPB438F90D"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet1NATGatewayF19F34D5"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet2Subnet8330E8D7"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet2RouteTable461E03BA"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet2RouteTableAssociation7791B9F4"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet2DefaultRoute64F83898"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet2/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet2EIPC6C21A0A"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Public-prodSubnet2/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPublicprodSubnet2NATGateway3430C516"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet1Subnet9ABB722B"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet1RouteTable5580DA6A"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet1RouteTableAssociationCEBF83A2"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet1DefaultRouteD63098B8"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet2Subnet47A5C7A6"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet2RouteTable9BBD04E8"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet2RouteTableAssociation28496180"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-Private-prodSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppPrivateprodSubnet2DefaultRouteC0D89B4A"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-DB-prodSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppDBprodSubnet1Subnet6037AAF9"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-DB-prodSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppDBprodSubnet1RouteTable1EB8BB4B"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-DB-prodSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppDBprodSubnet1RouteTableAssociationB4561283"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-DB-prodSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppDBprodSubnet2Subnet7EA17F80"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-DB-prodSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppDBprodSubnet2RouteTable34D92E47"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VocabApp-DB-prodSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVocabAppDBprodSubnet2RouteTableAssociationA553B377"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodIGW78E08776"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-VPC-prod/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppVPCprodVPCGW10CC0FD3"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DB-SG-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSGprod0C999AE9"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DB-SG-prod/from VocabAppProdStackVocabAppDBSGprod57B3959F:{IndirectPort}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSGprodfromVocabAppProdStackVocabAppDBSGprod57B3959FIndirectPort6E8D4F1F"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DB-SG-prod/to VocabAppProdStackVocabAppDBSGprod57B3959F:{IndirectPort}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSGprodtoVocabAppProdStackVocabAppDBSGprod57B3959FIndirectPortD8B4B319"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DB-Secret-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSecretprodE2099F76"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DB-Secret-prod/Attachment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSecretprodAttachment94360F48"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DB-SubnetGroup-prod/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDBSubnetGroupprod"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Aurora-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAuroraprod27E7C582"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Aurora-prod/VocabApp-Writer-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAuroraprodVocabAppWriterprodAAFCFAC2"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Proxy-Role-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxyRoleprodB29C6276"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Proxy-Role-prod/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxyRoleprodDefaultPolicy6876F586"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Proxy-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxyprod02A557F4"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Proxy-prod/ProxyTargetGroup": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppProxyprodProxyTargetGroupD375DF4F"
+          }
+        ],
+        "/VocabAppProdStack/DBEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DBEndpoint"
+          }
+        ],
+        "/VocabAppProdStack/DBReadEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DBReadEndpoint"
+          }
+        ],
+        "/VocabAppProdStack/DBSecret": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DBSecret"
+          }
+        ],
+        "/VocabAppProdStack/VPCId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VPCId"
+          }
+        ],
+        "/VocabAppProdStack/ProxyEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProxyEndpoint"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Lambda-SG-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppLambdaSGprod46EC6A99"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Psycopg2-Layer-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppPsycopg2Layerprod8D70DBDF"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetVocab-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetVocabprodServiceRoleDB392871"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetVocab-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetVocabprodServiceRoleDefaultPolicy8220E5A1"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetVocab-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetVocabprod09FF20E7"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-CreateVocab-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateVocabprodServiceRole9A86F5B5"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-CreateVocab-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateVocabprodServiceRoleDefaultPolicy3AB314D2"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-CreateVocab-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateVocabprod42F2C757"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-UpdateVocab-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppUpdateVocabprodServiceRole7BE72612"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-UpdateVocab-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppUpdateVocabprodServiceRoleDefaultPolicy96A4703B"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-UpdateVocab-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppUpdateVocabprod6902E1D1"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Migrate-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppMigrateprodServiceRole378A1EC7"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Migrate-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppMigrateprodServiceRoleDefaultPolicy78D694C2"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Migrate-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppMigrateprodE35EEF95"
+          }
+        ],
+        "/VocabAppProdStack/GetVocabLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetVocabLambdaName"
+          }
+        ],
+        "/VocabAppProdStack/CreateVocabLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateVocabLambdaName"
+          }
+        ],
+        "/VocabAppProdStack/UpdateVocabLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UpdateVocabLambdaName"
+          }
+        ],
+        "/VocabAppProdStack/MigrateLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MigrateLambdaName"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprod8CF8C01D"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodDeploymentA8170CF844046fa5a9834bf385ac6fa084da95da"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodDeploymentStageprod32663873"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodEndpoint5A99667F"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodOPTIONS38CE2EAD"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocab2F6BD60C"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabOPTIONS19CC26A7"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/GET/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.GET..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabGETApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDGETvocab008CA920"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/GET/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.GET..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabGETApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDGETvocabBBCAB85A"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabGET8C2E7C9D"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/POST/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabPOSTApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDPOSTvocab5D82CBEE"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/POST/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabPOSTApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDPOSTvocab78100307"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabPOST0E145A52"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/PUT/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.PUT..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabPUTApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDPUTvocab0A393718"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/PUT/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.PUT..vocab": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabPUTApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDPUTvocabFB83B5E8"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/vocab/PUT/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodvocabPUTC41823C4"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/migrate/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodmigrateCE5A5B64"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/migrate/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodmigrateOPTIONSEDD0AE10"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/migrate/POST/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..migrate": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodmigratePOSTApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDPOSTmigrate564CD307"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/migrate/POST/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..migrate": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodmigratePOSTApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDPOSTmigrateBB48D326"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/migrate/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodmigratePOSTF5950FDC"
+          }
+        ],
+        "/VocabAppProdStack/APIGatewayURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APIGatewayURL"
+          }
+        ],
+        "/VocabAppProdStack/APIGatewayId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "APIGatewayId"
+          }
+        ],
+        "/VocabAppProdStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/VocabAppProdStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/VocabAppProdStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "VocabAppProdStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

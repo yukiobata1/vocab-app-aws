@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import Home from './pages/Home'
-// import Teacher from './pages/Teacher'
 
 import './App.css'
 
@@ -102,7 +99,7 @@ function App() {
 
     const newQuizData = selectedVocab.map((item) => {
       const correctAnswer = item['JP-kanji'] || item['JP-rubi'];
-      let options: string[] = [correctAnswer];
+      const options: string[] = [correctAnswer];
       const allPossibleOptions = shuffleArray(
         filteredVocab
           .map(v => v['JP-kanji'] || v['JP-rubi'])
@@ -220,12 +217,38 @@ interface QuizCardProps {
 const QuizCard: React.FC<QuizCardProps> = ({ questionData, onAnswer, onQuestionEnd }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [feedbackStates, setFeedbackStates] = useState<{[key: string]: string | null}>({});
+  const [sounds, setSounds] = useState<{correct: HTMLAudioElement, incorrect: HTMLAudioElement} | null>(null);
+
+  useEffect(() => {
+    const correctSound = new Audio('/right.mp3');
+    const incorrectSound = new Audio('/wrong.mp3');
+    
+    // 音声ファイルをプリロード
+    correctSound.load();
+    incorrectSound.load();
+    
+    setSounds({ correct: correctSound, incorrect: incorrectSound });
+  }, []);
 
   const handleOptionClick = (option: string) => {
-    if (selectedOption) return;
+    if (selectedOption || !sounds) return;
 
     setSelectedOption(option);
-    onAnswer(option); // Calculate score immediately
+    onAnswer(option);
+
+    const isCorrect = option === questionData.correctAnswer;
+    
+    // 振動フィードバック
+    if (navigator.vibrate) {
+      navigator.vibrate(isCorrect ? 100 : 200);
+    }
+
+    // 音声フィードバック
+    if (isCorrect) {
+      sounds.correct.play().catch(e => console.log('音声の再生に失敗しました:', e));
+    } else {
+      sounds.incorrect.play().catch(e => console.log('音声の再生に失敗しました:', e));
+    }
 
     const newFeedbackStates: {[key: string]: string | null} = {};
     questionData.options.forEach(opt => {
@@ -234,14 +257,14 @@ const QuizCard: React.FC<QuizCardProps> = ({ questionData, onAnswer, onQuestionE
         } else if (opt === option && option !== questionData.correctAnswer) {
             newFeedbackStates[opt] = 'incorrect';
         } else {
-            newFeedbackStates[opt] = null; // No feedback for other options initially
+            newFeedbackStates[opt] = null;
         }
     });
     setFeedbackStates(newFeedbackStates);
 
     setTimeout(() => {
-      onQuestionEnd(); // Proceed after delay
-      setSelectedOption(null); // Reset for next card (though key change in App handles this too)
+      onQuestionEnd();
+      setSelectedOption(null);
       setFeedbackStates({});
     }, 2000);
   };

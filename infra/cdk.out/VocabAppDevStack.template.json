@@ -1,0 +1,2556 @@
+{
+ "Resources": {
+  "VocabAppVPCdevE2CE4C6E": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/Resource"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet1Subnet8A118423": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-northeast-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "VocabApp-Public-dev"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/Subnet"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet1RouteTableB4D88526": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/RouteTable"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet1RouteTableAssociation876E3CF0": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet1RouteTableB4D88526"
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet1Subnet8A118423"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/RouteTableAssociation"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet1DefaultRoute171FA194": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VocabAppVPCdevIGWF95117FE"
+    },
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet1RouteTableB4D88526"
+    }
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVPCGWAA4DC7D9"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/DefaultRoute"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet1EIPCF7EB6A0": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/EIP"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet1NATGatewayD28E58C0": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "VocabAppVPCdevVocabAppPublicdevSubnet1EIPCF7EB6A0",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet1Subnet8A118423"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPublicdevSubnet1DefaultRoute171FA194",
+    "VocabAppVPCdevVocabAppPublicdevSubnet1RouteTableAssociation876E3CF0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet1/NATGateway"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet2SubnetBF4C9D46": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-northeast-1c",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "VocabApp-Public-dev"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/Subnet"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet2RouteTableCEA66A6D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/RouteTable"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet2RouteTableAssociation03814661": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet2RouteTableCEA66A6D"
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet2SubnetBF4C9D46"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/RouteTableAssociation"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet2DefaultRouteBF00E508": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VocabAppVPCdevIGWF95117FE"
+    },
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet2RouteTableCEA66A6D"
+    }
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVPCGWAA4DC7D9"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/DefaultRoute"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet2EIP6AD822AD": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/EIP"
+   }
+  },
+  "VocabAppVPCdevVocabAppPublicdevSubnet2NATGateway9DBB34FA": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "VocabAppVPCdevVocabAppPublicdevSubnet2EIP6AD822AD",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet2SubnetBF4C9D46"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPublicdevSubnet2DefaultRouteBF00E508",
+    "VocabAppVPCdevVocabAppPublicdevSubnet2RouteTableAssociation03814661"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Public-devSubnet2/NATGateway"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-northeast-1a",
+    "CidrBlock": "10.0.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "VocabApp-Private-dev"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/Subnet"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableF39DE0FB": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/RouteTable"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableF39DE0FB"
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/RouteTableAssociation"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet1NATGatewayD28E58C0"
+    },
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableF39DE0FB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet1/DefaultRoute"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-northeast-1c",
+    "CidrBlock": "10.0.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "VocabApp-Private-dev"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/Subnet"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableF37206D1": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/RouteTable"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableF37206D1"
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/RouteTableAssociation"
+   }
+  },
+  "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "VocabAppVPCdevVocabAppPublicdevSubnet2NATGateway9DBB34FA"
+    },
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableF37206D1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-Private-devSubnet2/DefaultRoute"
+   }
+  },
+  "VocabAppVPCdevVocabAppDBdevSubnet1SubnetF25191DB": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-northeast-1a",
+    "CidrBlock": "10.0.4.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "VocabApp-DB-dev"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1/Subnet"
+   }
+  },
+  "VocabAppVPCdevVocabAppDBdevSubnet1RouteTable4B858B63": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1/RouteTable"
+   }
+  },
+  "VocabAppVPCdevVocabAppDBdevSubnet1RouteTableAssociation685C1EB2": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppDBdevSubnet1RouteTable4B858B63"
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppDBdevSubnet1SubnetF25191DB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet1/RouteTableAssociation"
+   }
+  },
+  "VocabAppVPCdevVocabAppDBdevSubnet2SubnetBE7CB347": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "ap-northeast-1c",
+    "CidrBlock": "10.0.5.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "VocabApp-DB-dev"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2/Subnet"
+   }
+  },
+  "VocabAppVPCdevVocabAppDBdevSubnet2RouteTable4C40D5DC": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2/RouteTable"
+   }
+  },
+  "VocabAppVPCdevVocabAppDBdevSubnet2RouteTableAssociation5C6ABC55": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VocabAppVPCdevVocabAppDBdevSubnet2RouteTable4C40D5DC"
+    },
+    "SubnetId": {
+     "Ref": "VocabAppVPCdevVocabAppDBdevSubnet2SubnetBE7CB347"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VocabApp-DB-devSubnet2/RouteTableAssociation"
+   }
+  },
+  "VocabAppVPCdevIGWF95117FE": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "VocabAppDevStack/VocabApp-VPC-dev"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/IGW"
+   }
+  },
+  "VocabAppVPCdevVPCGWAA4DC7D9": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "VocabAppVPCdevIGWF95117FE"
+    },
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-VPC-dev/VPCGW"
+   }
+  },
+  "VocabAppDBSGdev1A788973": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for VocabApp Aurora cluster (dev)",
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": {
+       "Fn::GetAtt": [
+        "VocabAppVPCdevE2CE4C6E",
+        "CidrBlock"
+       ]
+      },
+      "Description": "Allow PostgreSQL connections from VPC",
+      "FromPort": 5432,
+      "IpProtocol": "tcp",
+      "ToPort": 5432
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-DB-SG-dev/Resource"
+   }
+  },
+  "VocabAppDBSGdevfromVocabAppDevStackVocabAppDBSGdevC87B6EC4IndirectPort5E8F8D77": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow connections to the database Cluster from the Proxy",
+    "FromPort": {
+     "Fn::GetAtt": [
+      "VocabAppAuroradevF5E41487",
+      "Endpoint.Port"
+     ]
+    },
+    "GroupId": {
+     "Fn::GetAtt": [
+      "VocabAppDBSGdev1A788973",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "VocabAppDBSGdev1A788973",
+      "GroupId"
+     ]
+    },
+    "ToPort": {
+     "Fn::GetAtt": [
+      "VocabAppAuroradevF5E41487",
+      "Endpoint.Port"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-DB-SG-dev/from VocabAppDevStackVocabAppDBSGdevC87B6EC4:{IndirectPort}"
+   }
+  },
+  "VocabAppDBSGdevtoVocabAppDevStackVocabAppDBSGdevC87B6EC4IndirectPortE65E8084": {
+   "Type": "AWS::EC2::SecurityGroupEgress",
+   "Properties": {
+    "Description": "Allow connections to the database Cluster from the Proxy",
+    "DestinationSecurityGroupId": {
+     "Fn::GetAtt": [
+      "VocabAppDBSGdev1A788973",
+      "GroupId"
+     ]
+    },
+    "FromPort": {
+     "Fn::GetAtt": [
+      "VocabAppAuroradevF5E41487",
+      "Endpoint.Port"
+     ]
+    },
+    "GroupId": {
+     "Fn::GetAtt": [
+      "VocabAppDBSGdev1A788973",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "ToPort": {
+     "Fn::GetAtt": [
+      "VocabAppAuroradevF5E41487",
+      "Endpoint.Port"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-DB-SG-dev/to VocabAppDevStackVocabAppDBSGdevC87B6EC4:{IndirectPort}"
+   }
+  },
+  "VocabAppDBSecretdev9198F524": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "Database credentials for VocabApp (dev)",
+    "GenerateSecretString": {
+     "ExcludeCharacters": "\"@/\\'",
+     "GenerateStringKey": "password",
+     "IncludeSpace": false,
+     "PasswordLength": 32,
+     "SecretStringTemplate": "{\"username\":\"vocabadmin\"}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-DB-Secret-dev/Resource"
+   }
+  },
+  "VocabAppDBSecretdevAttachmentFE768768": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "VocabAppDBSecretdev9198F524"
+    },
+    "TargetId": {
+     "Ref": "VocabAppAuroradevF5E41487"
+    },
+    "TargetType": "AWS::RDS::DBCluster"
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-DB-Secret-dev/Attachment/Resource"
+   }
+  },
+  "VocabAppDBSubnetGroupdev": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnet group for VocabApp Aurora cluster (dev)",
+    "SubnetIds": [
+     {
+      "Ref": "VocabAppVPCdevVocabAppDBdevSubnet1SubnetF25191DB"
+     },
+     {
+      "Ref": "VocabAppVPCdevVocabAppDBdevSubnet2SubnetBE7CB347"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-DB-SubnetGroup-dev/Default"
+   }
+  },
+  "VocabAppAuroradevF5E41487": {
+   "Type": "AWS::RDS::DBCluster",
+   "Properties": {
+    "BackupRetentionPeriod": 3,
+    "CopyTagsToSnapshot": true,
+    "DBClusterParameterGroupName": "default.aurora-postgresql15",
+    "DBSubnetGroupName": {
+     "Ref": "VocabAppDBSubnetGroupdev"
+    },
+    "DatabaseName": "vocabapp",
+    "DeletionProtection": false,
+    "Engine": "aurora-postgresql",
+    "EngineVersion": "15.4",
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       },
+       ":SecretString:username::}}"
+      ]
+     ]
+    },
+    "Port": 5432,
+    "PreferredBackupWindow": "03:00-04:00",
+    "PreferredMaintenanceWindow": "Sun:04:00-Sun:05:00",
+    "ServerlessV2ScalingConfiguration": {
+     "MaxCapacity": 2,
+     "MinCapacity": 0.5
+    },
+    "StorageEncrypted": true,
+    "VpcSecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "VocabAppDBSGdev1A788973",
+       "GroupId"
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Snapshot",
+   "DeletionPolicy": "Snapshot",
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Aurora-dev/Resource"
+   }
+  },
+  "VocabAppAuroradevVocabAppWriterdev24906A17": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "DBClusterIdentifier": {
+     "Ref": "VocabAppAuroradevF5E41487"
+    },
+    "DBInstanceClass": "db.serverless",
+    "Engine": "aurora-postgresql",
+    "PromotionTier": 0
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Aurora-dev/VocabApp-Writer-dev/Resource"
+   }
+  },
+  "VocabAppProxyRoledev45F6AF8A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "rds.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Proxy-Role-dev/Resource"
+   }
+  },
+  "VocabAppProxyRoledevDefaultPolicyBA361176": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "VocabAppProxyRoledevDefaultPolicyBA361176",
+    "Roles": [
+     {
+      "Ref": "VocabAppProxyRoledev45F6AF8A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Proxy-Role-dev/DefaultPolicy/Resource"
+   }
+  },
+  "VocabAppProxydevF5DC84E5": {
+   "Type": "AWS::RDS::DBProxy",
+   "Properties": {
+    "Auth": [
+     {
+      "AuthScheme": "SECRETS",
+      "IAMAuth": "DISABLED",
+      "SecretArn": {
+       "Ref": "VocabAppDBSecretdev9198F524"
+      }
+     }
+    ],
+    "DBProxyName": "VocabApp-Proxy-dev",
+    "EngineFamily": "POSTGRESQL",
+    "IdleClientTimeout": 1800,
+    "RequireTLS": false,
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "VocabAppProxyRoledev45F6AF8A",
+      "Arn"
+     ]
+    },
+    "VpcSecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "VocabAppDBSGdev1A788973",
+       "GroupId"
+      ]
+     }
+    ],
+    "VpcSubnetIds": [
+     {
+      "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+     },
+     {
+      "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Proxy-dev/Resource"
+   }
+  },
+  "VocabAppProxydevProxyTargetGroupDE815E1A": {
+   "Type": "AWS::RDS::DBProxyTargetGroup",
+   "Properties": {
+    "ConnectionPoolConfigurationInfo": {
+     "MaxConnectionsPercent": 50,
+     "MaxIdleConnectionsPercent": 10
+    },
+    "DBClusterIdentifiers": [
+     {
+      "Ref": "VocabAppAuroradevF5E41487"
+     }
+    ],
+    "DBProxyName": {
+     "Ref": "VocabAppProxydevF5DC84E5"
+    },
+    "TargetGroupName": "default"
+   },
+   "DependsOn": [
+    "VocabAppAuroradevF5E41487",
+    "VocabAppAuroradevVocabAppWriterdev24906A17"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Proxy-dev/ProxyTargetGroup"
+   }
+  },
+  "VocabAppLambdaSGdev3845940D": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for VocabApp Lambda functions (dev)",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VocabAppVPCdevE2CE4C6E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Lambda-SG-dev/Resource"
+   }
+  },
+  "VocabAppPsycopg2Layerdev518B3A39": {
+   "Type": "AWS::Lambda::LayerVersion",
+   "Properties": {
+    "CompatibleRuntimes": [
+     "python3.9"
+    ],
+    "Content": {
+     "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+     "S3Key": "702c8a90f4a54289146c36d6e8571b225e2e77668e6d67c613048d21e8a8fd86.zip"
+    },
+    "Description": "psycopg2 layer for PostgreSQL connectivity"
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Psycopg2-Layer-dev/Resource",
+    "aws:asset:path": "asset.702c8a90f4a54289146c36d6e8571b225e2e77668e6d67c613048d21e8a8fd86",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Content"
+   }
+  },
+  "VocabAppGetVocabdevServiceRoleB64E7564": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-GetVocab-dev/ServiceRole/Resource"
+   }
+  },
+  "VocabAppGetVocabdevServiceRoleDefaultPolicy2649F4B4": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "VocabAppGetVocabdevServiceRoleDefaultPolicy2649F4B4",
+    "Roles": [
+     {
+      "Ref": "VocabAppGetVocabdevServiceRoleB64E7564"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-GetVocab-dev/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "VocabAppGetVocabdev80DF46FE": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+    },
+    "Description": "Get vocabulary words and questions",
+    "Environment": {
+     "Variables": {
+      "SECRET_ARN": {
+       "Ref": "VocabAppDBSecretdev9198F524"
+      },
+      "PROXY_ENDPOINT": {
+       "Fn::GetAtt": [
+        "VocabAppProxydevF5DC84E5",
+        "Endpoint"
+       ]
+      },
+      "DB_NAME": "vocabapp",
+      "ENVIRONMENT": "dev"
+     }
+    },
+    "Handler": "get_vocab.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "VocabAppPsycopg2Layerdev518B3A39"
+     }
+    ],
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "VocabAppGetVocabdevServiceRoleB64E7564",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 30,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "VocabAppLambdaSGdev3845940D",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+      },
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "VocabAppGetVocabdevServiceRoleDefaultPolicy2649F4B4",
+    "VocabAppGetVocabdevServiceRoleB64E7564",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-GetVocab-dev/Resource",
+    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "VocabAppCreateVocabdevServiceRole325A2397": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-CreateVocab-dev/ServiceRole/Resource"
+   }
+  },
+  "VocabAppCreateVocabdevServiceRoleDefaultPolicyF3C5A3B8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "VocabAppCreateVocabdevServiceRoleDefaultPolicyF3C5A3B8",
+    "Roles": [
+     {
+      "Ref": "VocabAppCreateVocabdevServiceRole325A2397"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-CreateVocab-dev/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "VocabAppCreateVocabdev9461C9BD": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+    },
+    "Description": "Create vocabulary books and questions",
+    "Environment": {
+     "Variables": {
+      "SECRET_ARN": {
+       "Ref": "VocabAppDBSecretdev9198F524"
+      },
+      "PROXY_ENDPOINT": {
+       "Fn::GetAtt": [
+        "VocabAppProxydevF5DC84E5",
+        "Endpoint"
+       ]
+      },
+      "DB_NAME": "vocabapp",
+      "ENVIRONMENT": "dev"
+     }
+    },
+    "Handler": "create_vocab.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "VocabAppPsycopg2Layerdev518B3A39"
+     }
+    ],
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "VocabAppCreateVocabdevServiceRole325A2397",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 30,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "VocabAppLambdaSGdev3845940D",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+      },
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "VocabAppCreateVocabdevServiceRoleDefaultPolicyF3C5A3B8",
+    "VocabAppCreateVocabdevServiceRole325A2397",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-CreateVocab-dev/Resource",
+    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "VocabAppUpdateVocabdevServiceRole8FFAD12E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-UpdateVocab-dev/ServiceRole/Resource"
+   }
+  },
+  "VocabAppUpdateVocabdevServiceRoleDefaultPolicyF79CB354": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "VocabAppUpdateVocabdevServiceRoleDefaultPolicyF79CB354",
+    "Roles": [
+     {
+      "Ref": "VocabAppUpdateVocabdevServiceRole8FFAD12E"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-UpdateVocab-dev/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "VocabAppUpdateVocabdev90D29C34": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+    },
+    "Description": "Update vocabulary words and progress",
+    "Environment": {
+     "Variables": {
+      "SECRET_ARN": {
+       "Ref": "VocabAppDBSecretdev9198F524"
+      },
+      "PROXY_ENDPOINT": {
+       "Fn::GetAtt": [
+        "VocabAppProxydevF5DC84E5",
+        "Endpoint"
+       ]
+      },
+      "DB_NAME": "vocabapp",
+      "ENVIRONMENT": "dev"
+     }
+    },
+    "Handler": "update_vocab.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "VocabAppPsycopg2Layerdev518B3A39"
+     }
+    ],
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "VocabAppUpdateVocabdevServiceRole8FFAD12E",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 30,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "VocabAppLambdaSGdev3845940D",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+      },
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "VocabAppUpdateVocabdevServiceRoleDefaultPolicyF79CB354",
+    "VocabAppUpdateVocabdevServiceRole8FFAD12E",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-UpdateVocab-dev/Resource",
+    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "VocabAppMigratedevServiceRole482FDE98": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Migrate-dev/ServiceRole/Resource"
+   }
+  },
+  "VocabAppMigratedevServiceRoleDefaultPolicyEACFB654": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "VocabAppMigratedevServiceRoleDefaultPolicyEACFB654",
+    "Roles": [
+     {
+      "Ref": "VocabAppMigratedevServiceRole482FDE98"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Migrate-dev/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "VocabAppMigratedev0322AA86": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+    },
+    "Description": "Run database migrations",
+    "Environment": {
+     "Variables": {
+      "SECRET_ARN": {
+       "Ref": "VocabAppDBSecretdev9198F524"
+      },
+      "PROXY_ENDPOINT": {
+       "Fn::GetAtt": [
+        "VocabAppProxydevF5DC84E5",
+        "Endpoint"
+       ]
+      },
+      "DB_NAME": "vocabapp",
+      "ENVIRONMENT": "dev"
+     }
+    },
+    "Handler": "migrate.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "VocabAppPsycopg2Layerdev518B3A39"
+     }
+    ],
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "VocabAppMigratedevServiceRole482FDE98",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 300,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "VocabAppLambdaSGdev3845940D",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+      },
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "VocabAppMigratedevServiceRoleDefaultPolicyEACFB654",
+    "VocabAppMigratedevServiceRole482FDE98",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Migrate-dev/Resource",
+    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "VocabAppImportLambdadevServiceRoleF172E2E2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Import-Lambda-dev/ServiceRole/Resource"
+   }
+  },
+  "VocabAppImportLambdadevServiceRoleDefaultPolicyF5407E33": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "VocabAppDBSecretdev9198F524"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "VocabAppImportLambdadevServiceRoleDefaultPolicyF5407E33",
+    "Roles": [
+     {
+      "Ref": "VocabAppImportLambdadevServiceRoleF172E2E2"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Import-Lambda-dev/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "VocabAppImportLambdadevB6F1B00E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+     "S3Key": "bf068ba76c1caff1ea2f1d7e0934d329b5867348ff4e34c7366a846b46c529ab.zip"
+    },
+    "Description": "Import vocabulary data from files",
+    "Environment": {
+     "Variables": {
+      "SECRET_ARN": {
+       "Ref": "VocabAppDBSecretdev9198F524"
+      },
+      "PROXY_ENDPOINT": {
+       "Fn::GetAtt": [
+        "VocabAppProxydevF5DC84E5",
+        "Endpoint"
+       ]
+      },
+      "DB_NAME": "vocabapp",
+      "ENVIRONMENT": "dev"
+     }
+    },
+    "Handler": "vocab-import.lambda_handler",
+    "Layers": [
+     {
+      "Ref": "VocabAppPsycopg2Layerdev518B3A39"
+     }
+    ],
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "VocabAppImportLambdadevServiceRoleF172E2E2",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.9",
+    "Timeout": 900,
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "VocabAppLambdaSGdev3845940D",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+      },
+      {
+       "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "VocabAppImportLambdadevServiceRoleDefaultPolicyF5407E33",
+    "VocabAppImportLambdadevServiceRoleF172E2E2",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1DefaultRouteCFFDE6FC",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet1RouteTableAssociationEC9CCD69",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2DefaultRoute11112326",
+    "VocabAppVPCdevVocabAppPrivatedevSubnet2RouteTableAssociation10B98264"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-Import-Lambda-dev/Resource",
+    "aws:asset:path": "asset.bf068ba76c1caff1ea2f1d7e0934d329b5867348ff4e34c7366a846b46c529ab",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "VocabAppAPIdevFCF0C3BB": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "Vocabulary app REST API for dev environment",
+    "Name": "VocabApp API (dev)"
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Resource"
+   }
+  },
+  "VocabAppAPIdevDeployment3FD8245775a91e5660432a3ea78591655f4aaf72": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Vocabulary app REST API for dev environment",
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "DependsOn": [
+    "VocabAppAPIdevmigrateOPTIONS10018BBF",
+    "VocabAppAPIdevmigratePOST4FA0A364",
+    "VocabAppAPIdevmigrateDC36582A",
+    "VocabAppAPIdevOPTIONSA05D093B",
+    "VocabAppAPIdevvocabGET8E6DF0D7",
+    "VocabAppAPIdevvocabOPTIONS2AF4C645",
+    "VocabAppAPIdevvocabPOST0BCBD4BD",
+    "VocabAppAPIdevvocabPUT759CC023",
+    "VocabAppAPIdevvocab750E82A8"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Deployment/Resource"
+   }
+  },
+  "VocabAppAPIdevDeploymentStagedevF1405917": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "VocabAppAPIdevDeployment3FD8245775a91e5660432a3ea78591655f4aaf72"
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    },
+    "StageName": "dev"
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/DeploymentStage.dev/Resource"
+   }
+  },
+  "VocabAppAPIdevOPTIONSA05D093B": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "VocabAppAPIdevFCF0C3BB",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/OPTIONS/Resource"
+   }
+  },
+  "VocabAppAPIdevvocab750E82A8": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "VocabAppAPIdevFCF0C3BB",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "vocab",
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/Resource"
+   }
+  },
+  "VocabAppAPIdevvocabOPTIONS2AF4C645": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "VocabAppAPIdevvocab750E82A8"
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/OPTIONS/Resource"
+   }
+  },
+  "VocabAppAPIdevvocabGETApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7GETvocab5AB26FFD": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppGetVocabdev80DF46FE",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/",
+       {
+        "Ref": "VocabAppAPIdevDeploymentStagedevF1405917"
+       },
+       "/GET/vocab"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/GET/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..vocab"
+   }
+  },
+  "VocabAppAPIdevvocabGETApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7GETvocab9CBB416B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppGetVocabdev80DF46FE",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/test-invoke-stage/GET/vocab"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/GET/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..vocab"
+   }
+  },
+  "VocabAppAPIdevvocabGET8E6DF0D7": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "RequestTemplates": {
+      "application/json": "{ \"statusCode\": \"200\" }"
+     },
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "VocabAppGetVocabdev80DF46FE",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "RequestParameters": {
+     "method.request.querystring.book_id": false,
+     "method.request.querystring.limit": false,
+     "method.request.querystring.offset": false
+    },
+    "ResourceId": {
+     "Ref": "VocabAppAPIdevvocab750E82A8"
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/GET/Resource"
+   }
+  },
+  "VocabAppAPIdevvocabPOSTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7POSTvocab4A94763A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppCreateVocabdev9461C9BD",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/",
+       {
+        "Ref": "VocabAppAPIdevDeploymentStagedevF1405917"
+       },
+       "/POST/vocab"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/POST/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..vocab"
+   }
+  },
+  "VocabAppAPIdevvocabPOSTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7POSTvocab180C71F3": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppCreateVocabdev9461C9BD",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/test-invoke-stage/POST/vocab"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/POST/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..vocab"
+   }
+  },
+  "VocabAppAPIdevvocabPOST0BCBD4BD": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "RequestTemplates": {
+      "application/json": "{ \"statusCode\": \"200\" }"
+     },
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "VocabAppCreateVocabdev9461C9BD",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "VocabAppAPIdevvocab750E82A8"
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/POST/Resource"
+   }
+  },
+  "VocabAppAPIdevvocabPUTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7PUTvocabCB682B57": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppUpdateVocabdev90D29C34",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/",
+       {
+        "Ref": "VocabAppAPIdevDeploymentStagedevF1405917"
+       },
+       "/PUT/vocab"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/PUT/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.PUT..vocab"
+   }
+  },
+  "VocabAppAPIdevvocabPUTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7PUTvocab96C91BA6": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppUpdateVocabdev90D29C34",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/test-invoke-stage/PUT/vocab"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/PUT/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.PUT..vocab"
+   }
+  },
+  "VocabAppAPIdevvocabPUT759CC023": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "PUT",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "RequestTemplates": {
+      "application/json": "{ \"statusCode\": \"200\" }"
+     },
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "VocabAppUpdateVocabdev90D29C34",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "VocabAppAPIdevvocab750E82A8"
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/vocab/PUT/Resource"
+   }
+  },
+  "VocabAppAPIdevmigrateDC36582A": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "VocabAppAPIdevFCF0C3BB",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "migrate",
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/migrate/Resource"
+   }
+  },
+  "VocabAppAPIdevmigrateOPTIONS10018BBF": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "VocabAppAPIdevmigrateDC36582A"
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/migrate/OPTIONS/Resource"
+   }
+  },
+  "VocabAppAPIdevmigratePOSTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7POSTmigrateF9E44A1E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppMigratedev0322AA86",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/",
+       {
+        "Ref": "VocabAppAPIdevDeploymentStagedevF1405917"
+       },
+       "/POST/migrate"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/migrate/POST/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..migrate"
+   }
+  },
+  "VocabAppAPIdevmigratePOSTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7POSTmigrateB1508131": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "VocabAppMigratedev0322AA86",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:ap-northeast-1:982722143806:",
+       {
+        "Ref": "VocabAppAPIdevFCF0C3BB"
+       },
+       "/test-invoke-stage/POST/migrate"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/migrate/POST/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..migrate"
+   }
+  },
+  "VocabAppAPIdevmigratePOST4FA0A364": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "RequestTemplates": {
+      "application/json": "{ \"statusCode\": \"200\" }"
+     },
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "VocabAppMigratedev0322AA86",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "VocabAppAPIdevmigrateDC36582A"
+    },
+    "RestApiId": {
+     "Ref": "VocabAppAPIdevFCF0C3BB"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Default/migrate/POST/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/31SXWvjMBD8LX1XdNe0FO4xH20ItD1jl7yWtbznKrElo101Z4z/+2HJcZIW7mlnZodh5PVc3j7cy9sbONJMFYdZpXPZZQzqIOBI7x2quex2jRKrP2aXrETi80qrzOcGedDOKLWe8Q3yCs/6WVsQWaWBtTWTeQCP22QYr8AbYDxCKxKnP4HxHLw1jM7gZIhNRrZgBvVRo2GRofJOc7tx1jehw3+FrSkdEn3TH4PcC0LlkKkGAyU62WWBj/YBxfEGrkS+qDEZvm564QqSXXzY1Gm9vBTWwJAD4aryxOii4YpsDTEYhZM1cfZvG3dfYWwQknuhoZZdauN5wkxspVXwR9SLCuq8ANk9Q4tuh47Gc13xJ2/U6Y6XOEFXaxosvaC7dyBCJrkYhqA7ufTqgLwEQgGNLuP5ZJci8aLRodQI19hUtj19zAuWMZTx7wogRbLeKQyZL8gfthiWIzptx+SA+/5K/u258SxCxSFSm/LKLYwtUO7px+d8Ln/Jnzd70nrmvGFdo0zj/AfWf4wEQgMAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "VocabAppDevStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "DBEndpoint": {
+   "Description": "Aurora cluster endpoint for dev",
+   "Value": {
+    "Fn::GetAtt": [
+     "VocabAppAuroradevF5E41487",
+     "Endpoint.Address"
+    ]
+   }
+  },
+  "DBReadEndpoint": {
+   "Description": "Aurora cluster read endpoint for dev",
+   "Value": {
+    "Fn::GetAtt": [
+     "VocabAppAuroradevF5E41487",
+     "ReadEndpoint.Address"
+    ]
+   }
+  },
+  "DBSecret": {
+   "Description": "Database credentials secret ARN for dev",
+   "Value": {
+    "Ref": "VocabAppDBSecretdev9198F524"
+   }
+  },
+  "VPCId": {
+   "Description": "VPC ID for dev",
+   "Value": {
+    "Ref": "VocabAppVPCdevE2CE4C6E"
+   }
+  },
+  "ProxyEndpoint": {
+   "Description": "RDS Proxy endpoint for dev",
+   "Value": {
+    "Fn::GetAtt": [
+     "VocabAppProxydevF5DC84E5",
+     "Endpoint"
+    ]
+   }
+  },
+  "ImportLambdaName": {
+   "Description": "Import Lambda function name for dev",
+   "Value": {
+    "Ref": "VocabAppImportLambdadevB6F1B00E"
+   }
+  },
+  "GetVocabLambdaName": {
+   "Description": "Get Vocab Lambda function name for dev",
+   "Value": {
+    "Ref": "VocabAppGetVocabdev80DF46FE"
+   }
+  },
+  "CreateVocabLambdaName": {
+   "Description": "Create Vocab Lambda function name for dev",
+   "Value": {
+    "Ref": "VocabAppCreateVocabdev9461C9BD"
+   }
+  },
+  "UpdateVocabLambdaName": {
+   "Description": "Update Vocab Lambda function name for dev",
+   "Value": {
+    "Ref": "VocabAppUpdateVocabdev90D29C34"
+   }
+  },
+  "MigrateLambdaName": {
+   "Description": "Migrate Lambda function name for dev",
+   "Value": {
+    "Ref": "VocabAppMigratedev0322AA86"
+   }
+  },
+  "VocabAppAPIdevEndpointA7C9D19F": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "VocabAppAPIdevFCF0C3BB"
+      },
+      ".execute-api.ap-northeast-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "VocabAppAPIdevDeploymentStagedevF1405917"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "APIGatewayURL": {
+   "Description": "API Gateway URL for dev",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "VocabAppAPIdevFCF0C3BB"
+      },
+      ".execute-api.ap-northeast-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "VocabAppAPIdevDeploymentStagedevF1405917"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "APIGatewayId": {
+   "Description": "API Gateway ID for dev",
+   "Value": {
+    "Ref": "VocabAppAPIdevFCF0C3BB"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

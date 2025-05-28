@@ -1,0 +1,48 @@
+{
+  "version": "38.0.1",
+  "files": {
+    "702c8a90f4a54289146c36d6e8571b225e2e77668e6d67c613048d21e8a8fd86": {
+      "source": {
+        "path": "asset.702c8a90f4a54289146c36d6e8571b225e2e77668e6d67c613048d21e8a8fd86",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "982722143806-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+          "objectKey": "702c8a90f4a54289146c36d6e8571b225e2e77668e6d67c613048d21e8a8fd86.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-file-publishing-role-982722143806-ap-northeast-1"
+        }
+      }
+    },
+    "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e": {
+      "source": {
+        "path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "982722143806-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+          "objectKey": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-file-publishing-role-982722143806-ap-northeast-1"
+        }
+      }
+    },
+    "58d1b532a8de7ae97eb669f1ada256c6940c5bbad0349cfcdc386f8fe9137306": {
+      "source": {
+        "path": "VocabAppProdStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "982722143806-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+          "objectKey": "58d1b532a8de7ae97eb669f1ada256c6940c5bbad0349cfcdc386f8fe9137306.json",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-file-publishing-role-982722143806-ap-northeast-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
