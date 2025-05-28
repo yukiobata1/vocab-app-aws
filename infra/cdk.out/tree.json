@@ -1582,7 +1582,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Get vocabulary words and questions",
                     "environment": {
@@ -1797,7 +1797,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Create vocabulary books and questions",
                     "environment": {
@@ -2012,7 +2012,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Update vocabulary words and progress",
                     "environment": {
@@ -2227,7 +2227,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Run database migrations",
                     "environment": {
@@ -2442,7 +2442,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "5bcbc5229921b3310849d5cfbca24eac0dbd5281ac30abc3aec13b4a43b09270.zip"
+                      "s3Key": "90b1fba200934da6bcceccece4b36c892e1eda02c1019fb92fd9543ae446c80e.zip"
                     },
                     "description": "Import vocabulary data from files",
                     "environment": {
@@ -2603,7 +2603,7 @@
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
                       "aws:cdk:cloudformation:props": {
                         "deploymentId": {
-                          "Ref": "VocabAppAPIdevDeployment3FD8245775a91e5660432a3ea78591655f4aaf72"
+                          "Ref": "VocabAppAPIdevDeployment3FD82457f09e21b9ea8f50f95ed427ef2173b81c"
                         },
                         "restApiId": {
                           "Ref": "VocabAppAPIdevFCF0C3BB"
@@ -2656,9 +2656,9 @@
                                 {
                                   "statusCode": "204",
                                   "responseParameters": {
-                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                                     "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                    "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
                                   }
                                 }
                               ]
@@ -2744,9 +2744,9 @@
                                     {
                                       "statusCode": "204",
                                       "responseParameters": {
-                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                                         "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
                                       }
                                     }
                                   ]
@@ -2871,7 +2871,7 @@
                                 "authorizationType": "NONE",
                                 "httpMethod": "GET",
                                 "integration": {
-                                  "type": "AWS_PROXY",
+                                  "type": "AWS",
                                   "uri": {
                                     "Fn::Join": [
                                       "",
@@ -2892,10 +2892,27 @@
                                     ]
                                   },
                                   "integrationHttpMethod": "POST",
-                                  "requestTemplates": {
-                                    "application/json": "{ \"statusCode\": \"200\" }"
-                                  }
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "200",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
+                                      }
+                                    }
+                                  ]
                                 },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "200",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
                                 "requestParameters": {
                                   "method.request.querystring.book_id": false,
                                   "method.request.querystring.limit": false,
@@ -3245,9 +3262,9 @@
                                     {
                                       "statusCode": "204",
                                       "responseParameters": {
-                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                                         "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
                                       }
                                     }
                                   ]
@@ -5068,7 +5085,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Get vocabulary words and questions",
                     "environment": {
@@ -5283,7 +5300,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Create vocabulary books and questions",
                     "environment": {
@@ -5498,7 +5515,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Update vocabulary words and progress",
                     "environment": {
@@ -5713,7 +5730,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+                      "s3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
                     },
                     "description": "Run database migrations",
                     "environment": {
@@ -5866,7 +5883,7 @@
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
                       "aws:cdk:cloudformation:props": {
                         "deploymentId": {
-                          "Ref": "VocabAppAPIprodDeploymentA8170CF844046fa5a9834bf385ac6fa084da95da"
+                          "Ref": "VocabAppAPIprodDeploymentA8170CF808a956803c34109286ddfb99202b682c"
                         },
                         "restApiId": {
                           "Ref": "VocabAppAPIprod8CF8C01D"
@@ -5919,9 +5936,9 @@
                                 {
                                   "statusCode": "204",
                                   "responseParameters": {
-                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                                     "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                    "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
                                   }
                                 }
                               ]
@@ -6007,9 +6024,9 @@
                                     {
                                       "statusCode": "204",
                                       "responseParameters": {
-                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                                         "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
                                       }
                                     }
                                   ]
@@ -6134,7 +6151,7 @@
                                 "authorizationType": "NONE",
                                 "httpMethod": "GET",
                                 "integration": {
-                                  "type": "AWS_PROXY",
+                                  "type": "AWS",
                                   "uri": {
                                     "Fn::Join": [
                                       "",
@@ -6155,10 +6172,27 @@
                                     ]
                                   },
                                   "integrationHttpMethod": "POST",
-                                  "requestTemplates": {
-                                    "application/json": "{ \"statusCode\": \"200\" }"
-                                  }
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "200",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
+                                      }
+                                    }
+                                  ]
                                 },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "200",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
                                 "requestParameters": {
                                   "method.request.querystring.book_id": false,
                                   "method.request.querystring.limit": false,
@@ -6508,9 +6542,9 @@
                                     {
                                       "statusCode": "204",
                                       "responseParameters": {
-                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
                                         "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
                                       }
                                     }
                                   ]

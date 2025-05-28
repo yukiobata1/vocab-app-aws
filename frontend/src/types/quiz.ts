@@ -26,15 +26,17 @@ export interface VocabQuestion {
 }
 
 // Quiz question types
-export enum QuestionType {
-  NEPALI_TO_KANJI = 'nepali_to_kanji',           // ネパール語 → 漢字
-  NEPALI_TO_RUBI = 'nepali_to_rubi',             // ネパール語 → 読み
-  KANJI_TO_RUBI = 'kanji_to_rubi',               // 漢字 → 読み
-  RUBI_TO_KANJI = 'rubi_to_kanji',               // 読み → 漢字
-  FILL_IN_BLANK = 'fill_in_blank',               // 文脈問題（空欄埋め）
-  KANJI_TO_NEPALI = 'kanji_to_nepali',           // 漢字 → ネパール語
-  RUBI_TO_NEPALI = 'rubi_to_nepali'              // 読み → ネパール語
-}
+export const QuestionType = {
+  NEPALI_TO_KANJI: 'nepali_to_kanji',           // ネパール語 → 漢字
+  NEPALI_TO_RUBI: 'nepali_to_rubi',             // ネパール語 → 読み
+  KANJI_TO_RUBI: 'kanji_to_rubi',               // 漢字 → 読み
+  RUBI_TO_KANJI: 'rubi_to_kanji',               // 読み → 漢字
+  FILL_IN_BLANK: 'fill_in_blank',               // 文脈問題（空欄埋め）
+  KANJI_TO_NEPALI: 'kanji_to_nepali',           // 漢字 → ネパール語
+  RUBI_TO_NEPALI: 'rubi_to_nepali'              // 読み → ネパール語
+} as const;
+
+export type QuestionType = typeof QuestionType[keyof typeof QuestionType];
 
 export interface QuestionTypeConfig {
   id: QuestionType;
@@ -115,13 +117,15 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
 
 // Quiz configuration
 export interface QuizConfig {
-  vocabBookId: number;
+  bookId: number;
+  bookTitle?: string;
   questionCount: number;           // 出題数 (5, 10, 15, 20, etc.)
-  kaRange: {                      // 課の範囲
+  lessonRange: {                  // 課の範囲
     start: number;
     end: number;
   };
   enabledQuestionTypes: QuestionType[];  // 有効な出題形式
+  difficulty?: string;
 }
 
 // Generated quiz question for display
@@ -132,6 +136,23 @@ export interface GeneratedQuizQuestion {
   correctAnswer: string;         // 正解
   options: string[];            // 選択肢（正解を含む4択）
   sourceQuestion: VocabQuestion; // 元の語彙データ
+}
+
+// Quiz question for display (simplified interface)
+export interface QuizQuestion {
+  id: string;
+  type: QuestionType;
+  questionText: string;
+  correctAnswer: string;
+  options: string[];
+}
+
+// Quiz interface (used by components)
+export interface Quiz {
+  id: string;
+  config: QuizConfig;
+  questions: QuizQuestion[];
+  createdAt: string;
 }
 
 // Quiz session state

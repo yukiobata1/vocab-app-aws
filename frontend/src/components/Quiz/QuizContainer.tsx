@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TeacherConfig } from './TeacherConfig';
 import { QuizDisplay } from './QuizDisplay';
-import { Quiz, QuizConfig } from '../../types/quiz';
+import type { Quiz, QuizConfig } from '../../types/quiz';
 import { generateQuiz } from '../../utils/quizGenerator';
 import { vocabService } from '../../services/vocabService';
 
@@ -11,7 +11,7 @@ export const QuizContainer: React.FC = () => {
   const [state, setState] = useState<QuizState>('config');
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<{ [questionIndex: number]: string }>({});
+  const [, setAnswers] = useState<{ [questionIndex: number]: string }>({});
 
   const handleConfigSubmit = async (config: QuizConfig) => {
     setState('loading');

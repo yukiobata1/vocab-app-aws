@@ -1023,7 +1023,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+     "S3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
     },
     "Description": "Get vocabulary words and questions",
     "Environment": {
@@ -1085,7 +1085,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "VocabAppDevStack/VocabApp-GetVocab-dev/Resource",
-    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:path": "asset.0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1182,7 +1182,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+     "S3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
     },
     "Description": "Create vocabulary books and questions",
     "Environment": {
@@ -1244,7 +1244,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "VocabAppDevStack/VocabApp-CreateVocab-dev/Resource",
-    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:path": "asset.0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1341,7 +1341,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+     "S3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
     },
     "Description": "Update vocabulary words and progress",
     "Environment": {
@@ -1403,7 +1403,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "VocabAppDevStack/VocabApp-UpdateVocab-dev/Resource",
-    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:path": "asset.0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1500,7 +1500,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-     "S3Key": "48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e.zip"
+     "S3Key": "0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca.zip"
     },
     "Description": "Run database migrations",
     "Environment": {
@@ -1562,7 +1562,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "VocabAppDevStack/VocabApp-Migrate-dev/Resource",
-    "aws:asset:path": "asset.48dc12b4ea81e876b9f3906a2317b821169bd996a48b147c880560cd98c3328e",
+    "aws:asset:path": "asset.0e942d824163bdb9fe5ba2593378dad3e0c3ded963240935bc5ac5001eef7eca",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1659,7 +1659,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-     "S3Key": "5bcbc5229921b3310849d5cfbca24eac0dbd5281ac30abc3aec13b4a43b09270.zip"
+     "S3Key": "90b1fba200934da6bcceccece4b36c892e1eda02c1019fb92fd9543ae446c80e.zip"
     },
     "Description": "Import vocabulary data from files",
     "Environment": {
@@ -1721,7 +1721,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "VocabAppDevStack/VocabApp-Import-Lambda-dev/Resource",
-    "aws:asset:path": "asset.5bcbc5229921b3310849d5cfbca24eac0dbd5281ac30abc3aec13b4a43b09270",
+    "aws:asset:path": "asset.90b1fba200934da6bcceccece4b36c892e1eda02c1019fb92fd9543ae446c80e",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1736,7 +1736,7 @@
     "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Resource"
    }
   },
-  "VocabAppAPIdevDeployment3FD8245775a91e5660432a3ea78591655f4aaf72": {
+  "VocabAppAPIdevDeployment3FD82457f09e21b9ea8f50f95ed427ef2173b81c": {
    "Type": "AWS::ApiGateway::Deployment",
    "Properties": {
     "Description": "Vocabulary app REST API for dev environment",
@@ -1763,7 +1763,7 @@
    "Type": "AWS::ApiGateway::Stage",
    "Properties": {
     "DeploymentId": {
-     "Ref": "VocabAppAPIdevDeployment3FD8245775a91e5660432a3ea78591655f4aaf72"
+     "Ref": "VocabAppAPIdevDeployment3FD82457f09e21b9ea8f50f95ed427ef2173b81c"
     },
     "RestApiId": {
      "Ref": "VocabAppAPIdevFCF0C3BB"
@@ -1784,9 +1784,9 @@
      "IntegrationResponses": [
       {
        "ResponseParameters": {
-        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
         "method.response.header.Access-Control-Allow-Origin": "'*'",
-        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
        },
        "StatusCode": "204"
       }
@@ -1848,9 +1848,9 @@
      "IntegrationResponses": [
       {
        "ResponseParameters": {
-        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
         "method.response.header.Access-Control-Allow-Origin": "'*'",
-        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
        },
        "StatusCode": "204"
       }
@@ -1956,10 +1956,17 @@
     "HttpMethod": "GET",
     "Integration": {
      "IntegrationHttpMethod": "POST",
-     "RequestTemplates": {
-      "application/json": "{ \"statusCode\": \"200\" }"
-     },
-     "Type": "AWS_PROXY",
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
+       },
+       "StatusCode": "200"
+      }
+     ],
+     "Type": "AWS",
      "Uri": {
       "Fn::Join": [
        "",
@@ -1980,6 +1987,16 @@
       ]
      }
     },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "200"
+     }
+    ],
     "RequestParameters": {
      "method.request.querystring.book_id": false,
      "method.request.querystring.limit": false,
@@ -2244,9 +2261,9 @@
      "IntegrationResponses": [
       {
        "ResponseParameters": {
-        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
         "method.response.header.Access-Control-Allow-Origin": "'*'",
-        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
        },
        "StatusCode": "204"
       }

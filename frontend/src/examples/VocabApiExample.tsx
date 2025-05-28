@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { vocabService, VocabBook, VocabQuestion } from '../services/vocabService';
+import { vocabService } from '../services/vocabService';
+import type { VocabBook, VocabQuestion } from '../config/api';
 
 // Example component showing how to use the vocab API
 const VocabApiExample: React.FC = () => {

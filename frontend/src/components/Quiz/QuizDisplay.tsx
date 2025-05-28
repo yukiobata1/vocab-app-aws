@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Quiz, QuizQuestion, QuestionType } from '../../types/quiz';
+import type { Quiz, QuizQuestion } from '../../types/quiz';
+import { QuestionType } from '../../types/quiz';
 
 interface QuizDisplayProps {
   quiz: Quiz;

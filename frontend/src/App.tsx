@@ -1,4 +1,3 @@
-import React from 'react';
 import { QuizContainer } from './components/Quiz/QuizContainer';
 import './App.css';
 

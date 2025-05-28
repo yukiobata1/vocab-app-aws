@@ -266,9 +266,9 @@ export class VocabAppStack extends cdk.Stack {
       restApiName: `VocabApp API (${environment})`,
       description: `Vocabulary app REST API for ${environment} environment`,
       defaultCorsPreflightOptions: {
-        allowOrigins: apigateway.Cors.ALL_ORIGINS,
-        allowMethods: apigateway.Cors.ALL_METHODS,
-        allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key'],
+        allowOrigins: ['*'],
+        allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token'],
       },
       deployOptions: {
         stageName: environment,
@@ -277,7 +277,17 @@ export class VocabAppStack extends cdk.Stack {
 
     // API Gateway Lambda integrations
     const getVocabIntegration = new apigateway.LambdaIntegration(getVocabLambda, {
-      requestTemplates: { 'application/json': '{ "statusCode": "200" }' },
+      proxy: false,
+      integrationResponses: [
+        {
+          statusCode: '200',
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': "'*'",
+            'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+            'method.response.header.Access-Control-Allow-Methods': "'GET,POST,PUT,DELETE,OPTIONS'",
+          },
+        }
+      ],
     });
 
     const createVocabIntegration = new apigateway.LambdaIntegration(createVocabLambda, {
@@ -302,6 +312,16 @@ export class VocabAppStack extends cdk.Stack {
         'method.request.querystring.limit': false,
         'method.request.querystring.offset': false,
       },
+      methodResponses: [
+        {
+          statusCode: '200',
+          responseParameters: {
+            'method.response.header.Access-Control-Allow-Origin': true,
+            'method.response.header.Access-Control-Allow-Headers': true,
+            'method.response.header.Access-Control-Allow-Methods': true,
+          },
+        }
+      ],
     });
 
     // POST /vocab - Create books or questions

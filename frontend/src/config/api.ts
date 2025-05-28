@@ -12,7 +12,9 @@ export const API_CONFIG = {
 export const buildApiUrl = (endpoint: keyof typeof API_CONFIG.endpoints, params?: Record<string, string>) => {
   const baseUrl = API_CONFIG.baseUrl;
   const endpointPath = API_CONFIG.endpoints[endpoint];
-  const url = new URL(endpointPath, baseUrl);
+  // baseUrlが既に/devを含んでいるので、単純に結合する
+  const fullUrl = `${baseUrl}${endpointPath}`;
+  const url = new URL(fullUrl);
   
   if (params) {
     Object.entries(params).forEach(([key, value]) => {

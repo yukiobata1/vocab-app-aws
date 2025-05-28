@@ -1,27 +1,28 @@
-import { 
+import type { 
   VocabQuestion, 
   QuizConfig, 
   QuizQuestion, 
-  QuestionType, 
-  Quiz,
-  QUESTION_TYPE_CONFIGS 
+  Quiz
 } from '../types/quiz';
-import { VocabQuestion as VocabularyQuestionData } from '../config/api';
+import { QuestionType, QUESTION_TYPE_CONFIGS } from '../types/quiz';
+import type { VocabQuestion as ApiVocabQuestion } from '../config/api';
 
 /**
  * API形式の語彙データをVocabQuestionに変換
  */
-function convertApiDataToVocabQuestion(apiData: VocabularyQuestionData): VocabQuestion {
+function convertApiDataToVocabQuestion(apiData: ApiVocabQuestion): VocabQuestion {
   return {
     id: apiData.id,
-    book_id: apiData.book_id,
     ka: apiData.ka,
     np1: apiData.np1,
     jp_kanji: apiData.jp_kanji,
     jp_rubi: apiData.jp_rubi,
     nepali_sentence: apiData.nepali_sentence || '',
     japanese_question: apiData.japanese_question || '',
-    japanese_example: apiData.japanese_example || ''
+    japanese_example: apiData.japanese_example || '',
+    extra_data: apiData.extra_data || {},
+    created_at: apiData.created_at,
+    updated_at: apiData.updated_at
   };
 }
 
@@ -100,7 +101,7 @@ function generateSingleQuestion(
 /**
  * メイン関数：クイズを生成する
  */
-export function generateQuiz(apiQuestions: VocabularyQuestionData[], config: QuizConfig): Quiz {
+export function generateQuiz(apiQuestions: ApiVocabQuestion[], config: QuizConfig): Quiz {
   // 1. API形式のデータを内部形式に変換
   const allQuestions = apiQuestions.map(convertApiDataToVocabQuestion);
   
@@ -161,7 +162,7 @@ export function generateQuiz(apiQuestions: VocabularyQuestionData[], config: Qui
 /**
  * 課の範囲を取得（利用可能な最小・最大課番号）
  */
-export function getAvailableKaRange(questions: VocabularyQuestionData[]): { min: number; max: number } {
+export function getAvailableKaRange(questions: ApiVocabQuestion[]): { min: number; max: number } {
   if (questions.length === 0) {
     return { min: 1, max: 1 };
   }

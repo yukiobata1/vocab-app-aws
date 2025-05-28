@@ -1,20 +1,47 @@
-import { vocabApi, BooksResponse, QuestionsResponse, VocabQuestion } from '../config/api';
+import { vocabApi, type BooksResponse, type QuestionsResponse } from '../config/api';
 
 // Generic API call function
 async function apiCall<T>(url: string, options?: RequestInit): Promise<T> {
+  // Only add Content-Type header for requests with a body (POST, PUT, etc.)
+  const headers: Record<string, string> = {};
+  
+  // Copy existing headers if they exist
+  if (options?.headers) {
+    if (options.headers instanceof Headers) {
+      options.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(options.headers)) {
+      options.headers.forEach(([key, value]) => {
+        headers[key] = value;
+      });
+    } else {
+      Object.assign(headers, options.headers);
+    }
+  }
+  
+  // Add Content-Type only if there's a body
+  if (options?.body) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
     ...options,
+    headers,
   });
 
   if (!response.ok) {
     throw new Error(`API call failed: ${response.status} ${response.statusText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // Handle AWS Lambda response format where actual data is in body property as JSON string
+  if (data.body && typeof data.body === 'string') {
+    return JSON.parse(data.body);
+  }
+  
+  return data;
 }
 
 // Vocabulary API service
