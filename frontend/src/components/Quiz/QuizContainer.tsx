@@ -110,15 +110,9 @@ export const QuizContainer: React.FC = () => {
   return (
     <div className="quiz-container min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">語彙クイズシステム</h1>
-          <p className="text-gray-600">教師用クイズ設定・実行システム</p>
-        </div>
-
         {/* Navigation */}
         {state === 'quiz' && (
-          <div className="text-center mb-6">
+          <div className="text-center mb-6 flex justify-between">
             <button
               onClick={handleReturnToConfig}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
