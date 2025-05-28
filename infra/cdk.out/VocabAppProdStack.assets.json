@@ -29,7 +29,7 @@
         }
       }
     },
-    "51942fc7794d6f81d39b03dbf77e7b9bac3670b0c628a21bf028c471de574e08": {
+    "0251603b7db5a6fc6768e02a70ca9d0de5ba3a880b1733893c1136f03c907563": {
       "source": {
         "path": "VocabAppProdStack.template.json",
         "packaging": "file"
@@ -37,7 +37,7 @@
       "destinations": {
         "982722143806-ap-northeast-1": {
           "bucketName": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-          "objectKey": "51942fc7794d6f81d39b03dbf77e7b9bac3670b0c628a21bf028c471de574e08.json",
+          "objectKey": "0251603b7db5a6fc6768e02a70ca9d0de5ba3a880b1733893c1136f03c907563.json",
           "region": "ap-northeast-1",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-file-publishing-role-982722143806-ap-northeast-1"
         }

@@ -1736,7 +1736,7 @@
     "aws:cdk:path": "VocabAppDevStack/VocabApp-API-dev/Resource"
    }
   },
-  "VocabAppAPIdevDeployment3FD82457f09e21b9ea8f50f95ed427ef2173b81c": {
+  "VocabAppAPIdevDeployment3FD824571be6fec5c5b877ebe5357017cee09eb4": {
    "Type": "AWS::ApiGateway::Deployment",
    "Properties": {
     "Description": "Vocabulary app REST API for dev environment",
@@ -1763,7 +1763,7 @@
    "Type": "AWS::ApiGateway::Stage",
    "Properties": {
     "DeploymentId": {
-     "Ref": "VocabAppAPIdevDeployment3FD82457f09e21b9ea8f50f95ed427ef2173b81c"
+     "Ref": "VocabAppAPIdevDeployment3FD824571be6fec5c5b877ebe5357017cee09eb4"
     },
     "RestApiId": {
      "Ref": "VocabAppAPIdevFCF0C3BB"
@@ -1956,17 +1956,7 @@
     "HttpMethod": "GET",
     "Integration": {
      "IntegrationHttpMethod": "POST",
-     "IntegrationResponses": [
-      {
-       "ResponseParameters": {
-        "method.response.header.Access-Control-Allow-Origin": "'*'",
-        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
-       },
-       "StatusCode": "200"
-      }
-     ],
-     "Type": "AWS",
+     "Type": "AWS_PROXY",
      "Uri": {
       "Fn::Join": [
        "",
@@ -1986,21 +1976,6 @@
        ]
       ]
      }
-    },
-    "MethodResponses": [
-     {
-      "ResponseParameters": {
-       "method.response.header.Access-Control-Allow-Origin": true,
-       "method.response.header.Access-Control-Allow-Headers": true,
-       "method.response.header.Access-Control-Allow-Methods": true
-      },
-      "StatusCode": "200"
-     }
-    ],
-    "RequestParameters": {
-     "method.request.querystring.book_id": false,
-     "method.request.querystring.limit": false,
-     "method.request.querystring.offset": false
     },
     "ResourceId": {
      "Ref": "VocabAppAPIdevvocab750E82A8"

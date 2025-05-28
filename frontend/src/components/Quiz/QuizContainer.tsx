@@ -19,57 +19,13 @@ export const QuizContainer: React.FC = () => {
 
     try {
       // Fetch questions from API based on config
-      console.log('Calling getQuestions with bookId:', config.bookId);
       const response = await vocabService.getQuestions(config.bookId);
-      console.log('getQuestions response:', response);
       
-      // Check if we got questions or books (API might be returning wrong data)
-      let questions: any[] = [];
-      if (response.questions) {
-        questions = response.questions;
-      } else if (response.books) {
-        // Backend is returning books instead of questions - use mock data for now
-        console.warn('Backend API issue: returning books instead of questions. Using mock data.');
-        questions = [
-          {
-            id: 1,
-            book_id: config.bookId,
-            ka: config.lessonRange.start,
-            np1: 'नमस्ते',
-            jp_kanji: 'こんにちは',
-            jp_rubi: 'こんにちは',
-            nepali_sentence: 'नमस्ते, तपाईं कस्तो हुनुहुन्छ?',
-            japanese_question: 'ネパール語で「こんにちは」は何と言いますか？',
-            japanese_example: 'こんにちは、元気ですか？'
-          },
-          {
-            id: 2,
-            book_id: config.bookId,
-            ka: config.lessonRange.start,
-            np1: 'धन्यवाद',
-            jp_kanji: 'ありがとう',
-            jp_rubi: 'ありがとう',
-            nepali_sentence: 'धन्यवाद, तपाईंको सहायताको लागि।',
-            japanese_question: 'ネパール語で「ありがとう」は何と言いますか？',
-            japanese_example: 'ありがとう、助かりました。'
-          },
-          {
-            id: 3,
-            book_id: config.bookId,
-            ka: config.lessonRange.start + 1,
-            np1: 'पानी',
-            jp_kanji: '水',
-            jp_rubi: 'みず',
-            nepali_sentence: 'म पानी पिउन चाहन्छु।',
-            japanese_question: 'ネパール語で「水」は何と言いますか？',
-            japanese_example: '水を飲みたいです。'
-          }
-        ];
-      } else {
+      if (!response.questions) {
         throw new Error('APIレスポンスに問題データがありません');
       }
       
-      const filteredQuestions = questions.filter(
+      const filteredQuestions = response.questions.filter(
         q => q.ka >= config.lessonRange.start && q.ka <= config.lessonRange.end
       );
 

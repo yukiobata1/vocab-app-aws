@@ -1577,7 +1577,7 @@
     "aws:cdk:path": "VocabAppProdStack/VocabApp-API-prod/Resource"
    }
   },
-  "VocabAppAPIprodDeploymentA8170CF808a956803c34109286ddfb99202b682c": {
+  "VocabAppAPIprodDeploymentA8170CF8d87728ef9d6e5c4af4431fd77a56a8b8": {
    "Type": "AWS::ApiGateway::Deployment",
    "Properties": {
     "Description": "Vocabulary app REST API for prod environment",
@@ -1604,7 +1604,7 @@
    "Type": "AWS::ApiGateway::Stage",
    "Properties": {
     "DeploymentId": {
-     "Ref": "VocabAppAPIprodDeploymentA8170CF808a956803c34109286ddfb99202b682c"
+     "Ref": "VocabAppAPIprodDeploymentA8170CF8d87728ef9d6e5c4af4431fd77a56a8b8"
     },
     "RestApiId": {
      "Ref": "VocabAppAPIprod8CF8C01D"
@@ -1797,17 +1797,7 @@
     "HttpMethod": "GET",
     "Integration": {
      "IntegrationHttpMethod": "POST",
-     "IntegrationResponses": [
-      {
-       "ResponseParameters": {
-        "method.response.header.Access-Control-Allow-Origin": "'*'",
-        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
-       },
-       "StatusCode": "200"
-      }
-     ],
-     "Type": "AWS",
+     "Type": "AWS_PROXY",
      "Uri": {
       "Fn::Join": [
        "",
@@ -1827,21 +1817,6 @@
        ]
       ]
      }
-    },
-    "MethodResponses": [
-     {
-      "ResponseParameters": {
-       "method.response.header.Access-Control-Allow-Origin": true,
-       "method.response.header.Access-Control-Allow-Headers": true,
-       "method.response.header.Access-Control-Allow-Methods": true
-      },
-      "StatusCode": "200"
-     }
-    ],
-    "RequestParameters": {
-     "method.request.querystring.book_id": false,
-     "method.request.querystring.limit": false,
-     "method.request.querystring.offset": false
     },
     "ResourceId": {
      "Ref": "VocabAppAPIprodvocab2F6BD60C"

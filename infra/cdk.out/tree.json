@@ -2603,7 +2603,7 @@
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
                       "aws:cdk:cloudformation:props": {
                         "deploymentId": {
-                          "Ref": "VocabAppAPIdevDeployment3FD82457f09e21b9ea8f50f95ed427ef2173b81c"
+                          "Ref": "VocabAppAPIdevDeployment3FD824571be6fec5c5b877ebe5357017cee09eb4"
                         },
                         "restApiId": {
                           "Ref": "VocabAppAPIdevFCF0C3BB"
@@ -2871,7 +2871,7 @@
                                 "authorizationType": "NONE",
                                 "httpMethod": "GET",
                                 "integration": {
-                                  "type": "AWS",
+                                  "type": "AWS_PROXY",
                                   "uri": {
                                     "Fn::Join": [
                                       "",
@@ -2891,32 +2891,7 @@
                                       ]
                                     ]
                                   },
-                                  "integrationHttpMethod": "POST",
-                                  "integrationResponses": [
-                                    {
-                                      "statusCode": "200",
-                                      "responseParameters": {
-                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
-                                      }
-                                    }
-                                  ]
-                                },
-                                "methodResponses": [
-                                  {
-                                    "statusCode": "200",
-                                    "responseParameters": {
-                                      "method.response.header.Access-Control-Allow-Origin": true,
-                                      "method.response.header.Access-Control-Allow-Headers": true,
-                                      "method.response.header.Access-Control-Allow-Methods": true
-                                    }
-                                  }
-                                ],
-                                "requestParameters": {
-                                  "method.request.querystring.book_id": false,
-                                  "method.request.querystring.limit": false,
-                                  "method.request.querystring.offset": false
+                                  "integrationHttpMethod": "POST"
                                 },
                                 "resourceId": {
                                   "Ref": "VocabAppAPIdevvocab750E82A8"
@@ -5883,7 +5858,7 @@
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
                       "aws:cdk:cloudformation:props": {
                         "deploymentId": {
-                          "Ref": "VocabAppAPIprodDeploymentA8170CF808a956803c34109286ddfb99202b682c"
+                          "Ref": "VocabAppAPIprodDeploymentA8170CF8d87728ef9d6e5c4af4431fd77a56a8b8"
                         },
                         "restApiId": {
                           "Ref": "VocabAppAPIprod8CF8C01D"
@@ -6151,7 +6126,7 @@
                                 "authorizationType": "NONE",
                                 "httpMethod": "GET",
                                 "integration": {
-                                  "type": "AWS",
+                                  "type": "AWS_PROXY",
                                   "uri": {
                                     "Fn::Join": [
                                       "",
@@ -6171,32 +6146,7 @@
                                       ]
                                     ]
                                   },
-                                  "integrationHttpMethod": "POST",
-                                  "integrationResponses": [
-                                    {
-                                      "statusCode": "200",
-                                      "responseParameters": {
-                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-                                        "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'"
-                                      }
-                                    }
-                                  ]
-                                },
-                                "methodResponses": [
-                                  {
-                                    "statusCode": "200",
-                                    "responseParameters": {
-                                      "method.response.header.Access-Control-Allow-Origin": true,
-                                      "method.response.header.Access-Control-Allow-Headers": true,
-                                      "method.response.header.Access-Control-Allow-Methods": true
-                                    }
-                                  }
-                                ],
-                                "requestParameters": {
-                                  "method.request.querystring.book_id": false,
-                                  "method.request.querystring.limit": false,
-                                  "method.request.querystring.offset": false
+                                  "integrationHttpMethod": "POST"
                                 },
                                 "resourceId": {
                                   "Ref": "VocabAppAPIprodvocab2F6BD60C"

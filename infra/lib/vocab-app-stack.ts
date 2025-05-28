@@ -277,17 +277,7 @@ export class VocabAppStack extends cdk.Stack {
 
     // API Gateway Lambda integrations
     const getVocabIntegration = new apigateway.LambdaIntegration(getVocabLambda, {
-      proxy: false,
-      integrationResponses: [
-        {
-          statusCode: '200',
-          responseParameters: {
-            'method.response.header.Access-Control-Allow-Origin': "'*'",
-            'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-            'method.response.header.Access-Control-Allow-Methods': "'GET,POST,PUT,DELETE,OPTIONS'",
-          },
-        }
-      ],
+      proxy: true,
     });
 
     const createVocabIntegration = new apigateway.LambdaIntegration(createVocabLambda, {
@@ -306,23 +296,7 @@ export class VocabAppStack extends cdk.Stack {
     const vocabResource = api.root.addResource('vocab');
     
     // GET /vocab - Get books or questions
-    vocabResource.addMethod('GET', getVocabIntegration, {
-      requestParameters: {
-        'method.request.querystring.book_id': false,
-        'method.request.querystring.limit': false,
-        'method.request.querystring.offset': false,
-      },
-      methodResponses: [
-        {
-          statusCode: '200',
-          responseParameters: {
-            'method.response.header.Access-Control-Allow-Origin': true,
-            'method.response.header.Access-Control-Allow-Headers': true,
-            'method.response.header.Access-Control-Allow-Methods': true,
-          },
-        }
-      ],
-    });
+    vocabResource.addMethod('GET', getVocabIntegration);
 
     // POST /vocab - Create books or questions
     vocabResource.addMethod('POST', createVocabIntegration);

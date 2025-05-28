@@ -55,7 +55,6 @@ export const vocabService = {
   // Get questions from a specific book
   async getQuestions(bookId: number, limit: number = 50, offset: number = 0): Promise<QuestionsResponse> {
     const url = vocabApi.getQuestions(bookId, limit, offset);
-    console.log('getQuestions URL:', url);
     return apiCall<QuestionsResponse>(url);
   },
 
