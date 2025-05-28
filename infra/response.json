@@ -1,0 +1,1 @@
+{"statusCode": 200, "body": "{\"message\": \"Vocabulary data imported successfully using bulk operations\", \"books\": 4, \"questions\": 55, \"inserted\": 1, \"n4_inserted\": 1, \"n3_inserted\": 0, \"optimization\": \"Used execute_values bulk insert with 1000-row chunks\"}"}

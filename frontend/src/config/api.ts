@@ -56,6 +56,7 @@ export interface VocabBook {
 
 export interface VocabQuestion {
   id: number;
+  book_id: number;
   ka: number;
   np1: string;
   jp_kanji: string;

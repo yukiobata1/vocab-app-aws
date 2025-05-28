@@ -2442,7 +2442,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "bf068ba76c1caff1ea2f1d7e0934d329b5867348ff4e34c7366a846b46c529ab.zip"
+                      "s3Key": "5bcbc5229921b3310849d5cfbca24eac0dbd5281ac30abc3aec13b4a43b09270.zip"
                     },
                     "description": "Import vocabulary data from files",
                     "environment": {

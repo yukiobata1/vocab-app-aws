@@ -59,6 +59,16 @@ def lambda_handler(event, context):
             FOREIGN KEY (book_id) REFERENCES vocabulary_books(id) ON DELETE CASCADE
         );
         
+        -- Add unique constraint on name if it doesn't exist
+        DO $$ 
+        BEGIN
+            IF NOT EXISTS (
+                SELECT 1 FROM pg_constraint 
+                WHERE conname = 'vocabulary_books_name_key'
+            ) THEN
+                ALTER TABLE vocabulary_books ADD CONSTRAINT vocabulary_books_name_key UNIQUE (name);
+            END IF;
+        END $$;
         
         -- Create indexes for performance
         CREATE INDEX IF NOT EXISTS idx_vocab_questions_book_id ON vocabulary_questions(book_id);
@@ -104,26 +114,18 @@ def lambda_handler(event, context):
                 print(f"⚠️ No data to insert for {level}")
                 return 0
                 
-            # Insert or get vocabulary book - first try to get existing
-            cursor.execute("SELECT id FROM vocabulary_books WHERE name = %s", (book_name,))
-            result = cursor.fetchone()
+            # Insert or get vocabulary book using UPSERT
+            cursor.execute("""
+                INSERT INTO vocabulary_books (name, description, level, language_pair)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (name) DO UPDATE SET
+                    description = EXCLUDED.description,
+                    level = EXCLUDED.level,
+                    updated_at = CURRENT_TIMESTAMP
+                RETURNING id
+            """, (book_name, description, level, "JP-NP"))
             
-            if result:
-                book_id = result[0]
-                # Update existing book
-                cursor.execute("""
-                    UPDATE vocabulary_books 
-                    SET description = %s, level = %s, updated_at = CURRENT_TIMESTAMP
-                    WHERE id = %s
-                """, (description, level, book_id))
-            else:
-                # Insert new book
-                cursor.execute("""
-                    INSERT INTO vocabulary_books (name, description, level, language_pair)
-                    VALUES (%s, %s, %s, %s)
-                    RETURNING id
-                """, (book_name, description, level, "JP-NP"))
-                book_id = cursor.fetchone()[0]
+            book_id = cursor.fetchone()[0]
             
             # Clear existing questions for this book to avoid duplicates
             cursor.execute("DELETE FROM vocabulary_questions WHERE book_id = %s", (book_id,))

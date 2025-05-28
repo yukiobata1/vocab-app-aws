@@ -28,12 +28,12 @@ def lambda_handler(event, context):
         )
         cursor = conn.cursor()
         
-        # Create tables if they don't exist and add missing constraints
+        # Create tables if they don't exist
         create_tables_sql = """
         -- Create vocabulary books table
         CREATE TABLE IF NOT EXISTS vocabulary_books (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
+            name VARCHAR(255) NOT NULL UNIQUE,
             description TEXT,
             level VARCHAR(10) NOT NULL DEFAULT 'N4',
             language_pair VARCHAR(10) NOT NULL DEFAULT 'JP-NP',
@@ -58,7 +58,6 @@ def lambda_handler(event, context):
             
             FOREIGN KEY (book_id) REFERENCES vocabulary_books(id) ON DELETE CASCADE
         );
-        
         
         -- Create indexes for performance
         CREATE INDEX IF NOT EXISTS idx_vocab_questions_book_id ON vocabulary_questions(book_id);
@@ -104,26 +103,18 @@ def lambda_handler(event, context):
                 print(f"⚠️ No data to insert for {level}")
                 return 0
                 
-            # Insert or get vocabulary book - first try to get existing
-            cursor.execute("SELECT id FROM vocabulary_books WHERE name = %s", (book_name,))
-            result = cursor.fetchone()
+            # Insert or get vocabulary book using UPSERT
+            cursor.execute("""
+                INSERT INTO vocabulary_books (name, description, level, language_pair)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (name) DO UPDATE SET
+                    description = EXCLUDED.description,
+                    level = EXCLUDED.level,
+                    updated_at = CURRENT_TIMESTAMP
+                RETURNING id
+            """, (book_name, description, level, "JP-NP"))
             
-            if result:
-                book_id = result[0]
-                # Update existing book
-                cursor.execute("""
-                    UPDATE vocabulary_books 
-                    SET description = %s, level = %s, updated_at = CURRENT_TIMESTAMP
-                    WHERE id = %s
-                """, (description, level, book_id))
-            else:
-                # Insert new book
-                cursor.execute("""
-                    INSERT INTO vocabulary_books (name, description, level, language_pair)
-                    VALUES (%s, %s, %s, %s)
-                    RETURNING id
-                """, (book_name, description, level, "JP-NP"))
-                book_id = cursor.fetchone()[0]
+            book_id = cursor.fetchone()[0]
             
             # Clear existing questions for this book to avoid duplicates
             cursor.execute("DELETE FROM vocabulary_questions WHERE book_id = %s", (book_id,))
