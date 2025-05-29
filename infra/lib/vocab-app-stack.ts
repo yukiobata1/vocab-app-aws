@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as rds from 'aws-cdk-lib/aws-rds';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -125,6 +126,34 @@ export class VocabAppStack extends cdk.Stack {
       maxIdleConnectionsPercent: 10,
     });
 
+    // DynamoDB Table for Quiz Rooms
+    const quizRoomsTable = new dynamodb.Table(this, `VocabApp-QuizRooms-${environment}`, {
+      tableName: `VocabApp-QuizRooms-${environment}`,
+      partitionKey: {
+        name: 'roomCode',
+        type: dynamodb.AttributeType.STRING,
+      },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      timeToLiveAttribute: 'ttl',
+      removalPolicy: environment === 'prod' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY,
+      pointInTimeRecovery: environment === 'prod',
+      encryption: dynamodb.TableEncryption.AWS_MANAGED,
+      stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
+    });
+
+    // GSI for querying by createdBy (teacher)
+    quizRoomsTable.addGlobalSecondaryIndex({
+      indexName: 'CreatedByIndex',
+      partitionKey: {
+        name: 'createdBy',
+        type: dynamodb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: 'createdAt',
+        type: dynamodb.AttributeType.STRING,
+      },
+    });
+
     // Outputs
     new cdk.CfnOutput(this, `DBEndpoint`, {
       value: cluster.clusterEndpoint.hostname,
@@ -165,6 +194,7 @@ export class VocabAppStack extends cdk.Stack {
       PROXY_ENDPOINT: proxy.endpoint,
       DB_NAME: 'vocabapp',
       ENVIRONMENT: environment,
+      QUIZ_ROOMS_TABLE: quizRoomsTable.tableName,
     };
 
     // Common Lambda configuration
@@ -236,6 +266,58 @@ export class VocabAppStack extends cdk.Stack {
       });
     }
 
+    // Room code Lambda functions (DynamoDB only, no VPC needed)
+    const roomCodeLambdaConfig = {
+      runtime: lambda.Runtime.PYTHON_3_9,
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 256,
+      environment: {
+        QUIZ_ROOMS_TABLE: quizRoomsTable.tableName,
+        ENVIRONMENT: environment,
+      },
+    };
+
+    const createRoomLambda = new lambda.Function(this, `VocabApp-CreateRoom-${environment}`, {
+      ...roomCodeLambdaConfig,
+      handler: 'create_room.lambda_handler',
+      code: lambda.Code.fromAsset('lambda/rooms'),
+      description: 'Create quiz room with room code',
+    });
+
+    const getRoomLambda = new lambda.Function(this, `VocabApp-GetRoom-${environment}`, {
+      ...roomCodeLambdaConfig,
+      handler: 'get_room.lambda_handler',
+      code: lambda.Code.fromAsset('lambda/rooms'),
+      description: 'Get quiz room by room code',
+    });
+
+    const joinRoomLambda = new lambda.Function(this, `VocabApp-JoinRoom-${environment}`, {
+      ...roomCodeLambdaConfig,
+      handler: 'join_room.lambda_handler',
+      code: lambda.Code.fromAsset('lambda/rooms'),
+      description: 'Join quiz room',
+    });
+
+    const deleteRoomLambda = new lambda.Function(this, `VocabApp-DeleteRoom-${environment}`, {
+      ...roomCodeLambdaConfig,
+      handler: 'delete_room.lambda_handler',
+      code: lambda.Code.fromAsset('lambda/rooms'),
+      description: 'Delete quiz room',
+    });
+
+    const getRoomStatsLambda = new lambda.Function(this, `VocabApp-GetRoomStats-${environment}`, {
+      ...roomCodeLambdaConfig,
+      handler: 'get_room_stats.lambda_handler',
+      code: lambda.Code.fromAsset('lambda/rooms'),
+      description: 'Get quiz room statistics',
+    });
+
+    // Grant DynamoDB permissions to room Lambda functions
+    const roomLambdas = [createRoomLambda, getRoomLambda, joinRoomLambda, deleteRoomLambda, getRoomStatsLambda];
+    roomLambdas.forEach(fn => {
+      quizRoomsTable.grantReadWriteData(fn);
+    });
+
     // Grant Lambda functions access to the database secret
     [getVocabLambda, createVocabLambda, updateVocabLambda, migrateLambda].forEach(fn => {
       dbSecret.grantRead(fn);
@@ -292,6 +374,27 @@ export class VocabAppStack extends cdk.Stack {
       requestTemplates: { 'application/json': '{ "statusCode": "200" }' },
     });
 
+    // Room Lambda integrations
+    const createRoomIntegration = new apigateway.LambdaIntegration(createRoomLambda, {
+      proxy: true,
+    });
+
+    const getRoomIntegration = new apigateway.LambdaIntegration(getRoomLambda, {
+      proxy: true,
+    });
+
+    const joinRoomIntegration = new apigateway.LambdaIntegration(joinRoomLambda, {
+      proxy: true,
+    });
+
+    const deleteRoomIntegration = new apigateway.LambdaIntegration(deleteRoomLambda, {
+      proxy: true,
+    });
+
+    const getRoomStatsIntegration = new apigateway.LambdaIntegration(getRoomStatsLambda, {
+      proxy: true,
+    });
+
     // API Routes
     const vocabResource = api.root.addResource('vocab');
     
@@ -308,6 +411,27 @@ export class VocabAppStack extends cdk.Stack {
     const migrateResource = api.root.addResource('migrate');
     migrateResource.addMethod('POST', migrateIntegration);
 
+    // Room API routes
+    const roomResource = api.root.addResource('room');
+    
+    // POST /room - Create room
+    roomResource.addMethod('POST', createRoomIntegration);
+    
+    // GET /room/{roomCode} - Get room
+    const roomCodeResource = roomResource.addResource('{roomCode}');
+    roomCodeResource.addMethod('GET', getRoomIntegration);
+    
+    // DELETE /room/{roomCode} - Delete room
+    roomCodeResource.addMethod('DELETE', deleteRoomIntegration);
+    
+    // POST /room/{roomCode}/join - Join room
+    const joinRoomResource = roomCodeResource.addResource('join');
+    joinRoomResource.addMethod('POST', joinRoomIntegration);
+    
+    // GET /room/{roomCode}/stats - Get room stats
+    const roomStatsResource = roomCodeResource.addResource('stats');
+    roomStatsResource.addMethod('GET', getRoomStatsIntegration);
+
     // API Gateway outputs
     new cdk.CfnOutput(this, `APIGatewayURL`, {
       value: api.url,
@@ -317,6 +441,22 @@ export class VocabAppStack extends cdk.Stack {
     new cdk.CfnOutput(this, `APIGatewayId`, {
       value: api.restApiId,
       description: `API Gateway ID for ${environment}`,
+    });
+
+    new cdk.CfnOutput(this, `QuizRoomsTableName`, {
+      value: quizRoomsTable.tableName,
+      description: `DynamoDB table name for quiz rooms (${environment})`,
+    });
+
+    // Room Lambda function outputs
+    new cdk.CfnOutput(this, `CreateRoomLambdaName`, {
+      value: createRoomLambda.functionName,
+      description: `Create room Lambda function name for ${environment}`,
+    });
+
+    new cdk.CfnOutput(this, `GetRoomLambdaName`, {
+      value: getRoomLambda.functionName,
+      description: `Get room Lambda function name for ${environment}`,
     });
   }
 }

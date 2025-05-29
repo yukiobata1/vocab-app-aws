@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { TeacherDashboard } from './components/Quiz/TeacherDashboard';
 import { StudentContainer } from './components/Quiz/StudentContainer';
 import './App.css';

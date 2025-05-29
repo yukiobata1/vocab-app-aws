@@ -4,6 +4,7 @@ export const API_CONFIG = {
   endpoints: {
     vocab: import.meta.env.VITE_API_VOCAB_ENDPOINT || '/vocab',
     migrate: import.meta.env.VITE_API_MIGRATE_ENDPOINT || '/migrate',
+    room: import.meta.env.VITE_API_ROOM_ENDPOINT || '/room',
   },
   environment: import.meta.env.VITE_APP_ENV || 'development',
 } as const;
@@ -66,7 +67,7 @@ export interface VocabQuestion {
   nepali_sentence: string;
   japanese_question: string;
   japanese_example: string;
-  extra_data: Record<string, any>;
+  extra_data: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }

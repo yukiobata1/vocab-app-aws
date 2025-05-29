@@ -20,7 +20,7 @@ export interface VocabQuestion {
   nepali_sentence: string;
   japanese_question: string;
   japanese_example: string;
-  extra_data: Record<string, any>;
+  extra_data: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -164,4 +164,63 @@ export interface QuizSession {
   startTime: Date;
   endTime?: Date;
   score?: number;
+}
+
+// Quiz template (fixed questions, variable options)
+export interface QuizTemplate {
+  id: string;
+  name: string;
+  config: QuizConfig;
+  templateQuestions: QuizTemplateQuestion[];
+  createdAt: string;
+  createdBy: string;
+}
+
+export interface QuizTemplateQuestion {
+  id: string;
+  type: QuestionType;
+  questionText: string;
+  correctAnswer: string;
+  sourceVocabId: number;
+  allPossibleOptions: string[]; // All available wrong answers
+}
+
+// Individual quiz instance from template
+export interface QuizInstance {
+  templateId: string;
+  studentId: string;
+  questions: QuizQuestion[];
+  generatedAt: string;
+}
+
+// Room code based quiz room
+export interface QuizRoom {
+  roomCode: string;
+  config: QuizConfig;
+  questions: QuizQuestion[];
+  createdAt: string;
+  expiresAt: string;
+  createdBy: string; // "guest" for non-authenticated users
+  studentsJoined: string[];
+}
+
+// Room code API responses
+export interface CreateRoomResponse {
+  roomCode: string;
+  expiresAt: string;
+}
+
+export interface GetRoomResponse {
+  room: QuizRoom;
+}
+
+// Student modes
+export type StudentMode = 'study' | 'classroom';
+
+// User context for guest/authenticated users
+export interface UserContext {
+  isAuthenticated: boolean;
+  userId?: string;
+  name?: string;
+  isGuest: boolean;
 }
