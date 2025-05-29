@@ -21,9 +21,29 @@ export const StudentContainer: React.FC = () => {
   const [mode, setMode] = useState<StudentMode>('study');
   const [, setRoomCode] = useState('');
   const [quizData, setQuizData] = useState<QuizData[]>([]);
+  const [originalQuizData, setOriginalQuizData] = useState<QuizData[]>([]);
   const [currentScore, setCurrentScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  // Utility function to shuffle array
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Shuffle answer options while keeping correct answer
+  const shuffleQuizData = (data: QuizData[]): QuizData[] => {
+    const shuffledQuestions = shuffleArray(data);
+    return shuffledQuestions.map(question => ({
+      ...question,
+      options: shuffleArray(question.options)
+    }));
+  };
 
   // Study mode: generate quiz from config
   const handleStartQuiz = async (name: string, config: QuizConfig) => {
@@ -58,6 +78,7 @@ export const StudentContainer: React.FC = () => {
         correctAnswer: question.correctAnswer
       }));
 
+      setOriginalQuizData(convertedQuizData);
       setQuizData(convertedQuizData);
       setTotalQuestions(convertedQuizData.length);
       setState('quiz');
@@ -92,6 +113,7 @@ export const StudentContainer: React.FC = () => {
         correctAnswer: question.correctAnswer
       }));
 
+      setOriginalQuizData(convertedQuizData);
       setQuizData(convertedQuizData);
       setTotalQuestions(convertedQuizData.length);
       setState('quiz');
@@ -110,14 +132,10 @@ export const StudentContainer: React.FC = () => {
   };
 
   const handleRestart = () => {
-    // Return to waiting room to start a new quiz
-    setState('waiting');
-    setStudentName('');
-    setMode('study');
-    setRoomCode('');
+    // Restart with shuffled questions and answer choices for better learning
     setCurrentScore(0);
-    setTotalQuestions(0);
-    setQuizData([]);
+    setQuizData(shuffleQuizData(originalQuizData));
+    setState('quiz');
     setError(null);
   };
 

@@ -33,6 +33,14 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     setSounds({ correct: correctSound, incorrect: incorrectSound });
   }, []);
 
+  // Reset quiz state when quizData changes (for retry functionality)
+  useEffect(() => {
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setSelectedOption(null);
+    setFeedbackStates({});
+  }, [quizData]);
+
   const handleOptionClick = (option: string) => {
     if (selectedOption || !sounds) return;
 

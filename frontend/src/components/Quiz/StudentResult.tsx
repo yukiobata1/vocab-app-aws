@@ -12,7 +12,7 @@ export const StudentResult: React.FC<StudentResultProps> = ({
   score, 
   totalQuestions, 
   studentName, 
-  onRestart 
+  onRestart
 }) => {
   const [personalBest, setPersonalBest] = useState<number>(0);
   const [isNewRecord, setIsNewRecord] = useState(false);
