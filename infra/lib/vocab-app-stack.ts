@@ -6,6 +6,10 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
 
 export interface VocabAppStackProps extends cdk.StackProps {
@@ -457,6 +461,72 @@ export class VocabAppStack extends cdk.Stack {
     new cdk.CfnOutput(this, `GetRoomLambdaName`, {
       value: getRoomLambda.functionName,
       description: `Get room Lambda function name for ${environment}`,
+    });
+
+    // S3 bucket for frontend hosting
+    const frontendBucket = new s3.Bucket(this, `VocabApp-Frontend-${environment}`, {
+      bucketName: `vocab-app-frontend-${environment}-${cdk.Aws.ACCOUNT_ID}`,
+      websiteIndexDocument: 'index.html',
+      websiteErrorDocument: 'index.html', // For SPA routing
+      publicReadAccess: true,
+      blockPublicAccess: {
+        blockPublicAcls: false,
+        blockPublicPolicy: false,
+        ignorePublicAcls: false,
+        restrictPublicBuckets: false,
+      },
+      removalPolicy: environment === 'dev' ? cdk.RemovalPolicy.DESTROY : cdk.RemovalPolicy.RETAIN,
+      autoDeleteObjects: environment === 'dev',
+    });
+
+    // CloudFront distribution for global CDN
+    const distribution = new cloudfront.Distribution(this, `VocabApp-CloudFront-${environment}`, {
+      defaultBehavior: {
+        origin: new origins.S3Origin(frontendBucket),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        originRequestPolicy: cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
+      },
+      defaultRootObject: 'index.html',
+      errorResponses: [
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: '/index.html', // For SPA routing
+        },
+        {
+          httpStatus: 403,
+          responseHttpStatus: 200,
+          responsePagePath: '/index.html',
+        },
+      ],
+      comment: `VocabApp Frontend Distribution (${environment})`,
+    });
+
+    // Deploy frontend build to S3 (will be built separately)
+    // Note: Frontend needs to be built first with: npm run build
+    const frontendDeployment = new s3deploy.BucketDeployment(this, `VocabApp-Frontend-Deploy-${environment}`, {
+      sources: [s3deploy.Source.asset('../frontend/dist')],
+      destinationBucket: frontendBucket,
+      distribution,
+      distributionPaths: ['/*'],
+    });
+
+    // Frontend outputs
+    new cdk.CfnOutput(this, `FrontendBucketName`, {
+      value: frontendBucket.bucketName,
+      description: `S3 bucket name for frontend (${environment})`,
+    });
+
+    new cdk.CfnOutput(this, `FrontendURL`, {
+      value: `https://${distribution.distributionDomainName}`,
+      description: `CloudFront URL for frontend (${environment})`,
+    });
+
+    new cdk.CfnOutput(this, `CloudFrontDistributionId`, {
+      value: distribution.distributionId,
+      description: `CloudFront distribution ID for ${environment}`,
     });
   }
 }

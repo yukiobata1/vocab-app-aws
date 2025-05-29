@@ -19,7 +19,7 @@
         "notificationArns": [],
         "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-deploy-role-982722143806-ap-northeast-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-cfn-exec-role-982722143806-ap-northeast-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/eceb42d4c05707bbba915f5143567e0968cb504cc2faeef2f8681f042bde1eb6.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/cc1bfbb73cd8a6d70a35902f37c67a4ad50729be52ffe92b6302b98f8cc3d83b.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -281,6 +281,20 @@
             "data": "VocabAppProxydevProxyTargetGroupDE815E1A"
           }
         ],
+        "/VocabAppDevStack/VocabApp-QuizRooms-dev": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "VocabAppQuizRoomsdevC08A7E07"
+            }
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-QuizRooms-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppQuizRoomsdevC08A7E07"
+          }
+        ],
         "/VocabAppDevStack/DBEndpoint": [
           {
             "type": "aws:cdk:logicalId",
@@ -419,6 +433,96 @@
             "data": "ImportLambdaName"
           }
         ],
+        "/VocabAppDevStack/VocabApp-CreateRoom-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateRoomdevServiceRole642B544D"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-CreateRoom-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateRoomdevServiceRoleDefaultPolicyF1DDB483"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-CreateRoom-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateRoomdev96B98813"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetRoom-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomdevServiceRoleD28D836E"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetRoom-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomdevServiceRoleDefaultPolicyA1F908C7"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetRoom-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomdev3D743B55"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-JoinRoom-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppJoinRoomdevServiceRole22F2BB64"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-JoinRoom-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppJoinRoomdevServiceRoleDefaultPolicyA3830860"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-JoinRoom-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppJoinRoomdev7DDBFFBF"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DeleteRoom-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDeleteRoomdevServiceRoleA5B56357"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DeleteRoom-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDeleteRoomdevServiceRoleDefaultPolicyD3DFD5C2"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-DeleteRoom-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDeleteRoomdev70173D2A"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetRoomStats-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomStatsdevServiceRole4EB016E3"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetRoomStats-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomStatsdevServiceRoleDefaultPolicy59E93FA1"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-GetRoomStats-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomStatsdevA3D02C98"
+          }
+        ],
         "/VocabAppDevStack/GetVocabLambdaName": [
           {
             "type": "aws:cdk:logicalId",
@@ -452,7 +556,7 @@
         "/VocabAppDevStack/VocabApp-API-dev/Deployment/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "VocabAppAPIdevDeployment3FD824571be6fec5c5b877ebe5357017cee09eb4"
+            "data": "VocabAppAPIdevDeployment3FD824576eae15ecd50e66fd7472333083961e62"
           }
         ],
         "/VocabAppDevStack/VocabApp-API-dev/DeploymentStage.dev/Resource": [
@@ -569,6 +673,144 @@
             "data": "VocabAppAPIdevmigratePOST4FA0A364"
           }
         ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroom51B6300C"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomOPTIONSEA62F552"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/POST/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..room": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomPOSTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7POSTroom8B73A365"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/POST/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..room": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomPOSTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7POSTroom84D343C7"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomPOST19D8175F"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeFA086460"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeOPTIONSEAA5493F"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/GET/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeGETApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7GETroomroomCodeBE08B02A"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/GET/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeGETApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7GETroomroomCode00C4EB12"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeGETD6F6DFE5"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/DELETE/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.DELETE..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeDELETEApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7DELETEroomroomCode57AD2D43"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/DELETE/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.DELETE..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeDELETEApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7DELETEroomroomCodeD95BB429"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/DELETE/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodeDELETEF7148562"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/join/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodejoinF724D7B8"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/join/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodejoinOPTIONS6BF3E736"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/join/POST/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..room.{roomCode}.join": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodejoinPOSTApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7POSTroomroomCodejoin7B675218"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/join/POST/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.POST..room.{roomCode}.join": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodejoinPOSTApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7POSTroomroomCodejoin364DBC1A"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/join/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodejoinPOSTDC2F110C"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/stats/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodestats454A873E"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/stats/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodestatsOPTIONS65B426D3"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/stats/GET/ApiPermission.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..room.{roomCode}.stats": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodestatsGETApiPermissionVocabAppDevStackVocabAppAPIdev3771EDB7GETroomroomCodestatsC3A44975"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/stats/GET/ApiPermission.Test.VocabAppDevStackVocabAppAPIdev3771EDB7.GET..room.{roomCode}.stats": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodestatsGETApiPermissionTestVocabAppDevStackVocabAppAPIdev3771EDB7GETroomroomCodestats54A85C1E"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-API-dev/Default/room/{roomCode}/stats/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIdevroomroomCodestatsGETB55AD9C3"
+          }
+        ],
         "/VocabAppDevStack/APIGatewayURL": [
           {
             "type": "aws:cdk:logicalId",
@@ -579,6 +821,124 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "APIGatewayId"
+          }
+        ],
+        "/VocabAppDevStack/QuizRoomsTableName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuizRoomsTableName"
+          }
+        ],
+        "/VocabAppDevStack/CreateRoomLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateRoomLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/GetRoomLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetRoomLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Frontend-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontenddevAE3D26D4"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Frontend-dev/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontenddevPolicy925D9B41"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Frontend-dev/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontenddevAutoDeleteObjectsCustomResource7A169CAF"
+          }
+        ],
+        "/VocabAppDevStack/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/VocabAppDevStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/VocabAppDevStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-CloudFront-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCloudFrontdev9E8E89E1"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Frontend-Deploy-dev/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontendDeploydevAwsCliLayer3D04ECDD"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Frontend-Deploy-dev/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontendDeploydevCustomResourceA4832A1D"
+          }
+        ],
+        "/VocabAppDevStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-singleton",
+            "data": true
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-runtime-family",
+            "data": 2
+          }
+        ],
+        "/VocabAppDevStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/VocabAppDevStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/VocabAppDevStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/VocabAppDevStack/FrontendBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FrontendBucketName"
+          }
+        ],
+        "/VocabAppDevStack/FrontendURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FrontendURL"
+          }
+        ],
+        "/VocabAppDevStack/CloudFrontDistributionId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudFrontDistributionId"
           }
         ],
         "/VocabAppDevStack/CDKMetadata/Default": [
@@ -620,7 +980,7 @@
         "notificationArns": [],
         "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-deploy-role-982722143806-ap-northeast-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-cfn-exec-role-982722143806-ap-northeast-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/0251603b7db5a6fc6768e02a70ca9d0de5ba3a880b1733893c1136f03c907563.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/327afd77883dde250c327d50722d7238c26d6b6a364ef5c598c96c3719c8be30.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -882,6 +1242,20 @@
             "data": "VocabAppProxyprodProxyTargetGroupD375DF4F"
           }
         ],
+        "/VocabAppProdStack/VocabApp-QuizRooms-prod": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "VocabAppQuizRoomsprod6BB9E822"
+            }
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-QuizRooms-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppQuizRoomsprod6BB9E822"
+          }
+        ],
         "/VocabAppProdStack/DBEndpoint": [
           {
             "type": "aws:cdk:logicalId",
@@ -996,6 +1370,96 @@
             "data": "VocabAppMigrateprodE35EEF95"
           }
         ],
+        "/VocabAppProdStack/VocabApp-CreateRoom-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateRoomprodServiceRole3D3305A9"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-CreateRoom-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateRoomprodServiceRoleDefaultPolicy3C4886A3"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-CreateRoom-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCreateRoomprod6EF251F4"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetRoom-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomprodServiceRoleF069F860"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetRoom-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomprodServiceRoleDefaultPolicyDFBFE744"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetRoom-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomprodCF1BCE02"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-JoinRoom-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppJoinRoomprodServiceRole1C844F6C"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-JoinRoom-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppJoinRoomprodServiceRoleDefaultPolicyCED07154"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-JoinRoom-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppJoinRoomprod7C436C14"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DeleteRoom-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDeleteRoomprodServiceRoleE4C07369"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DeleteRoom-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDeleteRoomprodServiceRoleDefaultPolicyD301F50B"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-DeleteRoom-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppDeleteRoomprod05F6F13C"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetRoomStats-prod/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomStatsprodServiceRoleA69A2E41"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetRoomStats-prod/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomStatsprodServiceRoleDefaultPolicy53191F11"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-GetRoomStats-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppGetRoomStatsprod838B5042"
+          }
+        ],
         "/VocabAppProdStack/GetVocabLambdaName": [
           {
             "type": "aws:cdk:logicalId",
@@ -1029,7 +1493,7 @@
         "/VocabAppProdStack/VocabApp-API-prod/Deployment/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "VocabAppAPIprodDeploymentA8170CF8d87728ef9d6e5c4af4431fd77a56a8b8"
+            "data": "VocabAppAPIprodDeploymentA8170CF8719bee418ba91fec8c32e73e3a50098a"
           }
         ],
         "/VocabAppProdStack/VocabApp-API-prod/DeploymentStage.prod/Resource": [
@@ -1146,6 +1610,144 @@
             "data": "VocabAppAPIprodmigratePOSTF5950FDC"
           }
         ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomB1DE12AD"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomOPTIONSE92DCCA0"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/POST/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..room": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomPOSTApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDPOSTroom98532B55"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/POST/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..room": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomPOSTApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDPOSTroomE811D61D"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomPOSTCF2A95AE"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCode8111DBEB"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodeOPTIONSF2B82CF4"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/GET/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.GET..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodeGETApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDGETroomroomCode799BE4CA"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/GET/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.GET..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodeGETApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDGETroomroomCode44EF5EE5"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodeGETD3382FDF"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/DELETE/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.DELETE..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodeDELETEApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDDELETEroomroomCodeC2077122"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/DELETE/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.DELETE..room.{roomCode}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodeDELETEApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDDELETEroomroomCode7BBAC81C"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/DELETE/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodeDELETE08A0A4E5"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/join/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodejoin862ACC7C"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/join/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodejoinOPTIONSF7D26487"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/join/POST/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..room.{roomCode}.join": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodejoinPOSTApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDPOSTroomroomCodejoin6DF9E912"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/join/POST/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.POST..room.{roomCode}.join": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodejoinPOSTApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDPOSTroomroomCodejoin94CBD495"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/join/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodejoinPOST0E7856A3"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/stats/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodestats33555C6F"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/stats/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodestatsOPTIONSCB1B6BFE"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/stats/GET/ApiPermission.VocabAppProdStackVocabAppAPIprod820BE0CD.GET..room.{roomCode}.stats": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodestatsGETApiPermissionVocabAppProdStackVocabAppAPIprod820BE0CDGETroomroomCodestats03810159"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/stats/GET/ApiPermission.Test.VocabAppProdStackVocabAppAPIprod820BE0CD.GET..room.{roomCode}.stats": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodestatsGETApiPermissionTestVocabAppProdStackVocabAppAPIprod820BE0CDGETroomroomCodestatsD2D25A2A"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-API-prod/Default/room/{roomCode}/stats/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppAPIprodroomroomCodestatsGET828DEEB3"
+          }
+        ],
         "/VocabAppProdStack/APIGatewayURL": [
           {
             "type": "aws:cdk:logicalId",
@@ -1156,6 +1758,100 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "APIGatewayId"
+          }
+        ],
+        "/VocabAppProdStack/QuizRoomsTableName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuizRoomsTableName"
+          }
+        ],
+        "/VocabAppProdStack/CreateRoomLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreateRoomLambdaName"
+          }
+        ],
+        "/VocabAppProdStack/GetRoomLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetRoomLambdaName"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Frontend-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontendprodED2E3505"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Frontend-prod/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontendprodPolicyE9908FD4"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-CloudFront-prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCloudFrontprod14B07771"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Frontend-Deploy-prod/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontendDeployprodAwsCliLayerDA324C87"
+          }
+        ],
+        "/VocabAppProdStack/VocabApp-Frontend-Deploy-prod/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppFrontendDeployprodCustomResourceCFD4CE4B"
+          }
+        ],
+        "/VocabAppProdStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-singleton",
+            "data": true
+          },
+          {
+            "type": "aws:cdk:is-custom-resource-handler-runtime-family",
+            "data": 2
+          }
+        ],
+        "/VocabAppProdStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/VocabAppProdStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/VocabAppProdStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/VocabAppProdStack/FrontendBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FrontendBucketName"
+          }
+        ],
+        "/VocabAppProdStack/FrontendURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FrontendURL"
+          }
+        ],
+        "/VocabAppProdStack/CloudFrontDistributionId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudFrontDistributionId"
           }
         ],
         "/VocabAppProdStack/CDKMetadata/Default": [
