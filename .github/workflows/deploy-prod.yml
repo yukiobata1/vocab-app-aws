@@ -1,0 +1,104 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+        - prod
+      confirm:
+        description: 'Type "DEPLOY" to confirm production deployment'
+        required: true
+        type: string
+
+env:
+  AWS_REGION: ap-northeast-1
+  NODE_VERSION: '18'
+
+jobs:
+  validate-input:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "DEPLOY" ]; then
+            echo "❌ Production deployment not confirmed. Please type 'DEPLOY' exactly."
+            exit 1
+          fi
+          echo "✅ Production deployment confirmed"
+
+  deploy-production:
+    needs: validate-input
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infra/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build frontend for production
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install CDK dependencies
+        working-directory: ./infra
+        run: npm ci
+
+      - name: Deploy to Production
+        working-directory: ./infra
+        run: |
+          echo "🚀 Deploying to Production Environment..."
+          npx cdk bootstrap --require-approval never
+          npx cdk deploy VocabAppProdStack --require-approval never
+
+      - name: Get deployment outputs
+        id: outputs
+        working-directory: ./infra
+        run: |
+          FRONTEND_URL=$(npx cdk output VocabAppProdStack.FrontendURL --json | jq -r '.VocabAppProdStack.FrontendURL')
+          API_URL=$(npx cdk output VocabAppProdStack.APIGatewayURL --json | jq -r '.VocabAppProdStack.APIGatewayURL')
+          echo "frontend-url=${FRONTEND_URL}" >> $GITHUB_OUTPUT
+          echo "api-url=${API_URL}" >> $GITHUB_OUTPUT
+
+      - name: Create deployment summary
+        run: |
+          echo "## 🎉 Production Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📱 **Frontend URL:**" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.outputs.outputs.frontend-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 **API Gateway URL:**" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.outputs.outputs.api-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ⏰ **Deployed at:**" >> $GITHUB_STEP_SUMMARY
+          echo "$(date -u)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify Slack (if configured)
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"🚀 Vocab App Production Deployment Successful!\n📱 Frontend: ${{ steps.outputs.outputs.frontend-url }}\"}" \
+            $SLACK_WEBHOOK_URL
