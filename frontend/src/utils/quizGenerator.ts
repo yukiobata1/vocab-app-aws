@@ -45,18 +45,19 @@ function filterQuestionsByKaRange(questions: VocabQuestion[], kaRange: { start: 
   return questions.filter(q => q.ka >= kaRange.start && q.ka <= kaRange.end);
 }
 
+
 /**
- * 選択肢を生成（正解を含む4択）
+ * フォールバック対応の選択肢を生成
  */
-function generateOptions(
+function generateOptionsWithFallback(
   correctAnswer: string, 
   allQuestions: VocabQuestion[], 
   optionsField: keyof VocabQuestion,
   count: number = 4
 ): string[] {
-  // 正解以外の選択肢を収集
+  // 正解以外の選択肢を収集（フォールバック対応）
   const wrongOptions = allQuestions
-    .map(q => q[optionsField] as string)
+    .map(q => getAnswerWithFallback(q, optionsField))
     .filter(option => option && option !== correctAnswer && option.trim() !== '')
     .filter((option, index, array) => array.indexOf(option) === index); // 重複除去
 
@@ -70,6 +71,20 @@ function generateOptions(
 }
 
 /**
+ * フォールバック対応：jp_kanjiがない場合はjp_rubiを使用
+ */
+function getAnswerWithFallback(question: VocabQuestion, field: keyof VocabQuestion): string {
+  const value = question[field] as string;
+  
+  // jp_kanjiが空でjp_rubiがある場合、jp_rubiを使用
+  if (field === 'jp_kanji' && (!value || value.trim() === '') && question.jp_rubi && question.jp_rubi.trim() !== '') {
+    return question.jp_rubi;
+  }
+  
+  return value || '';
+}
+
+/**
  * 単一の問題を生成
  */
 function generateSingleQuestion(
@@ -80,10 +95,10 @@ function generateSingleQuestion(
   const config = QUESTION_TYPE_CONFIGS[questionType];
   
   const questionText = sourceQuestion[config.questionField] as string;
-  const correctAnswer = sourceQuestion[config.answerField] as string;
+  const correctAnswer = getAnswerWithFallback(sourceQuestion, config.answerField);
   
-  // 選択肢生成
-  const options = generateOptions(
+  // 選択肢生成（フォールバック対応）
+  const options = generateOptionsWithFallback(
     correctAnswer,
     allQuestions,
     config.optionsField
@@ -120,11 +135,11 @@ export function generateQuiz(apiQuestions: ApiVocabQuestion[], config: QuizConfi
   const generatedQuestions: QuizQuestion[] = [];
 
   for (const vocabQuestion of selectedQuestions) {
-    // 有効な出題形式からランダム選択
+    // 有効な出題形式からランダム選択（フォールバック対応）
     const availableTypes = config.enabledQuestionTypes.filter(type => {
       const typeConfig = QUESTION_TYPE_CONFIGS[type];
       const questionText = vocabQuestion[typeConfig.questionField] as string;
-      const answerText = vocabQuestion[typeConfig.answerField] as string;
+      const answerText = getAnswerWithFallback(vocabQuestion, typeConfig.answerField);
       
       // 問題文と答えが両方存在する場合のみ有効
       return questionText && questionText.trim() !== '' && 
@@ -132,7 +147,22 @@ export function generateQuiz(apiQuestions: ApiVocabQuestion[], config: QuizConfi
     });
 
     if (availableTypes.length === 0) {
-      console.warn(`語彙 ${vocabQuestion.jp_kanji} に対する有効な出題形式がありません`);
+      // フォールバックしても出題形式がない場合、スキップするのではなく警告のみ
+      console.warn(`語彙 ${vocabQuestion.jp_kanji || vocabQuestion.jp_rubi || vocabQuestion.id} に対する有効な出題形式がありません`);
+      
+      // 最低限ネパール語→読みを試行
+      if (vocabQuestion.np1 && vocabQuestion.jp_rubi) {
+        try {
+          const fallbackQuestion = generateSingleQuestion(
+            vocabQuestion,
+            QuestionType.NEPALI_TO_RUBI,
+            allQuestions
+          );
+          generatedQuestions.push(fallbackQuestion);
+        } catch (error) {
+          console.error(`フォールバック問題生成エラー:`, error);
+        }
+      }
       continue;
     }
 
@@ -150,10 +180,22 @@ export function generateQuiz(apiQuestions: ApiVocabQuestion[], config: QuizConfi
     }
   }
 
-  // 5. Quizオブジェクトとして返す
+  // 5. 生成された問題数が不足している場合の対処
+  if (generatedQuestions.length === 0) {
+    throw new Error('クイズ問題を生成できませんでした。語彙データを確認してください。');
+  }
+
+  if (generatedQuestions.length < config.questionCount) {
+    console.warn(`要求された問題数 ${config.questionCount} に対して ${generatedQuestions.length} 問しか生成できませんでした`);
+  }
+
+  // 6. Quizオブジェクトとして返す
   return {
     id: `quiz-${Date.now()}`,
-    config,
+    config: {
+      ...config,
+      questionCount: generatedQuestions.length // 実際に生成された問題数に更新
+    },
     questions: generatedQuestions,
     createdAt: new Date().toISOString()
   };

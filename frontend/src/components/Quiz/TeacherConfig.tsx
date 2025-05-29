@@ -20,13 +20,13 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
 
 
   const questionTypeLabels = {
-    [QuestionType.NEPALI_TO_KANJI]: 'ネパール語 → 漢字',
-    [QuestionType.NEPALI_TO_RUBI]: 'ネパール語 → 読み',
-    [QuestionType.KANJI_TO_RUBI]: '漢字 → 読み',
-    [QuestionType.RUBI_TO_KANJI]: '読み → 漢字',
-    [QuestionType.KANJI_TO_NEPALI]: '漢字 → ネパール語',
-    [QuestionType.RUBI_TO_NEPALI]: '読み → ネパール語',
-    [QuestionType.FILL_IN_BLANK]: '空欄補充問題'
+    [QuestionType.NEPALI_TO_KANJI]: 'ネ→漢字',
+    [QuestionType.NEPALI_TO_RUBI]: 'ネ→読み',
+    [QuestionType.KANJI_TO_RUBI]: '漢字→読み',
+    [QuestionType.RUBI_TO_KANJI]: '読み→漢字',
+    [QuestionType.KANJI_TO_NEPALI]: '漢字→ネ',
+    [QuestionType.RUBI_TO_NEPALI]: '読み→ネ',
+    [QuestionType.FILL_IN_BLANK]: '文脈問題'
   };
 
   useEffect(() => {
@@ -189,23 +189,25 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
 
         <h3 className="text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">出題形式</h3>
         <div className="px-4 py-3">
-          {Object.entries(questionTypeLabels).map(([type, label]) => {
-            const isSelected = enabledQuestionTypes.includes(type as QuestionType);
-            return (
-              <div key={type} className="flex items-center mb-3">
-                <input
-                  type="checkbox"
-                  id={type}
-                  checked={isSelected}
-                  onChange={() => handleQuestionTypeToggle(type as QuestionType)}
-                  className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor={type} className="text-[#0e141b] text-base font-normal leading-normal">
-                  {label}
-                </label>
-              </div>
-            );
-          })}
+          <div className="grid grid-cols-2 gap-2">
+            {Object.entries(questionTypeLabels).map(([type, label]) => {
+              const isSelected = enabledQuestionTypes.includes(type as QuestionType);
+              return (
+                <div key={type} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={type}
+                    checked={isSelected}
+                    onChange={() => handleQuestionTypeToggle(type as QuestionType)}
+                    className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor={type} className="text-[#0e141b] text-sm font-normal leading-normal">
+                    {label}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       <div>
