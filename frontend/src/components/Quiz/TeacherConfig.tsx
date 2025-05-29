@@ -37,7 +37,7 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
     try {
       setLoading(true);
       const response = await vocabService.getBooks();
-      const booksData = response.books.filter(book => book.question_count > 1);
+      const booksData = response.books.filter(book => book.question_count > 4);
       setBooks(booksData);
       if (booksData.length > 0) {
         setSelectedBookId(booksData[0].id);
