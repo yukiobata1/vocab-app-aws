@@ -179,8 +179,12 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
           </div>
           
           <div className="text-center mb-8">
-            <div className="text-2xl font-bold leading-relaxed whitespace-pre-line" style={{ color: colors.crimsonColor }}>
-              {currentQuestion.question}
+            <div className="text-2xl font-bold leading-relaxed" style={{ color: colors.crimsonColor }}>
+              {currentQuestion.question.split('\n\n').map((part, index) => (
+                <div key={index} className={index > 0 ? 'mt-4 text-lg text-gray-600' : ''}>
+                  {part}
+                </div>
+              ))}
             </div>
           </div>
 

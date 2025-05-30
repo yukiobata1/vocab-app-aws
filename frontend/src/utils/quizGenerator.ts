@@ -159,12 +159,15 @@ export function generateQuiz(apiQuestions: ApiVocabQuestion[], config: QuizConfi
     // 有効な出題形式からランダム選択（フォールバック対応）
     const availableTypes = config.enabledQuestionTypes.filter(type => {
       const typeConfig = QUESTION_TYPE_CONFIGS[type];
-      const questionText = vocabQuestion[typeConfig.questionField] as string;
+      // 複数の質問フィールドのうち少なくとも一つが存在することを確認
+      const hasValidQuestion = typeConfig.questionFields.some(field => {
+        const questionText = vocabQuestion[field] as string;
+        return questionText && questionText.trim() !== '';
+      });
       const answerText = getAnswerWithFallback(vocabQuestion, typeConfig.answerField);
       
       // 問題文と答えが両方存在する場合のみ有効
-      return questionText && questionText.trim() !== '' && 
-             answerText && answerText.trim() !== '';
+      return hasValidQuestion && answerText && answerText.trim() !== '';
     });
 
     if (availableTypes.length === 0) {

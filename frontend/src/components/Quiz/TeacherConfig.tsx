@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { type QuizConfig, QuestionType, type VocabBook } from '../../types/quiz';
 import { vocabService } from '../../services/vocabService';
-import { QuizFormatSelector, getQuestionTypeFromFormat, getFormatFromQuestionType } from './QuizFormatSelector';
+import { QuizFormatSelector, getQuestionTypeFromFormat } from './QuizFormatSelector';
 
 interface TeacherConfigProps {
   onConfigSubmit: (config: QuizConfig) => void;
@@ -26,9 +26,9 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
 
 
   // Update selectedQuestionType when format changes
-  const handleFormatChange = (format: { input1: string; input2?: string; output: string }) => {
+  const handleFormatChange = (format: { input1: string; input2: string | undefined; output: string }) => {
     setQuizFormat(format);
-    setSelectedQuestionType(getQuestionTypeFromFormat(format.input1, format.input2, format.output));
+    setSelectedQuestionType(getQuestionTypeFromFormat(format.input1, format.output, format.input2));
   };
 
 

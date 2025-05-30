@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { vocabService } from '../../services/vocabService';
 import type { QuizConfig, VocabBook, QuestionType, StudentMode } from '../../types/quiz';
-import { QuizFormatSelector, getQuestionTypeFromFormat, getFormatFromQuestionType } from './QuizFormatSelector';
+import { QuizFormatSelector, getQuestionTypeFromFormat } from './QuizFormatSelector';
 
 interface StudentWaitingRoomProps {
   onStartQuiz: (studentName: string, config: QuizConfig) => void;
@@ -73,9 +73,9 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     }
   };
 
-  const handleFormatChange = (format: { input1: string; input2?: string; output: string }) => {
+  const handleFormatChange = (format: { input1: string; input2: string | undefined; output: string }) => {
     setQuizFormat(format);
-    setSelectedQuestionType(getQuestionTypeFromFormat(format.input1, format.input2, format.output));
+    setSelectedQuestionType(getQuestionTypeFromFormat(format.input1, format.output, format.input2));
   };
 
   const handleRoomCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {

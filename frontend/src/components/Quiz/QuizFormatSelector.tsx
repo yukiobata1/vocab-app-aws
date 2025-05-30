@@ -5,10 +5,10 @@ import { QuestionType } from '../../types/quiz';
 interface QuizFormatSelectorProps {
   value: {
     input1: string;
-    input2?: string;
+    input2: string | undefined;
     output: string;
   };
-  onChange: (format: { input1: string; input2?: string; output: string }) => void;
+  onChange: (format: { input1: string; input2: string | undefined; output: string }) => void;
   allowMultipleInputs?: boolean;
 }
 
@@ -103,8 +103,8 @@ export const QuizFormatSelector: React.FC<QuizFormatSelectorProps> = ({
 // Helper function to convert format to QuestionType
 export const getQuestionTypeFromFormat = (
   input1: string,
-  input2: string | undefined,
-  output: string
+  output: string,
+  input2?: string
 ): QuestionType => {
   // Handle compound formats (with two inputs)
   if (input2) {

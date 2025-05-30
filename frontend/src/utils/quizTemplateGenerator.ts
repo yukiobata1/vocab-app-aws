@@ -106,11 +106,14 @@ function generateFixedQuestionSet(
     // 有効な出題形式を取得
     const availableTypes = config.enabledQuestionTypes.filter(type => {
       const typeConfig = QUESTION_TYPE_CONFIGS[type];
-      const questionText = vocab[typeConfig.questionField] as string;
+      // 複数の質問フィールドのうち少なくとも一つが存在することを確認
+      const hasValidQuestion = typeConfig.questionFields.some(field => {
+        const questionText = vocab[field] as string;
+        return questionText && questionText.trim() !== '';
+      });
       const answerText = vocab[typeConfig.answerField] as string;
       
-      return questionText && questionText.trim() !== '' && 
-             answerText && answerText.trim() !== '';
+      return hasValidQuestion && answerText && answerText.trim() !== '';
     });
 
     if (availableTypes.length === 0) {
@@ -142,7 +145,28 @@ export function generateQuizTemplate(
 
   const templateQuestions: QuizTemplateQuestion[] = questionSet.map((item, index) => {
     const typeConfig = QUESTION_TYPE_CONFIGS[item.type];
-    const questionText = item.vocab[typeConfig.questionField] as string;
+    // 複数の質問フィールドがある場合は結合
+    const questionTexts = typeConfig.questionFields.map(field => {
+      const value = item.vocab[field] as string;
+      return value || '';
+    }).filter(text => text.trim() !== '');
+
+    // 複数の質問文を適切に結合
+    let questionText = '';
+    if (questionTexts.length === 1) {
+      questionText = questionTexts[0];
+    } else if (questionTexts.length === 2) {
+      // 例: 文脈 + ネパール語 の場合
+      const [context, nepali] = questionTexts;
+      if (typeConfig.questionFields.includes('japanese_question') && typeConfig.questionFields.includes('np1')) {
+        questionText = `${context}\n\n意味：${nepali}`;
+      } else {
+        questionText = questionTexts.join(' / ');
+      }
+    } else {
+      questionText = questionTexts.join(' / ');
+    }
+    
     const correctAnswer = item.vocab[typeConfig.answerField] as string;
     
     // すべての可能な選択肢を収集
