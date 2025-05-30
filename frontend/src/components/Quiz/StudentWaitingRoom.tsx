@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { vocabService } from '../../services/vocabService';
 import type { QuizConfig, VocabBook, QuestionType, StudentMode } from '../../types/quiz';
-import { QUESTION_TYPE_CONFIGS } from '../../types/quiz';
+import { QuizFormatSelector, getQuestionTypeFromFormat, getFormatFromQuestionType } from './QuizFormatSelector';
 
 interface StudentWaitingRoomProps {
   onStartQuiz: (studentName: string, config: QuizConfig) => void;
@@ -20,14 +20,20 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
   const [questionCount, setQuestionCount] = useState<number>(10);
   const [lessonStart, setLessonStart] = useState<number>(1);
   const [lessonEnd, setLessonEnd] = useState<number>(5);
-  const [selectedQuestionTypes, setSelectedQuestionTypes] = useState<QuestionType[]>(['nepali_to_kanji', 'kanji_to_nepali']);
+  const [selectedQuestionType, setSelectedQuestionType] = useState<QuestionType>('nepali_to_kanji');
+  const [quizFormat, setQuizFormat] = useState({
+    input1: 'ネパール語',
+    input2: undefined as string | undefined,
+    output: '漢字'
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadBooks = async () => {
       try {
         const response = await vocabService.getBooks();
-        setBooks(response.books);
+        const booksData = response.books.filter(book => book.question_count > 4);
+        setBooks(booksData);
       } catch (error) {
         console.error('Failed to load books:', error);
       } finally {
@@ -50,7 +56,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
           bookTitle: books.find(b => b.id === selectedBookId)?.name || '',
           questionCount,
           lessonRange: { start: lessonStart, end: lessonEnd },
-          enabledQuestionTypes: selectedQuestionTypes
+          enabledQuestionTypes: [selectedQuestionType]
         };
         await onStartQuiz(studentName.trim(), config);
       } else {
@@ -67,6 +73,11 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     }
   };
 
+  const handleFormatChange = (format: { input1: string; input2?: string; output: string }) => {
+    setQuizFormat(format);
+    setSelectedQuestionType(getQuestionTypeFromFormat(format.input1, format.input2, format.output));
+  };
+
   const handleRoomCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     if (value.length <= 6) {
@@ -74,50 +85,47 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     }
   };
 
-  const handleQuestionTypeToggle = (type: QuestionType) => {
-    setSelectedQuestionTypes(prev => 
-      prev.includes(type) 
-        ? prev.filter(t => t !== type)
-        : [...prev, type]
-    );
-  };
+
+  const newGoldColor = "#C89F63"; // 新しい黄土色
+  const crimsonColor = "#8C1515"; // えんじ色の代表例 (スタンフォードカーディナル)
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-6"></div>
-          <div className="text-xl text-gray-700">読み込み中...</div>
-        </div>
-      </div>
+      <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center p-4 text-center">
+      <div 
+        className="animate-spin rounded-full h-12 w-12 border-b-4 mb-4"
+        style={{ borderColor: newGoldColor }}
+      ></div>
+      <p className="text-xl font-medium" style={{ color: crimsonColor }}>教材を読み込み中...</p>
+      <p className="text-gray-500">しばらくお待ちください。</p>
+    </div>
     );
   }
 
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
-          {/* Logo/Icon */}
-          <div className="mb-8">
-            <div className="text-8xl mb-4">📚</div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              語彙クイズ
-            </h1>
-            <p className="text-gray-600">
-              {mode === 'study' ? 'クイズを設定して開始しましょう！' : '教室テストに参加しましょう！'}
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full">
+        <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8">
+          {/* Header */}
+          <h2 className="text-3xl font-bold text-center mb-8" style={{ color: crimsonColor }}>
+            {mode === 'study' ? '単語クイズ設定' : '教室テスト参加'}
+          </h2>
 
           {/* Mode Selection */}
           <div className="mb-6">
-            <div className="flex bg-gray-100 rounded-xl p-1">
+            <div className="flex rounded-xl p-1 bg-gray-100">
               <button
                 onClick={() => setMode('study')}
                 className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
                   mode === 'study'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800'
+                    ? 'shadow-sm'
+                    : ''
                 }`}
+                style={{
+                  backgroundColor: mode === 'study' ? 'white' : 'transparent',
+                  color: mode === 'study' ? crimsonColor : '#6B7280'
+                }}
               >
                 📖 勉強モード
               </button>
@@ -125,9 +133,13 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                 onClick={() => setMode('classroom')}
                 className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
                   mode === 'classroom'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800'
+                    ? 'shadow-sm'
+                    : ''
                 }`}
+                style={{
+                  backgroundColor: mode === 'classroom' ? 'white' : 'transparent',
+                  color: mode === 'classroom' ? crimsonColor : '#6B7280'
+                }}
               >
                 🏫 教室テスト
               </button>
@@ -135,9 +147,9 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
           </div>
 
           {/* Input Form */}
-          <div className="space-y-6">
-            <div>
-              <label htmlFor="studentName" className="block text-left text-sm font-medium text-gray-700 mb-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+            <div className="md:col-span-2">
+              <label htmlFor="studentName" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
                 あなたの名前
               </label>
               <input
@@ -146,14 +158,14 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
                 placeholder="山田太郎"
-                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
+                className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
                 disabled={isStarting}
               />
             </div>
 
             {mode === 'classroom' && (
-              <div>
-                <label htmlFor="roomCode" className="block text-left text-sm font-medium text-gray-700 mb-2">
+              <div className="md:col-span-2">
+                <label htmlFor="roomCode" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
                   クイズコード
                 </label>
                 <input
@@ -162,8 +174,9 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                   value={roomCode}
                   onChange={handleRoomCodeChange}
                   placeholder="ABC123"
-                  className="w-full px-4 py-3 text-lg text-center font-mono border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 tracking-wider"
+                  className="w-full p-3 text-center font-mono border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 tracking-wider"
                   disabled={isStarting}
+                  style={{ fontSize: '1.25rem' }}
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   先生から教えてもらった6文字のコードを入力してください
@@ -173,15 +186,15 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
 
             {mode === 'study' && (
               <>
-                <div>
-                  <label htmlFor="bookSelect" className="block text-left text-sm font-medium text-gray-700 mb-2">
-                    教材を選択
+                <div className="md:col-span-2">
+                  <label htmlFor="bookSelect" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
+                    教材選択
                   </label>
                   <select
                     id="bookSelect"
                     value={selectedBookId}
                     onChange={(e) => setSelectedBookId(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
                     disabled={isStarting}
                   >
                     {books.map(book => (
@@ -190,130 +203,87 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                   </select>
                 </div>
 
-            <div>
-              <label htmlFor="bookSelect" className="block text-left text-sm font-medium text-gray-700 mb-2">
-                教材を選択
-              </label>
-              <select
-                id="bookSelect"
-                value={selectedBookId}
-                onChange={(e) => setSelectedBookId(Number(e.target.value))}
-                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
-                disabled={isStarting}
-              >
-                {books.map(book => (
-                  <option key={book.id} value={book.id}>{book.name}</option>
-                ))}
-              </select>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="lessonStart" className="block text-left text-sm font-medium text-gray-700 mb-2">
-                  開始課
-                </label>
-                <input
-                  id="lessonStart"
-                  type="number"
-                  min={1}
-                  max={50}
-                  value={lessonStart}
-                  onChange={(e) => setLessonStart(Number(e.target.value))}
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
-                  disabled={isStarting}
-                />
-              </div>
-              <div>
-                <label htmlFor="lessonEnd" className="block text-left text-sm font-medium text-gray-700 mb-2">
-                  終了課
-                </label>
-                <input
-                  id="lessonEnd"
-                  type="number"
-                  min={lessonStart}
-                  max={50}
-                  value={lessonEnd}
-                  onChange={(e) => setLessonEnd(Number(e.target.value))}
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
-                  disabled={isStarting}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="questionCount" className="block text-left text-sm font-medium text-gray-700 mb-2">
-                問題数
-              </label>
-              <select
-                id="questionCount"
-                value={questionCount}
-                onChange={(e) => setQuestionCount(Number(e.target.value))}
-                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
-                disabled={isStarting}
-              >
-                <option value={5}>5問</option>
-                <option value={10}>10問</option>
-                <option value={15}>15問</option>
-                <option value={20}>20問</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-left text-sm font-medium text-gray-700 mb-2">
-                出題形式
-              </label>
-              <div className="space-y-2">
-                {Object.values(QUESTION_TYPE_CONFIGS).filter(config => config.enabled).map(config => (
-                  <label key={config.id} className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedQuestionTypes.includes(config.id)}
-                      onChange={() => handleQuestionTypeToggle(config.id)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      disabled={isStarting}
-                    />
-                    <span className="text-sm text-gray-700">{config.name}</span>
+                <div>
+                  <label htmlFor="lessonStart" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
+                    開始課
                   </label>
-                ))}
-              </div>
-            </div>
+                  <input
+                    id="lessonStart"
+                    type="number"
+                    min={1}
+                    max={50}
+                    value={lessonStart}
+                    onChange={(e) => setLessonStart(Number(e.target.value))}
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
+                    disabled={isStarting}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lessonEnd" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
+                    終了課
+                  </label>
+                  <input
+                    id="lessonEnd"
+                    type="number"
+                    min={lessonStart}
+                    max={50}
+                    value={lessonEnd}
+                    onChange={(e) => setLessonEnd(Number(e.target.value))}
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
+                    disabled={isStarting}
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label htmlFor="questionCount" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
+                    出題数
+                  </label>
+                  <select
+                    id="questionCount"
+                    value={questionCount}
+                    onChange={(e) => setQuestionCount(Number(e.target.value))}
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
+                    disabled={isStarting}
+                  >
+                    <option value={5}>5問</option>
+                    <option value={10}>10問</option>
+                    <option value={15}>15問</option>
+                    <option value={20}>20問</option>
+                  </select>
+                </div>
+
+                <QuizFormatSelector
+                  value={quizFormat}
+                  onChange={handleFormatChange}
+                  allowMultipleInputs={true}
+                />
               </>
             )}
           </div>
 
-          {/* Start Button */}
-          <button
-            onClick={handleStart}
-            disabled={
-              !studentName.trim() || 
-              isStarting ||
-              (mode === 'study' && selectedQuestionTypes.length === 0) ||
-              (mode === 'classroom' && !roomCode.trim())
-            }
-            className="w-full mt-8 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed shadow-lg"
-          >
-            {isStarting ? (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>{mode === 'study' ? '開始中...' : '参加中...'}</span>
-              </div>
-            ) : (
-              <span className="flex items-center justify-center space-x-2">
-                <span>🚀</span>
-                <span>{mode === 'study' ? 'クイズを開始する' : 'ルームに参加する'}</span>
-              </span>
-            )}
-          </button>
-
-          {/* Help Text */}
-          <div className="mt-6 text-sm text-gray-500">
-            <p>
-              {mode === 'study' 
-                ? '設定を確認してクイズを開始してください' 
-                : '先生から教えてもらったコードを入力してください'
+          <div className="mt-10 pt-2">
+            <button
+              onClick={handleStart}
+              disabled={
+                !studentName.trim() || 
+                isStarting ||
+                  (mode === 'classroom' && !roomCode.trim())
               }
-            </p>
+              className="w-full text-white py-3.5 px-6 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ backgroundColor: isStarting ? '#9CA3AF' : newGoldColor }}
+            >
+              {isStarting ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>{mode === 'study' ? '開始中...' : '参加中...'}</span>
+                </div>
+              ) : (
+                <span>{mode === 'study' ? 'クイズを開始' : 'ルームに参加'}</span>
+              )}
+            </button>
           </div>
+
         </div>
       </div>
     </div>

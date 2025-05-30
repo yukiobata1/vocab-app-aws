@@ -94,7 +94,28 @@ function generateSingleQuestion(
 ): QuizQuestion {
   const config = QUESTION_TYPE_CONFIGS[questionType];
   
-  const questionText = sourceQuestion[config.questionField] as string;
+  // 複数の質問フィールドがある場合は結合
+  const questionTexts = config.questionFields.map(field => {
+    const value = sourceQuestion[field] as string;
+    return value || '';
+  }).filter(text => text.trim() !== '');
+
+  // 複数の質問文を適切に結合
+  let questionText = '';
+  if (questionTexts.length === 1) {
+    questionText = questionTexts[0];
+  } else if (questionTexts.length === 2) {
+    // 例: 文脈 + ネパール語 の場合
+    const [context, nepali] = questionTexts;
+    if (config.questionFields.includes('japanese_question') && config.questionFields.includes('np1')) {
+      questionText = `${context}\n\n意味：${nepali}`;
+    } else {
+      questionText = questionTexts.join(' / ');
+    }
+  } else {
+    questionText = questionTexts.join(' / ');
+  }
+  
   const correctAnswer = getAnswerWithFallback(sourceQuestion, config.answerField);
   
   // 選択肢生成（フォールバック対応）

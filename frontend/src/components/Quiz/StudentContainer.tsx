@@ -146,7 +146,7 @@ export const StudentContainer: React.FC = () => {
 
       case 'loading':
         return (
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+          <div className="min-h-screen">
             <div className="text-center">
               <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-6"></div>
               <div className="text-2xl font-medium text-gray-700 mb-2">

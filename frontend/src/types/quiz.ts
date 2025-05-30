@@ -33,7 +33,9 @@ export const QuestionType = {
   RUBI_TO_KANJI: 'rubi_to_kanji',               // 読み → 漢字
   FILL_IN_BLANK: 'fill_in_blank',               // 文脈問題（空欄埋め）
   KANJI_TO_NEPALI: 'kanji_to_nepali',           // 漢字 → ネパール語
-  RUBI_TO_NEPALI: 'rubi_to_nepali'              // 読み → ネパール語
+  RUBI_TO_NEPALI: 'rubi_to_nepali',             // 読み → ネパール語
+  FILL_IN_BLANK_NEPALI_TO_KANJI: 'fill_in_blank_nepali_to_kanji', // 文脈+ネパール語 → 漢字
+  FILL_IN_BLANK_NEPALI_TO_RUBI: 'fill_in_blank_nepali_to_rubi'   // 文脈+ネパール語 → 読み
 } as const;
 
 export type QuestionType = typeof QuestionType[keyof typeof QuestionType];
@@ -42,9 +44,9 @@ export interface QuestionTypeConfig {
   id: QuestionType;
   name: string;
   description: string;
-  questionField: keyof VocabQuestion;  // 問題文として使うフィールド
-  answerField: keyof VocabQuestion;    // 正解として使うフィールド
-  optionsField: keyof VocabQuestion;   // 選択肢生成に使うフィールド
+  questionFields: (keyof VocabQuestion)[];  // 問題文として使うフィールド（複数可）
+  answerField: keyof VocabQuestion;         // 正解として使うフィールド
+  optionsField: keyof VocabQuestion;        // 選択肢生成に使うフィールド
   enabled: boolean;
 }
 
@@ -54,7 +56,7 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     id: QuestionType.NEPALI_TO_KANJI,
     name: 'ネパール語 → 漢字',
     description: 'ネパール語を見て漢字を選ぶ',
-    questionField: 'np1',
+    questionFields: ['np1'],
     answerField: 'jp_kanji',
     optionsField: 'jp_kanji',
     enabled: true
@@ -63,7 +65,7 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     id: QuestionType.NEPALI_TO_RUBI,
     name: 'ネパール語 → 読み',
     description: 'ネパール語を見て読みを選ぶ',
-    questionField: 'np1',
+    questionFields: ['np1'],
     answerField: 'jp_rubi',
     optionsField: 'jp_rubi',
     enabled: true
@@ -72,7 +74,7 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     id: QuestionType.KANJI_TO_RUBI,
     name: '漢字 → 読み',
     description: '漢字を見て読みを選ぶ',
-    questionField: 'jp_kanji',
+    questionFields: ['jp_kanji'],
     answerField: 'jp_rubi',
     optionsField: 'jp_rubi',
     enabled: true
@@ -81,7 +83,7 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     id: QuestionType.RUBI_TO_KANJI,
     name: '読み → 漢字',
     description: '読みを見て漢字を選ぶ',
-    questionField: 'jp_rubi',
+    questionFields: ['jp_rubi'],
     answerField: 'jp_kanji',
     optionsField: 'jp_kanji',
     enabled: true
@@ -90,7 +92,7 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     id: QuestionType.FILL_IN_BLANK,
     name: '文脈問題',
     description: '文脈から適切な語彙を選ぶ',
-    questionField: 'japanese_question',
+    questionFields: ['japanese_question'],
     answerField: 'jp_kanji',
     optionsField: 'jp_kanji',
     enabled: true
@@ -99,7 +101,7 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     id: QuestionType.KANJI_TO_NEPALI,
     name: '漢字 → ネパール語',
     description: '漢字を見てネパール語を選ぶ',
-    questionField: 'jp_kanji',
+    questionFields: ['jp_kanji'],
     answerField: 'np1',
     optionsField: 'np1',
     enabled: true
@@ -108,9 +110,27 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     id: QuestionType.RUBI_TO_NEPALI,
     name: '読み → ネパール語',
     description: '読みを見てネパール語を選ぶ',
-    questionField: 'jp_rubi',
+    questionFields: ['jp_rubi'],
     answerField: 'np1',
     optionsField: 'np1',
+    enabled: true
+  },
+  [QuestionType.FILL_IN_BLANK_NEPALI_TO_KANJI]: {
+    id: QuestionType.FILL_IN_BLANK_NEPALI_TO_KANJI,
+    name: '文脈+ネパール語 → 漢字',
+    description: '文脈とネパール語を見て漢字を選ぶ',
+    questionFields: ['japanese_question', 'np1'],
+    answerField: 'jp_kanji',
+    optionsField: 'jp_kanji',
+    enabled: true
+  },
+  [QuestionType.FILL_IN_BLANK_NEPALI_TO_RUBI]: {
+    id: QuestionType.FILL_IN_BLANK_NEPALI_TO_RUBI,
+    name: '文脈+ネパール語 → 読み',
+    description: '文脈とネパール語を見て読みを選ぶ',
+    questionFields: ['japanese_question', 'np1'],
+    answerField: 'jp_rubi',
+    optionsField: 'jp_rubi',
     enabled: true
   }
 };

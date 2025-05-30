@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { type QuizConfig, QuestionType, type VocabBook } from '../../types/quiz';
 import { vocabService } from '../../services/vocabService';
+import { QuizFormatSelector, getQuestionTypeFromFormat, getFormatFromQuestionType } from './QuizFormatSelector';
 
 interface TeacherConfigProps {
   onConfigSubmit: (config: QuizConfig) => void;
@@ -12,22 +13,24 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
   const [lessonStart, setLessonStart] = useState<number>(1);
   const [lessonEnd, setLessonEnd] = useState<number>(1);
   const [questionCount, setQuestionCount] = useState<number>(10);
-  const [enabledQuestionTypes, setEnabledQuestionTypes] = useState<QuestionType[]>([
+  const [selectedQuestionType, setSelectedQuestionType] = useState<QuestionType>(
     QuestionType.NEPALI_TO_KANJI
-  ]);
+  );
+  const [quizFormat, setQuizFormat] = useState({
+    input1: 'ネパール語',
+    input2: undefined as string | undefined,
+    output: '漢字'
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
 
-  const questionTypeLabels = {
-    [QuestionType.NEPALI_TO_KANJI]: 'ネ→漢字',
-    [QuestionType.NEPALI_TO_RUBI]: 'ネ→読み',
-    [QuestionType.KANJI_TO_RUBI]: '漢字→読み',
-    [QuestionType.RUBI_TO_KANJI]: '読み→漢字',
-    [QuestionType.KANJI_TO_NEPALI]: '漢字→ネ',
-    [QuestionType.RUBI_TO_NEPALI]: '読み→ネ',
-    [QuestionType.FILL_IN_BLANK]: '文脈問題'
+  // Update selectedQuestionType when format changes
+  const handleFormatChange = (format: { input1: string; input2?: string; output: string }) => {
+    setQuizFormat(format);
+    setSelectedQuestionType(getQuestionTypeFromFormat(format.input1, format.input2, format.output));
   };
+
 
   useEffect(() => {
     loadBooks();
@@ -36,47 +39,49 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
   const loadBooks = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await vocabService.getBooks();
       const booksData = response.books.filter(book => book.question_count > 4);
       setBooks(booksData);
-      if (booksData.length > 0) {
+      if (booksData.length > 0 && selectedBookId === null) {
         setSelectedBookId(booksData[0].id);
       }
     } catch (err) {
-      setError('教材の読み込みに失敗しました');
+      setError('教材の読み込みに失敗しました。ページを再読み込みしてください。');
       console.error('Failed to load books:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuestionTypeToggle = (type: QuestionType) => {
-    setEnabledQuestionTypes(prev => {
-      if (prev.includes(type)) {
-        return prev.filter(t => t !== type);
-      } else {
-        return [...prev, type];
-      }
-    });
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     
     if (!selectedBookId) {
       setError('教材を選択してください');
       return;
     }
 
-    if (enabledQuestionTypes.length === 0) {
-      setError('少なくとも1つの出題形式を選択してください');
-      return;
-    }
 
     if (lessonStart > lessonEnd) {
       setError('開始課は終了課以下である必要があります');
       return;
     }
+    if (lessonStart <= 0 || lessonEnd <= 0) {
+        setError('課番号は1以上で入力してください。');
+        return;
+    }
+    if (questionCount <=0) {
+        setError('問題数は1問以上で入力してください。');
+        return;
+    }
+     if (questionCount > 50) {
+        setError('問題数は50問以下で入力してください。');
+        return;
+    }
+
 
     const selectedBook = books.find(book => book.id === selectedBookId);
     if (!selectedBook) {
@@ -92,147 +97,148 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
         end: lessonEnd
       },
       questionCount,
-      enabledQuestionTypes,
-      difficulty: 'normal'
+      enabledQuestionTypes: [selectedQuestionType],
     };
 
     onConfigSubmit(config);
   };
 
-  if (loading) {
+  const newGoldColor = "#C89F63"; // 新しい黄土色
+  const crimsonColor = "#8C1515"; // えんじ色の代表例 (スタンフォードカーディナル)
+  // より明るいえんじ色が必要な場合は、例えば #A70000 など
+
+  if (loading && books.length === 0) {
     return (
-      <div className="relative flex size-full min-h-screen flex-col justify-center items-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-6"></div>
-          <div className="text-2xl font-medium text-gray-700 mb-2">
-            教材を読み込み中...
-          </div>
-          <div className="text-gray-500">
-            しばらくお待ちください
-          </div>
-        </div>
+      <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center p-4 text-center">
+        <div 
+          className="animate-spin rounded-full h-12 w-12 border-b-4 mb-4"
+          style={{ borderColor: newGoldColor }}
+        ></div>
+        <p className="text-xl font-medium" style={{ color: crimsonColor }}>教材を読み込み中...</p>
+        <p className="text-gray-500">しばらくお待ちください。</p>
       </div>
     );
   }
 
   return (
-    <div 
-      className="relative flex size-full min-h-screen flex-col justify-between group/design-root overflow-x-hidden" 
-      style={{
-        '--select-button-svg': 'url(\'data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(78,112,151)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e\')',
-        fontFamily: '"Noto Serif", "Noto Sans", sans-serif'
-      } as React.CSSProperties}
-    >
-      <div>
-        <div className="flex items-center p-4 pb-2 justify-between">
-          <h2 className="text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12 pr-12">単語クイズ作成</h2>
-        </div>
-        <h3 className="text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">教材選択</h3>
-        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-          <label className="flex flex-col min-w-40 flex-1">
+    <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8 max-w-2xl mx-auto my-8">
+      <h2 
+        className="text-3xl font-bold text-center mb-8"
+        style={{ color: crimsonColor }}
+      >
+        単語クイズ作成
+      </h2>
+
+      <form onSubmit={handleSubmit}>
+        {error && (
+          <div 
+            className="mb-6 p-4 border-l-4 rounded-md text-sm shadow-md"
+            style={{ backgroundColor: '#FEE2E2', borderColor: crimsonColor, color: '#991B1B' }} // Tailwind red-100, red-700相当
+          >
+            {error}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+          <div className="md:col-span-2">
+            <label htmlFor="materialSelect" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
+              教材選択
+            </label>
             <select
-              value={selectedBookId || ''}
-              onChange={(e) => setSelectedBookId(Number(e.target.value))}
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#0e141b] focus:outline-0 focus:ring-0 border border-[#d0dbe7] focus:border-[#d0dbe7] h-14 bg-[image:--select-button-svg] placeholder:text-[#4e7097] p-[15px] text-base font-normal leading-normal"
+              id="materialSelect"
+              value={selectedBookId ?? ''} 
+              onChange={(e) => {
+                const newBookId = Number(e.target.value);
+                if (newBookId) setSelectedBookId(newBookId);
+                setError(null); 
+              }}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out disabled:bg-gray-100 focus:outline-none focus:border-gray-500"
               required
+              disabled={loading}
             >
-              <option value="">教材を選択</option>
+              <option value="" disabled>教材を選択してください</option> 
               {books.map(book => (
                 <option key={book.id} value={book.id}>
                   {book.name} - {book.level} ({book.question_count}問)
                 </option>
               ))}
             </select>
-          </label>
-        </div>
+          </div>
 
-        <h3 className="text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">出題範囲</h3>
-        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-          <label className="flex flex-col min-w-40 flex-1">
+          <div>
+            <label htmlFor="lessonStartInput" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
+              開始課
+            </label>
             <input
+              id="lessonStartInput"
               type="number"
               min="1"
               value={lessonStart}
-              onChange={(e) => setLessonStart(Number(e.target.value))}
-              placeholder="開始"
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#0e141b] focus:outline-0 focus:ring-0 border border-[#d0dbe7] focus:border-[#d0dbe7] h-14 placeholder:text-[#4e7097] p-[15px] text-base font-normal leading-normal"
+              onChange={(e) => {
+                  setLessonStart(Number(e.target.value));
+                  setError(null);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
               required
             />
-          </label>
-          <label className="flex flex-col min-w-40 flex-1">
+          </div>
+          <div>
+            <label htmlFor="lessonEndInput" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
+              終了課
+            </label>
             <input
+              id="lessonEndInput"
               type="number"
               min="1"
               value={lessonEnd}
-              onChange={(e) => setLessonEnd(Number(e.target.value))}
-              placeholder="終了"
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#0e141b] focus:outline-0 focus:ring-0 border border-[#d0dbe7] focus:border-[#d0dbe7] h-14 placeholder:text-[#4e7097] p-[15px] text-base font-normal leading-normal"
+              onChange={(e) => {
+                  setLessonEnd(Number(e.target.value));
+                  setError(null);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
               required
             />
-          </label>
-        </div>
-
-        <h3 className="text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">出題数</h3>
-        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-          <label className="flex flex-col min-w-40 flex-1">
+          </div>
+          
+          <div className="md:col-span-2">
+            <label htmlFor="questionCountInput" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
+              出題数 (最大50問)
+            </label>
             <input
+              id="questionCountInput"
               type="number"
               min="1"
+              max="50"
               value={questionCount}
-              onChange={(e) => setQuestionCount(Number(e.target.value))}
-              placeholder="出題数を入力"
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#0e141b] focus:outline-0 focus:ring-0 border border-[#d0dbe7] focus:border-[#d0dbe7] h-14 placeholder:text-[#4e7097] p-[15px] text-base font-normal leading-normal"
+              onChange={(e) => {
+                  setQuestionCount(Number(e.target.value));
+                  setError(null);
+              }}
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
               required
             />
-          </label>
+          </div>
+
+          <QuizFormatSelector
+            value={quizFormat}
+            onChange={handleFormatChange}
+            allowMultipleInputs={true}
+          />
         </div>
 
-        <h3 className="text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">出題形式</h3>
-        <div className="px-4 py-3">
-          <div className="grid grid-cols-2 gap-2">
-            {Object.entries(questionTypeLabels).map(([type, label]) => {
-              const isSelected = enabledQuestionTypes.includes(type as QuestionType);
-              return (
-                <div key={type} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id={type}
-                    checked={isSelected}
-                    onChange={() => handleQuestionTypeToggle(type as QuestionType)}
-                    className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor={type} className="text-[#0e141b] text-sm font-normal leading-normal">
-                    {label}
-                  </label>
-                </div>
-              );
-            })}
-          </div>
+        <div className="mt-10 pt-2">
+          <button
+            type="submit"
+            className="w-full text-white py-3.5 px-6 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ 
+                backgroundColor: newGoldColor, 
+            }}
+            disabled={loading || !selectedBookId} 
+          >
+            {loading ? '処理中...' : 'クイズを発行'}
+          </button>
         </div>
-      </div>
-      <div>
-        <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-50 border-l-4 border-red-400 p-4 m-4 rounded-r-lg">
-              <div className="flex">
-                <div>
-                  <h3 className="text-sm font-medium text-red-800">エラーが発生しました</h3>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="flex px-4 py-3">
-            <button
-              type="submit"
-              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-[#1873dc] text-slate-50 text-base font-bold leading-normal tracking-[0.015em]"
-            >
-              <span className="truncate">クイズを発行</span>
-            </button>
-          </div>
-        </form>
-        <div className="h-5"></div>
-      </div>
+      </form>
     </div>
   );
 };

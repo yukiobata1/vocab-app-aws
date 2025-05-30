@@ -1,9 +1,13 @@
+'use client';
+
 import React, { useState } from 'react';
 import { TeacherConfig } from './TeacherConfig';
 import type { QuizConfig, QuizQuestion } from '../../types/quiz';
 import { generateQuiz } from '../../utils/quizGenerator';
 import { vocabService } from '../../services/vocabService';
 import { roomCodeService } from '../../services/roomCodeService';
+import { Button } from '@/components/ui/button';
+import { QUESTION_TYPE_CONFIGS } from '../../types/quiz';
 
 type TeacherState = 'config' | 'generating' | 'active' | 'error';
 
@@ -14,6 +18,13 @@ export const TeacherDashboard: React.FC = () => {
   const [, setQuizQuestions] = useState<QuizQuestion[]>([]);
   const [expiresAt, setExpiresAt] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
+
+  // Helper function to get question type display name
+  const getQuestionTypeDisplayName = (questionType: string): string => {
+    const config = QUESTION_TYPE_CONFIGS[questionType as keyof typeof QUESTION_TYPE_CONFIGS];
+    return config ? config.name : questionType;
+  };
 
   const handleConfigSubmit = async (config: QuizConfig) => {
     setState('generating');
@@ -83,6 +94,8 @@ export const TeacherDashboard: React.FC = () => {
   const copyRoomCode = async () => {
     try {
       await navigator.clipboard.writeText(roomCode);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.log('Failed to copy room code:', err);
     }
@@ -100,14 +113,15 @@ export const TeacherDashboard: React.FC = () => {
         return <TeacherConfig onConfigSubmit={handleConfigSubmit} />;
 
       case 'generating':
+        const loadingGoldColor = "#C89F63";
         return (
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-6"></div>
-              <div className="text-2xl font-medium text-gray-700 mb-2">
+              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-4 mx-auto mb-4 md:mb-6" style={{ borderColor: loadingGoldColor }}></div>
+              <div className="text-xl md:text-2xl font-medium text-gray-700 mb-2">
                 クイズルームを作成中...
               </div>
-              <div className="text-gray-500">
+              <div className="text-sm md:text-base text-gray-500">
                 問題を生成してDynamoDBに保存しています
               </div>
             </div>
@@ -115,112 +129,125 @@ export const TeacherDashboard: React.FC = () => {
         );
 
       case 'active':
+        const crimsonColor = "#8C1515";
+        const goldColor = "#C89F63";
         return (
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
-            <div className="max-w-4xl mx-auto space-y-6">
+          <div className="min-h-screen bg-gray-50 p-4">
+            <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
               {/* Header */}
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-gray-800 mb-4">
+              <div className="text-center mb-4 md:mb-8">
+                <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4" style={{ color: crimsonColor }}>
                   👨‍🏫 クイズルーム開始中
                 </h1>
-                <p className="text-xl text-gray-600">
+                <p className="text-base md:text-xl text-gray-600">
                   以下のコードを生徒に教えてください
                 </p>
               </div>
 
-              {/* Quiz Config Summary */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">📚 クイズ設定</h3>
+              {/* Quiz Config Summary - Mobile Optimized */}
+              <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">                
+    
+    <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4" style={{ color: crimsonColor }}>📚 クイズ設定</h3>
                 {quizConfig && (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                    <div className="bg-blue-50 rounded-lg p-3">
-                      <div className="text-sm text-blue-600">教材</div>
-                      <div className="font-bold text-blue-800">{quizConfig.bookTitle}</div>
+                  <div className="grid grid-cols-2 gap-2 md:gap-4 text-center">
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>教材</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800 truncate">{quizConfig.bookTitle}</div>
                     </div>
-                    <div className="bg-green-50 rounded-lg p-3">
-                      <div className="text-sm text-green-600">範囲</div>
-                      <div className="font-bold text-green-800">課{quizConfig.lessonRange.start}-{quizConfig.lessonRange.end}</div>
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>範囲</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800">課{quizConfig.lessonRange.start}-{quizConfig.lessonRange.end}</div>
                     </div>
-                    <div className="bg-purple-50 rounded-lg p-3">
-                      <div className="text-sm text-purple-600">問題数</div>
-                      <div className="font-bold text-purple-800">{quizConfig.questionCount}問</div>
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>問題数</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800">{quizConfig.questionCount}問</div>
                     </div>
-                    <div className="bg-orange-50 rounded-lg p-3">
-                      <div className="text-sm text-orange-600">出題形式</div>
-                      <div className="font-bold text-orange-800">{quizConfig.enabledQuestionTypes.length}種類</div>
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200 col-span-2" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>出題形式</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800 truncate">
+                        {getQuestionTypeDisplayName(quizConfig.enabledQuestionTypes[0])}
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Room Code Display */}
-              <div className="bg-white rounded-3xl shadow-2xl p-12 text-center">
-                <div className="bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl p-8 mb-8">
+              {/* Room Code Display - Mobile Optimized */}
+              <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-12 text-center">
+                <div 
+                  className="rounded-xl md:rounded-2xl p-4 md:p-8 mb-4 md:mb-8 border-4 cursor-pointer hover:opacity-90 transition-opacity duration-200" 
+                  style={{ backgroundColor: goldColor, borderColor: crimsonColor }}
+                  onClick={copyRoomCode}
+                  title="クリックでコピー"
+                >
                   <div className="text-white text-center">
-                    <div className="text-sm opacity-90 mb-2">クイズコード</div>
-                    <div className="text-8xl font-mono font-bold tracking-wider">
+                    <div className="text-xs md:text-sm mb-1 md:mb-2" style={{ color: 'white' }}>
+                      クイズコード {isCopied && <span className="text-xs">✅ コピーしました</span>}
+                    </div>
+                    <div className="text-4xl sm:text-5xl md:text-8xl font-mono font-bold tracking-wider" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
                       {roomCode}
                     </div>
                   </div>
                 </div>
 
                 {/* Room Info */}
-                <div className="bg-gray-50 rounded-xl p-4 mb-6">
-                  <p className="text-sm text-gray-600">
+                <div className="rounded-lg md:rounded-xl p-3 md:p-4 mb-4 md:mb-6 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
+                  <p className="text-xs md:text-sm text-gray-700">
                     有効期限: {expiresAt ? new Date(expiresAt).toLocaleString('ja-JP') : '24時間'}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-600 mt-1">
                     このコードは24時間後に自動的に無効になります
                   </p>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button
+                {/* Action Buttons - Mobile Optimized */}
+                <div className="flex flex-col gap-3 md:flex-row md:gap-4 justify-center">
+                  <Button
                     onClick={copyRoomCode}
-                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="text-white font-bold py-3 px-4 md:px-6 rounded-lg md:rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 touch-manipulation shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
+                    style={{ backgroundColor: goldColor }}
                   >
-                    <span>📋</span>
-                    <span>コードをコピー</span>
-                  </button>
+                    <span>{isCopied ? '✅' : '📋'}</span>
+                    <span className="text-sm md:text-base">{isCopied ? 'コピーしました' : 'コードをコピー'}</span>
+                  </Button>
                   
-                  <button
+                  <Button
                     onClick={generateNewRoom}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-3 px-4 md:px-6 rounded-lg md:rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 touch-manipulation"
                   >
                     <span>🔄</span>
-                    <span>新しいコード生成</span>
-                  </button>
+                    <span className="text-sm md:text-base">新しいコード生成</span>
+                  </Button>
                   
-                  <button
+                  <Button
                     onClick={stopQuiz}
-                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-3 px-4 md:px-6 rounded-lg md:rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 touch-manipulation"
                   >
                     <span>⏹️</span>
-                    <span>ルームを終了</span>
-                  </button>
+                    <span className="text-sm md:text-base">ルームを終了</span>
+                  </Button>
                 </div>
               </div>
 
-              {/* Instructions */}
-              <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">📋 手順</h3>
-                <div className="space-y-3 text-gray-600">
-                  <div className="flex items-start space-x-3">
-                    <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</span>
-                    <span>上の6桁コードを黒板やプロジェクターで生徒に見せてください</span>
+              {/* Instructions - Mobile Optimized */}
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-8">
+                <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4" style={{ color: crimsonColor }}>📋 手順</h3>
+                <div className="space-y-2 md:space-y-3 text-gray-600">
+                  <div className="flex items-start space-x-2 md:space-x-3">
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>1</span>
+                    <span className="text-sm md:text-base">上の6桁コードを黒板やプロジェクターで生徒に見せてください</span>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</span>
-                    <span>生徒に「生徒用」→「教室テスト」モードでアプリを開いてもらいます</span>
+                  <div className="flex items-start space-x-2 md:space-x-3">
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>2</span>
+                    <span className="text-sm md:text-base">生徒に「生徒用」→「教室テスト」モードでアプリを開いてもらいます</span>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</span>
-                    <span>生徒がコードを入力してクイズを開始します</span>
+                  <div className="flex items-start space-x-2 md:space-x-3">
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>3</span>
+                    <span className="text-sm md:text-base">生徒がコードを入力してクイズを開始します</span>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</span>
-                    <span>終了したら「ルームを終了」で新しいクイズを設定できます</span>
+                  <div className="flex items-start space-x-2 md:space-x-3">
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>4</span>
+                    <span className="text-sm md:text-base">終了したら「ルームを終了」で新しいクイズを設定できます</span>
                   </div>
                 </div>
               </div>
@@ -231,17 +258,17 @@ export const TeacherDashboard: React.FC = () => {
       case 'error':
         return (
           <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-red-50 flex items-center justify-center p-4">
-            <div className="max-w-md mx-auto">
-              <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
-                <div className="text-6xl mb-4">⚠️</div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">エラーが発生しました</h2>
-                <p className="text-gray-600 mb-6">{error}</p>
-                <button
+            <div className="max-w-md mx-auto w-full">
+              <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 text-center">
+                <div className="text-5xl md:text-6xl mb-3 md:mb-4">⚠️</div>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">エラーが発生しました</h2>
+                <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">{error}</p>
+                <Button
                   onClick={() => setState('config')}
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105"
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg md:rounded-2xl transition-all duration-200 transform hover:scale-105 touch-manipulation w-full md:w-auto"
                 >
                   設定に戻る
-                </button>
+                </Button>
               </div>
             </div>
           </div>

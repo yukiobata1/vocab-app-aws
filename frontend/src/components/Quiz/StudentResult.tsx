@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScoreManager } from '../../utils/scoreManager';
+import { colors } from '../../config/colors';
 
 interface StudentResultProps {
   score: number;
@@ -63,9 +64,9 @@ export const StudentResult: React.FC<StudentResultProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-2xl mx-auto w-full">
-        <div className="bg-white rounded-3xl shadow-2xl p-12 text-center">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
           {/* Icon and Title */}
           <div className="mb-8">
             {isNewRecord && percentage > 0 ? (
@@ -77,8 +78,8 @@ export const StudentResult: React.FC<StudentResultProps> = ({
             ) : (
               <div className="text-8xl mb-4">📚</div>
             )}
-            <h2 className="text-4xl font-bold text-gray-800 mb-2">クイズ終了！</h2>
-            <p className="text-xl text-gray-600">{studentName}さん、お疲れ様でした！</p>
+            <h2 className="text-3xl font-bold mb-2" style={{ color: colors.crimsonColor }}>クイズ終了！</h2>
+            <p className="text-lg text-gray-600">{studentName}さん、お疲れ様でした！</p>
           </div>
 
           {/* Current Score */}
@@ -159,7 +160,8 @@ export const StudentResult: React.FC<StudentResultProps> = ({
           {/* Action Button */}
           <button
             onClick={onRestart}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+            className="text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            style={{ backgroundColor: colors.newGoldColor }}
           >
             <span className="flex items-center justify-center space-x-2">
               <span>🚀</span>
