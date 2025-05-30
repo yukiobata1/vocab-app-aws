@@ -112,7 +112,21 @@ export const QuizDisplay: React.FC<QuizDisplayProps> = ({
       case QuestionType.RUBI_TO_NEPALI:
         return 'あ→🇳🇵';
       case QuestionType.FILL_IN_BLANK:
+      case QuestionType.FILL_IN_BLANK_TO_RUBI:
+      case QuestionType.FILL_IN_BLANK_TO_NEPALI:
         return '🔤';
+      case QuestionType.FILL_IN_BLANK_NEPALI_TO_KANJI:
+        return '🔤🇳🇵→漢';
+      case QuestionType.FILL_IN_BLANK_NEPALI_TO_RUBI:
+        return '🔤🇳🇵→あ';
+      case QuestionType.FILL_IN_BLANK_KANJI_TO_NEPALI:
+        return '🔤漢→🇳🇵';
+      case QuestionType.FILL_IN_BLANK_KANJI_TO_RUBI:
+        return '🔤漢→あ';
+      case QuestionType.FILL_IN_BLANK_RUBI_TO_NEPALI:
+        return '🔤あ→🇳🇵';
+      case QuestionType.FILL_IN_BLANK_RUBI_TO_KANJI:
+        return '🔤あ→漢';
       default:
         return '❓';
     }

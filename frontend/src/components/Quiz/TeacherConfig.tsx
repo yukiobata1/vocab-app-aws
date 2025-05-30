@@ -117,6 +117,7 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
       },
       questionCount,
       enabledQuestionTypes: [selectedQuestionType],
+      quizFormat: quizFormat,
     };
 
     onConfigSubmit(config);

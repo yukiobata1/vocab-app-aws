@@ -26,6 +26,19 @@ export const TeacherDashboard: React.FC = () => {
     return config ? config.name : questionType;
   };
 
+  // Helper function to get quiz format display name from format object
+  const getQuizFormatDisplayName = (format?: { input1: string; input2?: string; output: string }): string => {
+    if (!format) {
+      return '';
+    }
+    
+    if (format.input2) {
+      return `${format.input1}+${format.input2} → ${format.output}`;
+    } else {
+      return `${format.input1} → ${format.output}`;
+    }
+  };
+
   const handleConfigSubmit = async (config: QuizConfig) => {
     setState('generating');
     setError(null);
@@ -165,7 +178,10 @@ export const TeacherDashboard: React.FC = () => {
                     <div className="rounded-lg p-2 md:p-3 border border-gray-200 col-span-2" style={{ backgroundColor: '#FFFBEB' }}>
                       <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>出題形式</div>
                       <div className="text-sm md:text-base font-bold text-gray-800 truncate">
-                        {getQuestionTypeDisplayName(quizConfig.enabledQuestionTypes[0])}
+                        {quizConfig.quizFormat ? 
+                          getQuizFormatDisplayName(quizConfig.quizFormat) : 
+                          getQuestionTypeDisplayName(quizConfig.enabledQuestionTypes[0])
+                        }
                       </div>
                     </div>
                   </div>

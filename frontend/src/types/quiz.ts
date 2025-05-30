@@ -206,6 +206,11 @@ export interface QuizConfig {
   };
   enabledQuestionTypes: QuestionType[];  // 有効な出題形式
   difficulty?: string;
+  quizFormat?: {                  // 元のフォーマット情報
+    input1: string;
+    input2?: string;
+    output: string;
+  };
 }
 
 // Generated quiz question for display
