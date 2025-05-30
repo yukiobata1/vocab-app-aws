@@ -153,7 +153,7 @@ export const StudentContainer: React.FC = () => {
                 {mode === 'study' ? 'クイズを準備中...' : 'ルームに参加中...'}
               </div>
               <div className="text-gray-500">
-                {mode === 'study' ? '問題を生成しています' : 'DynamoDBから問題を取得しています'}
+                {mode === 'study' ? '問題を生成しています' : '問題を取得しています'}
               </div>
             </div>
           </div>

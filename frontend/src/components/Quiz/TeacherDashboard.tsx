@@ -137,7 +137,7 @@ export const TeacherDashboard: React.FC = () => {
                 クイズルームを作成中...
               </div>
               <div className="text-sm md:text-base text-gray-500">
-                問題を生成してDynamoDBに保存しています
+                問題を生成してコードを発行しています
               </div>
             </div>
           </div>
@@ -198,7 +198,7 @@ export const TeacherDashboard: React.FC = () => {
                 >
                   <div className="text-white text-center">
                     <div className="text-xs md:text-sm mb-1 md:mb-2" style={{ color: 'white' }}>
-                      クイズコード {isCopied && <span className="text-xs">✅ コピーしました</span>}
+                      {isCopied ? '✅ コピーしました' : 'クイズコードをコピー'}
                     </div>
                     <div className="text-4xl sm:text-5xl md:text-8xl font-mono font-bold tracking-wider" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
                       {roomCode}
