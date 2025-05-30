@@ -8,6 +8,7 @@ import { vocabService } from '../../services/vocabService';
 import { roomCodeService } from '../../services/roomCodeService';
 import { Button } from '@/components/ui/button';
 import { QUESTION_TYPE_CONFIGS } from '../../types/quiz';
+import { colors } from '@/config/colors';
 
 type TeacherState = 'config' | 'generating' | 'active' | 'error';
 
@@ -120,17 +121,18 @@ export const TeacherDashboard: React.FC = () => {
     }
   };
 
+  const { newGoldColor, crimsonColor } = colors;
+
   const renderContent = () => {
     switch (state) {
       case 'config':
         return <TeacherConfig onConfigSubmit={handleConfigSubmit} />;
 
       case 'generating':
-        const loadingGoldColor = "#C89F63";
-        return (
+          return (
           <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-4 mx-auto mb-4 md:mb-6" style={{ borderColor: loadingGoldColor }}></div>
+              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-4 mx-auto mb-4 md:mb-6" style={{ borderColor: newGoldColor }}></div>
               <div className="text-xl md:text-2xl font-medium text-gray-700 mb-2">
                 クイズルームを作成中...
               </div>
@@ -142,8 +144,6 @@ export const TeacherDashboard: React.FC = () => {
         );
 
       case 'active':
-        const crimsonColor = "#8C1515";
-        const goldColor = "#C89F63";
         return (
           <div className="min-h-screen bg-gray-50 p-4">
             <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
@@ -192,7 +192,7 @@ export const TeacherDashboard: React.FC = () => {
               <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-12 text-center">
                 <div 
                   className="rounded-xl md:rounded-2xl p-4 md:p-8 mb-4 md:mb-8 border-4 cursor-pointer hover:opacity-90 transition-opacity duration-200" 
-                  style={{ backgroundColor: goldColor, borderColor: crimsonColor }}
+                  style={{ backgroundColor: newGoldColor, borderColor: crimsonColor }}
                   onClick={copyRoomCode}
                   title="クリックでコピー"
                 >
@@ -221,7 +221,7 @@ export const TeacherDashboard: React.FC = () => {
                   <Button
                     onClick={copyRoomCode}
                     className="text-white font-bold py-3 px-4 md:px-6 rounded-lg md:rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 touch-manipulation shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
-                    style={{ backgroundColor: goldColor }}
+                    style={{ backgroundColor: newGoldColor }}
                   >
                     <span>{isCopied ? '✅' : '📋'}</span>
                     <span className="text-sm md:text-base">{isCopied ? 'コピーしました' : 'コードをコピー'}</span>
@@ -250,19 +250,19 @@ export const TeacherDashboard: React.FC = () => {
                 <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4" style={{ color: crimsonColor }}>📋 手順</h3>
                 <div className="space-y-2 md:space-y-3 text-gray-600">
                   <div className="flex items-start space-x-2 md:space-x-3">
-                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>1</span>
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>1</span>
                     <span className="text-sm md:text-base">上の6桁コードを黒板やプロジェクターで生徒に見せてください</span>
                   </div>
                   <div className="flex items-start space-x-2 md:space-x-3">
-                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>2</span>
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>2</span>
                     <span className="text-sm md:text-base">生徒に「生徒用」→「教室テスト」モードでアプリを開いてもらいます</span>
                   </div>
                   <div className="flex items-start space-x-2 md:space-x-3">
-                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>3</span>
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>3</span>
                     <span className="text-sm md:text-base">生徒がコードを入力してクイズを開始します</span>
                   </div>
                   <div className="flex items-start space-x-2 md:space-x-3">
-                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: goldColor }}>4</span>
+                    <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>4</span>
                     <span className="text-sm md:text-base">終了したら「ルームを終了」で新しいクイズを設定できます</span>
                   </div>
                 </div>

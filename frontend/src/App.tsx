@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { TeacherDashboard } from './components/Quiz/TeacherDashboard';
 import { StudentContainer } from './components/Quiz/StudentContainer';
+import { colors } from './config/colors';
 import './App.css';
 
 type AppMode = 'teacher' | 'student';
 
 function App() {
   const [mode, setMode] = useState<AppMode>('teacher');
-  
-  // Define colors matching TeacherConfig component
-  const crimsonColor = "#8C1515"; // えんじ色
-
+  const { crimsonColor } = colors;
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 発展したヘッダー */}

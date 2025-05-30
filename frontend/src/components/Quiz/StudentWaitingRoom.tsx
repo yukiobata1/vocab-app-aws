@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { vocabService } from '../../services/vocabService';
 import type { QuizConfig, VocabBook, QuestionType, StudentMode, VocabQuestion } from '../../types/quiz';
 import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
+import { colors } from '../../config/colors';
 
 interface StudentWaitingRoomProps {
   onStartQuiz: (studentName: string, config: QuizConfig) => void;
@@ -107,9 +108,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     }
   };
 
-
-  const newGoldColor = "#C89F63"; // 新しい黄土色
-  const crimsonColor = "#8C1515"; // えんじ色の代表例 (スタンフォードカーディナル)
+  const { newGoldColor, crimsonColor } = colors;
 
   if (isLoading) {
     return (
@@ -126,8 +125,8 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen p-4 pt-8">
+      <div className="max-w-2xl w-full mx-auto">
         <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8">
           {/* Header */}
           <h2 className="text-3xl font-bold text-center mb-8" style={{ color: crimsonColor }}>

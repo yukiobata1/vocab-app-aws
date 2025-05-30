@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { type QuizConfig, QuestionType, type VocabBook, type VocabQuestion } from '../../types/quiz';
 import { vocabService } from '../../services/vocabService';
 import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
+import { colors } from '@/config/colors';
 
 interface TeacherConfigProps {
   onConfigSubmit: (config: QuizConfig) => void;
@@ -123,10 +124,7 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
     onConfigSubmit(config);
   };
 
-  const newGoldColor = "#C89F63"; // 新しい黄土色
-  const crimsonColor = "#8C1515"; // えんじ色の代表例 (スタンフォードカーディナル)
-  // より明るいえんじ色が必要な場合は、例えば #A70000 など
-
+  const { newGoldColor, crimsonColor } = colors;
   if (loading && books.length === 0) {
     return (
       <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center p-4 text-center">
@@ -141,7 +139,7 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8 max-w-2xl mx-auto my-8">
+    <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8 max-w-2xl mx-auto mt-8">
       <h2 
         className="text-3xl font-bold text-center mb-8"
         style={{ color: crimsonColor }}

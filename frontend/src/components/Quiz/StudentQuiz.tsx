@@ -79,6 +79,16 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     setFeedbackStates(newFeedbackStates);
 
     setTimeout(() => {
+      // モバイルでのスタイル状態を完全にクリア
+      document.querySelectorAll('.option-button').forEach(btn => {
+        const element = btn as HTMLElement;
+        element.style.backgroundColor = '';
+        element.style.transform = '';
+        element.style.boxShadow = '';
+        // フォーカス状態もクリア
+        element.blur();
+      });
+      
       if (currentQuestionIndex < quizData.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption(null);
@@ -113,6 +123,16 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
       }
       
       setTimeout(() => {
+        // モバイルでのスタイル状態を完全にクリア
+        document.querySelectorAll('.option-button').forEach(btn => {
+          const element = btn as HTMLElement;
+          element.style.backgroundColor = '';
+          element.style.transform = '';
+          element.style.boxShadow = '';
+          // フォーカス状態もクリア
+          element.blur();
+        });
+        
         if (currentQuestionIndex < quizData.length - 1) {
           setCurrentQuestionIndex(currentQuestionIndex + 1);
           setSelectedOption(null);
@@ -191,7 +211,7 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
           {/* Options Grid - 2x2 layout like original */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {currentQuestion.options.map((option, index) => {
-              let buttonClass = 'option-button relative p-6 text-xl font-medium rounded-xl border-2 transition-all duration-150 transform hover:scale-105 min-h-[100px] flex items-center justify-center';
+              let buttonClass = 'option-button relative p-6 text-xl font-medium rounded-xl border-2 transition-all duration-150 transform hover:md:scale-105 min-h-[100px] flex items-center justify-center';
               let buttonStyle: React.CSSProperties = {};
               
               if (selectedOption) {
@@ -217,14 +237,18 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                   onClick={() => handleOptionClick(option)}
                   disabled={!!selectedOption || timeRemaining === 0}
                   onMouseEnter={(e) => {
-                    if (!selectedOption) {
-                      e.currentTarget.style.backgroundColor = '#FFFBEB';
+                    // モバイルデバイスまたは選択済みの場合はマウスイベントを無視
+                    if ('ontouchstart' in window || selectedOption) {
+                      return;
                     }
+                    e.currentTarget.style.backgroundColor = '#FFFBEB';
                   }}
                   onMouseLeave={(e) => {
-                    if (!selectedOption) {
-                      e.currentTarget.style.backgroundColor = 'white';
+                    // モバイルデバイスまたは選択済みの場合はマウスイベントを無視
+                    if ('ontouchstart' in window || selectedOption) {
+                      return;
                     }
+                    e.currentTarget.style.backgroundColor = 'white';
                   }}
                 >
                   <span className="text-center leading-relaxed">{option}</span>
