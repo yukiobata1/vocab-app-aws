@@ -171,7 +171,7 @@ def lambda_handler(event, context):
             return 0
 
         # Load and process N4 vocabulary
-        n4_csv_path = event.get('n4_csv_path', '/opt/frontend/public/N4_vocab.csv')
+        n4_csv_path = event.get('n4_csv_path', './N4_vocab.csv')
         n4_data = load_csv_from_s3_or_url(n4_csv_path, 'N4')
         n4_inserted = bulk_insert_vocab_book_and_questions(
             n4_data, 
@@ -181,7 +181,7 @@ def lambda_handler(event, context):
         )
 
         # Load and process N3 vocabulary
-        n3_csv_path = event.get('n3_csv_path', '/opt/frontend/public/N3_vocab.csv')
+        n3_csv_path = event.get('n3_csv_path', './N3_vocab.csv')
         n3_data = load_csv_from_s3_or_url(n3_csv_path, 'N3')
         n3_inserted = bulk_insert_vocab_book_and_questions(
             n3_data, 
@@ -190,7 +190,17 @@ def lambda_handler(event, context):
             'JLPT N3レベルの語彙集（日本語・ネパール語対照）'
         )
 
-        total_inserted = n4_inserted + n3_inserted
+        # Load and process みん日 vocabulary
+        minnichi_csv_path = event.get('minnichi_csv_path', './みん日1.csv')
+        minnichi_data = load_csv_from_s3_or_url(minnichi_csv_path, 'みん日')
+        minnichi_inserted = bulk_insert_vocab_book_and_questions(
+            minnichi_data, 
+            'みん日', 
+            'みん日', 
+            'みんなの日本語初級の語彙集（日本語・ネパール語対照）'
+        )
+
+        total_inserted = n4_inserted + n3_inserted + minnichi_inserted
         conn.commit()
         
         # Get stats
@@ -202,7 +212,7 @@ def lambda_handler(event, context):
         
         conn.close()
         
-        print(f"✅ Data import completed: {total_inserted} questions inserted ({n4_inserted} N4, {n3_inserted} N3)")
+        print(f"✅ Data import completed: {total_inserted} questions inserted ({n4_inserted} N4, {n3_inserted} N3, {minnichi_inserted} みん日)")
         
         return {
             'statusCode': 200,
@@ -213,6 +223,7 @@ def lambda_handler(event, context):
                 'inserted': total_inserted,
                 'n4_inserted': n4_inserted,
                 'n3_inserted': n3_inserted,
+                'minnichi_inserted': minnichi_inserted,
                 'optimization': 'Used execute_values bulk insert with 1000-row chunks'
             })
         }

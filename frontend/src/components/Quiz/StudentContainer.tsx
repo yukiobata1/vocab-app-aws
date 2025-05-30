@@ -164,7 +164,6 @@ export const StudentContainer: React.FC = () => {
           <StudentQuiz
             quizData={quizData}
             onQuizComplete={handleQuizComplete}
-            studentName={studentName}
           />
         );
 

@@ -108,10 +108,23 @@ export const getQuestionTypeFromFormat = (
 ): QuestionType => {
   // Handle compound formats (with two inputs)
   if (input2) {
+    // 文脈 + ネパール語 combinations
     if ((input1 === '文脈' || input2 === '文脈') && 
         (input1 === 'ネパール語' || input2 === 'ネパール語')) {
       if (output === '漢字') return QuestionType.FILL_IN_BLANK_NEPALI_TO_KANJI;
       if (output === '読み') return QuestionType.FILL_IN_BLANK_NEPALI_TO_RUBI;
+    }
+    // 文脈 + 漢字 combinations
+    if ((input1 === '文脈' || input2 === '文脈') && 
+        (input1 === '漢字' || input2 === '漢字')) {
+      if (output === 'ネパール語') return QuestionType.FILL_IN_BLANK_KANJI_TO_NEPALI;
+      if (output === '読み') return QuestionType.FILL_IN_BLANK_KANJI_TO_RUBI;
+    }
+    // 文脈 + 読み combinations
+    if ((input1 === '文脈' || input2 === '文脈') && 
+        (input1 === '読み' || input2 === '読み')) {
+      if (output === 'ネパール語') return QuestionType.FILL_IN_BLANK_RUBI_TO_NEPALI;
+      if (output === '漢字') return QuestionType.FILL_IN_BLANK_RUBI_TO_KANJI;
     }
   }
 
@@ -123,6 +136,8 @@ export const getQuestionTypeFromFormat = (
   if (input1 === '漢字' && output === 'ネパール語') return QuestionType.KANJI_TO_NEPALI;
   if (input1 === '読み' && output === 'ネパール語') return QuestionType.RUBI_TO_NEPALI;
   if (input1 === '文脈' && output === '漢字') return QuestionType.FILL_IN_BLANK;
+  if (input1 === '文脈' && output === '読み') return QuestionType.FILL_IN_BLANK_TO_RUBI;
+  if (input1 === '文脈' && output === 'ネパール語') return QuestionType.FILL_IN_BLANK_TO_NEPALI;
 
   return QuestionType.NEPALI_TO_KANJI; // Default fallback
 };
@@ -146,10 +161,22 @@ export const getFormatFromQuestionType = (
       return { input1: '読み', output: 'ネパール語' };
     case QuestionType.FILL_IN_BLANK:
       return { input1: '文脈', output: '漢字' };
+    case QuestionType.FILL_IN_BLANK_TO_RUBI:
+      return { input1: '文脈', output: '読み' };
+    case QuestionType.FILL_IN_BLANK_TO_NEPALI:
+      return { input1: '文脈', output: 'ネパール語' };
     case QuestionType.FILL_IN_BLANK_NEPALI_TO_KANJI:
       return { input1: '文脈', input2: 'ネパール語', output: '漢字' };
     case QuestionType.FILL_IN_BLANK_NEPALI_TO_RUBI:
       return { input1: '文脈', input2: 'ネパール語', output: '読み' };
+    case QuestionType.FILL_IN_BLANK_KANJI_TO_NEPALI:
+      return { input1: '文脈', input2: '漢字', output: 'ネパール語' };
+    case QuestionType.FILL_IN_BLANK_KANJI_TO_RUBI:
+      return { input1: '文脈', input2: '漢字', output: '読み' };
+    case QuestionType.FILL_IN_BLANK_RUBI_TO_NEPALI:
+      return { input1: '文脈', input2: '読み', output: 'ネパール語' };
+    case QuestionType.FILL_IN_BLANK_RUBI_TO_KANJI:
+      return { input1: '文脈', input2: '読み', output: '漢字' };
     default:
       return { input1: 'ネパール語', output: '漢字' };
   }

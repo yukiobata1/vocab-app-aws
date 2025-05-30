@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { vocabService } from '../../services/vocabService';
-import type { QuizConfig, VocabBook, QuestionType, StudentMode } from '../../types/quiz';
-import { QuizFormatSelector, getQuestionTypeFromFormat } from './QuizFormatSelector';
+import type { QuizConfig, VocabBook, QuestionType, StudentMode, VocabQuestion } from '../../types/quiz';
+import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
 
 interface StudentWaitingRoomProps {
   onStartQuiz: (studentName: string, config: QuizConfig) => void;
@@ -9,7 +9,7 @@ interface StudentWaitingRoomProps {
 }
 
 export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQuiz, onJoinRoom }) => {
-  const [mode, setMode] = useState<StudentMode>('study');
+  const [mode, setMode] = useState<StudentMode>('classroom');
   const [studentName, setStudentName] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [isStarting, setIsStarting] = useState(false);
@@ -27,6 +27,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     output: '漢字'
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [vocabularyQuestions, setVocabularyQuestions] = useState<VocabQuestion[]>([]);
 
   useEffect(() => {
     const loadBooks = async () => {
@@ -34,6 +35,9 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
         const response = await vocabService.getBooks();
         const booksData = response.books.filter(book => book.question_count > 4);
         setBooks(booksData);
+        if (booksData.length > 0) {
+          setSelectedBookId(booksData[0].id);
+        }
       } catch (error) {
         console.error('Failed to load books:', error);
       } finally {
@@ -42,6 +46,24 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     };
     loadBooks();
   }, []);
+
+  useEffect(() => {
+    if (selectedBookId && books.length > 0) {
+      loadVocabularyQuestions(selectedBookId);
+    }
+  }, [selectedBookId, books]);
+
+  const loadVocabularyQuestions = async (bookId: number) => {
+    try {
+      // Load a sample of questions to analyze field availability
+      const response = await vocabService.getQuestions(bookId, 20, 0);
+      setVocabularyQuestions(response.questions);
+    } catch (err) {
+      console.error('Failed to load vocabulary questions for field analysis:', err);
+      // Don't show error to user as this is for field detection only
+      setVocabularyQuestions([]);
+    }
+  };
 
   const handleStart = async () => {
     if (!studentName.trim()) {
@@ -116,20 +138,6 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
           <div className="mb-6">
             <div className="flex rounded-xl p-1 bg-gray-100">
               <button
-                onClick={() => setMode('study')}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  mode === 'study'
-                    ? 'shadow-sm'
-                    : ''
-                }`}
-                style={{
-                  backgroundColor: mode === 'study' ? 'white' : 'transparent',
-                  color: mode === 'study' ? crimsonColor : '#6B7280'
-                }}
-              >
-                📖 勉強モード
-              </button>
-              <button
                 onClick={() => setMode('classroom')}
                 className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
                   mode === 'classroom'
@@ -142,6 +150,20 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                 }}
               >
                 🏫 教室テスト
+              </button>
+              <button
+                onClick={() => setMode('study')}
+                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  mode === 'study'
+                    ? 'shadow-sm'
+                    : ''
+                }`}
+                style={{
+                  backgroundColor: mode === 'study' ? 'white' : 'transparent',
+                  color: mode === 'study' ? crimsonColor : '#6B7280'
+                }}
+              >
+                📖 勉強モード
               </button>
             </div>
           </div>
@@ -253,10 +275,11 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                   </select>
                 </div>
 
-                <QuizFormatSelector
+                <FieldAwareQuizFormatSelector
                   value={quizFormat}
                   onChange={handleFormatChange}
                   allowMultipleInputs={true}
+                  vocabularyQuestions={vocabularyQuestions}
                 />
               </>
             )}

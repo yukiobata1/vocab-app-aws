@@ -268,6 +268,23 @@ export class VocabAppStack extends cdk.Stack {
         value: importLambda.functionName,
         description: `Import Lambda function name for ${environment}`,
       });
+
+      // Cleanup Lambda for deleting small vocabulary books
+      const cleanupLambda = new lambda.Function(this, `VocabApp-Cleanup-Lambda-${environment}`, {
+        ...lambdaConfig,
+        handler: 'cleanup_small_books.lambda_handler',
+        code: lambda.Code.fromAsset('lambda'),
+        timeout: cdk.Duration.minutes(5),
+        memorySize: 256,
+        description: 'Cleanup vocabulary books with few questions',
+      });
+
+      dbSecret.grantRead(cleanupLambda);
+
+      new cdk.CfnOutput(this, `CleanupLambdaName`, {
+        value: cleanupLambda.functionName,
+        description: `Cleanup Lambda function name for ${environment}`,
+      });
     }
 
     // Room code Lambda functions (DynamoDB only, no VPC needed)

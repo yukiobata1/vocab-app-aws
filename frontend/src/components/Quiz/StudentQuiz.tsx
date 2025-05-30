@@ -10,13 +10,11 @@ interface QuizData {
 interface StudentQuizProps {
   quizData: QuizData[];
   onQuizComplete: (score: number, totalQuestions: number) => void;
-  studentName: string;
 }
 
 export const StudentQuiz: React.FC<StudentQuizProps> = ({ 
   quizData, 
   onQuizComplete, 
-  studentName: _studentName 
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -33,6 +31,8 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     incorrectSound.load();
     
     setSounds({ correct: correctSound, incorrect: incorrectSound });
+
+    console.log("quizData", quizData);
   }, []);
 
   // Reset quiz state when quizData changes (for retry functionality)

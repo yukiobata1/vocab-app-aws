@@ -2538,7 +2538,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "9fa7b2baccff4f2ca591851cfc52f211ad1a694c1d7c825e356cb62d08798024.zip"
+                      "s3Key": "d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00.zip"
                     },
                     "description": "Import vocabulary data from files",
                     "environment": {
@@ -2608,6 +2608,232 @@
           "ImportLambdaName": {
             "id": "ImportLambdaName",
             "path": "VocabAppDevStack/ImportLambdaName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.164.1"
+            }
+          },
+          "VocabApp-Cleanup-Lambda-dev": {
+            "id": "VocabApp-Cleanup-Lambda-dev",
+            "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.164.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          },
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.164.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "secretsmanager:DescribeSecret",
+                                    "secretsmanager:GetSecretValue"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Ref": "VocabAppDBSecretdev9198F524"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "VocabAppCleanupLambdadevServiceRoleDefaultPolicyDB19F4AC",
+                            "roles": [
+                              {
+                                "Ref": "VocabAppCleanupLambdadevServiceRole4FD103BF"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.164.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.164.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.164.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.164.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.164.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.164.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
+                      "s3Key": "d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00.zip"
+                    },
+                    "description": "Cleanup vocabulary books with few questions",
+                    "environment": {
+                      "variables": {
+                        "SECRET_ARN": {
+                          "Ref": "VocabAppDBSecretdev9198F524"
+                        },
+                        "PROXY_ENDPOINT": {
+                          "Fn::GetAtt": [
+                            "VocabAppProxydevF5DC84E5",
+                            "Endpoint"
+                          ]
+                        },
+                        "DB_NAME": "vocabapp",
+                        "ENVIRONMENT": "dev",
+                        "QUIZ_ROOMS_TABLE": {
+                          "Ref": "VocabAppQuizRoomsdevC08A7E07"
+                        }
+                      }
+                    },
+                    "handler": "cleanup_small_books.lambda_handler",
+                    "layers": [
+                      {
+                        "Ref": "VocabAppPsycopg2Layerdev518B3A39"
+                      }
+                    ],
+                    "memorySize": 256,
+                    "role": {
+                      "Fn::GetAtt": [
+                        "VocabAppCleanupLambdadevServiceRole4FD103BF",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "python3.9",
+                    "timeout": 300,
+                    "vpcConfig": {
+                      "subnetIds": [
+                        {
+                          "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet1Subnet530032F1"
+                        },
+                        {
+                          "Ref": "VocabAppVPCdevVocabAppPrivatedevSubnet2SubnetCB2CA029"
+                        }
+                      ],
+                      "securityGroupIds": [
+                        {
+                          "Fn::GetAtt": [
+                            "VocabAppLambdaSGdev3845940D",
+                            "GroupId"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.164.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.164.1"
+            }
+          },
+          "CleanupLambdaName": {
+            "id": "CleanupLambdaName",
+            "path": "VocabAppDevStack/CleanupLambdaName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnOutput",
               "version": "2.164.1"

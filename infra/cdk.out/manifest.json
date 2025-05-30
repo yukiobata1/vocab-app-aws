@@ -19,7 +19,7 @@
         "notificationArns": [],
         "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-deploy-role-982722143806-ap-northeast-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-cfn-exec-role-982722143806-ap-northeast-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/cc1bfbb73cd8a6d70a35902f37c67a4ad50729be52ffe92b6302b98f8cc3d83b.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/e2c86ab6f1819b69e88a9b0cec03be2fc07ddd7313d611b9a619d7a3f9e680d5.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -431,6 +431,30 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "ImportLambdaName"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCleanupLambdadevServiceRole4FD103BF"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCleanupLambdadevServiceRoleDefaultPolicyDB19F4AC"
+          }
+        ],
+        "/VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VocabAppCleanupLambdadev06AE702D"
+          }
+        ],
+        "/VocabAppDevStack/CleanupLambdaName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CleanupLambdaName"
           }
         ],
         "/VocabAppDevStack/VocabApp-CreateRoom-dev/ServiceRole/Resource": [
@@ -980,7 +1004,7 @@
         "notificationArns": [],
         "assumeRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-deploy-role-982722143806-ap-northeast-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::982722143806:role/cdk-hnb659fds-cfn-exec-role-982722143806-ap-northeast-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/327afd77883dde250c327d50722d7238c26d6b6a364ef5c598c96c3719c8be30.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-982722143806-ap-northeast-1/c6e2bfcae4893df29ff5700c3320c8ca4560fbc70db36c61ed73bef5c274f239.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [

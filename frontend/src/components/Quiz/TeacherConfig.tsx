@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { type QuizConfig, QuestionType, type VocabBook } from '../../types/quiz';
+import { type QuizConfig, QuestionType, type VocabBook, type VocabQuestion } from '../../types/quiz';
 import { vocabService } from '../../services/vocabService';
-import { QuizFormatSelector, getQuestionTypeFromFormat } from './QuizFormatSelector';
+import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
 
 interface TeacherConfigProps {
   onConfigSubmit: (config: QuizConfig) => void;
@@ -23,6 +23,7 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [vocabularyQuestions, setVocabularyQuestions] = useState<VocabQuestion[]>([]);
 
 
   // Update selectedQuestionType when format changes
@@ -35,6 +36,12 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
   useEffect(() => {
     loadBooks();
   }, []);
+
+  useEffect(() => {
+    if (selectedBookId) {
+      loadVocabularyQuestions(selectedBookId);
+    }
+  }, [selectedBookId]);
 
   const loadBooks = async () => {
     try {
@@ -51,6 +58,18 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
       console.error('Failed to load books:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadVocabularyQuestions = async (bookId: number) => {
+    try {
+      // Load a sample of questions to analyze field availability
+      const response = await vocabService.getQuestions(bookId, 20, 0);
+      setVocabularyQuestions(response.questions);
+    } catch (err) {
+      console.error('Failed to load vocabulary questions for field analysis:', err);
+      // Don't show error to user as this is for field detection only
+      setVocabularyQuestions([]);
     }
   };
 
@@ -219,10 +238,11 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
             />
           </div>
 
-          <QuizFormatSelector
+          <FieldAwareQuizFormatSelector
             value={quizFormat}
             onChange={handleFormatChange}
             allowMultipleInputs={true}
+            vocabularyQuestions={vocabularyQuestions}
           />
         </div>
 
