@@ -65,12 +65,17 @@ aws secretsmanager get-secret-value --secret-id <secret-arn> --query 'SecretStri
 
 ### Frontend Structure
 - `src/components/Quiz/`: React components for quiz functionality
-  - `QuizContainer.tsx`: Main quiz orchestration
-  - `TeacherDashboard.tsx`: Teacher controls and monitoring
-  - `StudentQuiz.tsx`: Student quiz interface
-- `src/types/quiz.ts`: TypeScript definitions for quiz system and question types
-- `src/utils/`: Quiz generation and room management utilities
-- `src/config/api.ts`: API configuration and endpoint definitions
+  - `TeacherDashboard.tsx`: Teacher controls and room management
+  - `TeacherConfig.tsx`: Quiz configuration form
+  - `StudentContainer.tsx`: Student mode orchestration and state management
+  - `StudentWaitingRoom.tsx`: Student entry point with mode selection
+  - `StudentQuiz.tsx`: Quiz taking interface with mobile-optimized interactions
+  - `StudentResult.tsx`: Results display
+  - `FieldAwareQuizFormatSelector.tsx`: Intelligent quiz format selector with field validation
+- `src/types/quiz.ts`: TypeScript definitions for quiz system and 15 question types
+- `src/utils/`: Quiz generation, field detection, and score management utilities
+- `src/config/`: API configuration and shared color constants
+- `src/services/`: REST API clients for vocabulary and room management
 
 ### Infrastructure
 - `lib/vocab-app-stack.ts`: Main CDK stack with Aurora, Lambda, and API Gateway
@@ -78,11 +83,11 @@ aws secretsmanager get-secret-value --secret-id <secret-arn> --query 'SecretStri
 - Two environments: `dev` (single writer, 0.5-2 ACU) and `prod` (with reader, 1-16 ACU)
 
 ### Question Types System
-The quiz supports 7 configurable question types defined in `types/quiz.ts`:
-- Nepali → Kanji/Reading
-- Kanji ↔ Reading  
-- Context-based fill-in-blank
-- Japanese → Nepali
+The quiz supports 15 configurable question types defined in `types/quiz.ts`:
+- Basic translations: Nepali ↔ Kanji, Nepali ↔ Reading, Kanji ↔ Reading
+- Context-based: Fill-in-blank with Japanese questions
+- Compound formats: Context + input field → output field (e.g., "文脈+読み → 漢字")
+- Field-aware validation ensures only available data fields are used for each vocabulary book
 
 ## Environment Configuration
 
@@ -114,3 +119,24 @@ Key tables:
 - Quiz questions generate 4-choice multiple choice with intelligent distractors
 - API endpoints handle both vocabulary books listing and individual questions
 - Infrastructure supports both development and production environments with different scaling parameters
+
+## Key Architecture Patterns
+
+### Quiz Flow
+1. **Teacher Mode**: TeacherConfig → TeacherDashboard (room creation) → Students join via room code
+2. **Student Mode**: StudentWaitingRoom (mode selection) → StudentContainer (state management) → StudentQuiz → StudentResult
+
+### State Management
+- No global state management - uses React local state and prop drilling
+- Quiz configuration passed through components as props
+- Room codes managed server-side via DynamoDB with 24-hour expiration
+
+### Mobile Optimization
+- Responsive design with mobile-first approach
+- Touch-optimized quiz interface with audio/haptic feedback
+- Proper cleanup of CSS states to prevent mobile interaction artifacts
+
+### Field Detection System
+- `FieldAwareQuizFormatSelector` analyzes vocabulary data to determine available fields
+- Prevents quiz creation with unavailable data combinations
+- `fieldDetection.ts` provides utilities for field availability analysis

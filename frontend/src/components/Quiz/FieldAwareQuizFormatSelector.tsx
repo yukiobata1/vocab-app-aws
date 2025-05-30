@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { colors } from '../../config/colors';
 import { QuestionType, type VocabQuestion } from '../../types/quiz';
-import { detectAvailableFields, isQuestionTypeCompatible } from '../../utils/fieldDetection';
+import { detectAvailableFields, isQuestionTypeCompatible, isCompoundFormatCompatible } from '../../utils/fieldDetection';
 
 interface FieldAwareQuizFormatSelectorProps {
   value: {
@@ -56,6 +56,13 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
 
   // Check if the current combination would result in a compatible question type
   const isCurrentCombinationValid = (): boolean => {
+    // For compound formats, use the dedicated compatibility check
+    if (value.input2 && value.input2 !== 'なし') {
+      const inputs = [value.input1, value.input2];
+      return isCompoundFormatCompatible(inputs, value.output, availableFields);
+    }
+    
+    // For single input formats, use the existing logic
     const questionType = getQuestionTypeFromFormat(value.input1, value.output, value.input2);
     return isQuestionTypeCompatible(questionType, availableFields);
   };
@@ -172,44 +179,75 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
   );
 };
 
-// Helper function to convert format to QuestionType (same as original)
+// Helper function to convert format to QuestionType with comprehensive combination handling
 export const getQuestionTypeFromFormat = (
   input1: string,
   output: string,
   input2?: string
 ): QuestionType => {
-  // Handle compound formats (with two inputs)
-  if (input2) {
-    // 文脈 + ネパール語 combinations
-    if ((input1 === '文脈' || input2 === '文脈') && 
-        (input1 === 'ネパール語' || input2 === 'ネパール語')) {
+  // Normalize inputs - remove duplicates and handle special cases
+  const normalizeInputs = (inp1: string, inp2?: string) => {
+    const inputs = [inp1];
+    if (inp2 && inp2 !== 'なし' && inp2 !== inp1) {
+      inputs.push(inp2);
+    }
+    return inputs.sort(); // Sort for consistent ordering
+  };
+
+  const inputs = normalizeInputs(input1, input2);
+  const hasContext = inputs.includes('文脈');
+  const hasKanji = inputs.includes('漢字');
+  const hasRubi = inputs.includes('読み');
+  const hasNepali = inputs.includes('ネパール語');
+
+  // Handle compound formats (with two different inputs)
+  if (inputs.length === 2) {
+    // 文脈 + other field combinations
+    if (hasContext && hasNepali) {
       if (output === '漢字') return QuestionType.FILL_IN_BLANK_NEPALI_TO_KANJI;
       if (output === '読み') return QuestionType.FILL_IN_BLANK_NEPALI_TO_RUBI;
     }
-    // 文脈 + 漢字 combinations
-    if ((input1 === '文脈' || input2 === '文脈') && 
-        (input1 === '漢字' || input2 === '漢字')) {
+    if (hasContext && hasKanji) {
       if (output === 'ネパール語') return QuestionType.FILL_IN_BLANK_KANJI_TO_NEPALI;
       if (output === '読み') return QuestionType.FILL_IN_BLANK_KANJI_TO_RUBI;
     }
-    // 文脈 + 読み combinations
-    if ((input1 === '文脈' || input2 === '文脈') && 
-        (input1 === '読み' || input2 === '読み')) {
+    if (hasContext && hasRubi) {
       if (output === 'ネパール語') return QuestionType.FILL_IN_BLANK_RUBI_TO_NEPALI;
       if (output === '漢字') return QuestionType.FILL_IN_BLANK_RUBI_TO_KANJI;
     }
+    
+    // Non-context combinations (新しい組み合わせ)
+    if (hasKanji && hasRubi) {
+      if (output === 'ネパール語') {
+        // 漢字+読み → ネパール語
+        return QuestionType.KANJI_RUBI_TO_NEPALI;
+      }
+    }
+    if (hasKanji && hasNepali) {
+      if (output === '読み') {
+        // ネパール語+漢字 → 読み
+        return QuestionType.NEPALI_KANJI_TO_RUBI;
+      }
+    }
+    if (hasRubi && hasNepali) {
+      if (output === '漢字') {
+        // ネパール語+読み → 漢字
+        return QuestionType.NEPALI_RUBI_TO_KANJI;
+      }
+    }
   }
 
-  // Handle single input formats
-  if (input1 === 'ネパール語' && output === '漢字') return QuestionType.NEPALI_TO_KANJI;
-  if (input1 === 'ネパール語' && output === '読み') return QuestionType.NEPALI_TO_RUBI;
-  if (input1 === '漢字' && output === '読み') return QuestionType.KANJI_TO_RUBI;
-  if (input1 === '読み' && output === '漢字') return QuestionType.RUBI_TO_KANJI;
-  if (input1 === '漢字' && output === 'ネパール語') return QuestionType.KANJI_TO_NEPALI;
-  if (input1 === '読み' && output === 'ネパール語') return QuestionType.RUBI_TO_NEPALI;
-  if (input1 === '文脈' && output === '漢字') return QuestionType.FILL_IN_BLANK;
-  if (input1 === '文脈' && output === '読み') return QuestionType.FILL_IN_BLANK_TO_RUBI;
-  if (input1 === '文脈' && output === 'ネパール語') return QuestionType.FILL_IN_BLANK_TO_NEPALI;
+  // Handle single input formats (unchanged)
+  const singleInput = inputs[0];
+  if (singleInput === 'ネパール語' && output === '漢字') return QuestionType.NEPALI_TO_KANJI;
+  if (singleInput === 'ネパール語' && output === '読み') return QuestionType.NEPALI_TO_RUBI;
+  if (singleInput === '漢字' && output === '読み') return QuestionType.KANJI_TO_RUBI;
+  if (singleInput === '読み' && output === '漢字') return QuestionType.RUBI_TO_KANJI;
+  if (singleInput === '漢字' && output === 'ネパール語') return QuestionType.KANJI_TO_NEPALI;
+  if (singleInput === '読み' && output === 'ネパール語') return QuestionType.RUBI_TO_NEPALI;
+  if (singleInput === '文脈' && output === '漢字') return QuestionType.FILL_IN_BLANK;
+  if (singleInput === '文脈' && output === '読み') return QuestionType.FILL_IN_BLANK_TO_RUBI;
+  if (singleInput === '文脈' && output === 'ネパール語') return QuestionType.FILL_IN_BLANK_TO_NEPALI;
 
   return QuestionType.NEPALI_TO_KANJI; // Default fallback
 };

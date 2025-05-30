@@ -41,7 +41,13 @@ export const QuestionType = {
   FILL_IN_BLANK_KANJI_TO_NEPALI: 'fill_in_blank_kanji_to_nepali', // 文脈+漢字 → ネパール語
   FILL_IN_BLANK_KANJI_TO_RUBI: 'fill_in_blank_kanji_to_rubi',   // 文脈+漢字 → 読み
   FILL_IN_BLANK_RUBI_TO_NEPALI: 'fill_in_blank_rubi_to_nepali', // 文脈+読み → ネパール語
-  FILL_IN_BLANK_RUBI_TO_KANJI: 'fill_in_blank_rubi_to_kanji'    // 文脈+読み → 漢字
+  FILL_IN_BLANK_RUBI_TO_KANJI: 'fill_in_blank_rubi_to_kanji',   // 文脈+読み → 漢字
+  NEPALI_KANJI_TO_RUBI: 'nepali_kanji_to_rubi',                 // ネパール語+漢字 → 読み
+  NEPALI_RUBI_TO_KANJI: 'nepali_rubi_to_kanji',                 // ネパール語+読み → 漢字
+  KANJI_RUBI_TO_NEPALI: 'kanji_rubi_to_nepali',                 // 漢字+読み → ネパール語
+  FILL_IN_BLANK_NEPALI_KANJI_TO_RUBI: 'fill_in_blank_nepali_kanji_to_rubi',     // 文脈+ネパール語+漢字 → 読み
+  FILL_IN_BLANK_NEPALI_RUBI_TO_KANJI: 'fill_in_blank_nepali_rubi_to_kanji',     // 文脈+ネパール語+読み → 漢字
+  FILL_IN_BLANK_KANJI_RUBI_TO_NEPALI: 'fill_in_blank_kanji_rubi_to_nepali'      // 文脈+漢字+読み → ネパール語
 } as const;
 
 export type QuestionType = typeof QuestionType[keyof typeof QuestionType];
@@ -191,6 +197,60 @@ export const QUESTION_TYPE_CONFIGS: Record<QuestionType, QuestionTypeConfig> = {
     questionFields: ['japanese_question', 'jp_rubi'],
     answerField: 'jp_kanji',
     optionsField: 'jp_kanji',
+    enabled: true
+  },
+  [QuestionType.NEPALI_KANJI_TO_RUBI]: {
+    id: QuestionType.NEPALI_KANJI_TO_RUBI,
+    name: 'ネパール語+漢字 → 読み',
+    description: 'ネパール語と漢字を見て読みを選ぶ',
+    questionFields: ['np1', 'jp_kanji'],
+    answerField: 'jp_rubi',
+    optionsField: 'jp_rubi',
+    enabled: true
+  },
+  [QuestionType.NEPALI_RUBI_TO_KANJI]: {
+    id: QuestionType.NEPALI_RUBI_TO_KANJI,
+    name: 'ネパール語+読み → 漢字',
+    description: 'ネパール語と読みを見て漢字を選ぶ',
+    questionFields: ['np1', 'jp_rubi'],
+    answerField: 'jp_kanji',
+    optionsField: 'jp_kanji',
+    enabled: true
+  },
+  [QuestionType.KANJI_RUBI_TO_NEPALI]: {
+    id: QuestionType.KANJI_RUBI_TO_NEPALI,
+    name: '漢字+読み → ネパール語',
+    description: '漢字と読みを見てネパール語を選ぶ',
+    questionFields: ['jp_kanji', 'jp_rubi'],
+    answerField: 'np1',
+    optionsField: 'np1',
+    enabled: true
+  },
+  [QuestionType.FILL_IN_BLANK_NEPALI_KANJI_TO_RUBI]: {
+    id: QuestionType.FILL_IN_BLANK_NEPALI_KANJI_TO_RUBI,
+    name: '文脈+ネパール語+漢字 → 読み',
+    description: '文脈、ネパール語、漢字を見て読みを選ぶ',
+    questionFields: ['japanese_question', 'np1', 'jp_kanji'],
+    answerField: 'jp_rubi',
+    optionsField: 'jp_rubi',
+    enabled: true
+  },
+  [QuestionType.FILL_IN_BLANK_NEPALI_RUBI_TO_KANJI]: {
+    id: QuestionType.FILL_IN_BLANK_NEPALI_RUBI_TO_KANJI,
+    name: '文脈+ネパール語+読み → 漢字',
+    description: '文脈、ネパール語、読みを見て漢字を選ぶ',
+    questionFields: ['japanese_question', 'np1', 'jp_rubi'],
+    answerField: 'jp_kanji',
+    optionsField: 'jp_kanji',
+    enabled: true
+  },
+  [QuestionType.FILL_IN_BLANK_KANJI_RUBI_TO_NEPALI]: {
+    id: QuestionType.FILL_IN_BLANK_KANJI_RUBI_TO_NEPALI,
+    name: '文脈+漢字+読み → ネパール語',
+    description: '文脈、漢字、読みを見てネパール語を選ぶ',
+    questionFields: ['japanese_question', 'jp_kanji', 'jp_rubi'],
+    answerField: 'np1',
+    optionsField: 'np1',
     enabled: true
   }
 };

@@ -67,6 +67,35 @@ export const isQuestionTypeCompatible = (
 };
 
 /**
+ * Checks if a compound format combination is valid with available fields
+ * This handles cases where we want non-context combinations like 漢字+読み→ネパール語
+ */
+export const isCompoundFormatCompatible = (
+  inputs: string[], 
+  output: string, 
+  availableFields: Set<keyof VocabQuestion>
+): boolean => {
+  const formatFieldMap: Record<string, keyof VocabQuestion> = {
+    'ネパール語': 'np1',
+    '漢字': 'jp_kanji',
+    '読み': 'jp_rubi',
+    '文脈': 'japanese_question'
+  };
+
+  // Check if all input fields are available
+  const inputFieldsAvailable = inputs.every(input => {
+    const field = formatFieldMap[input];
+    return field && availableFields.has(field);
+  });
+
+  // Check if output field is available
+  const outputField = formatFieldMap[output];
+  const outputFieldAvailable = outputField && availableFields.has(outputField);
+
+  return inputFieldsAvailable && outputFieldAvailable;
+};
+
+/**
  * Analyzes a vocabulary book's questions and returns field availability summary
  */
 export interface FieldAvailabilityAnalysis {

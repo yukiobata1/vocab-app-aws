@@ -100,17 +100,48 @@ function generateSingleQuestion(
     return value || '';
   }).filter(text => text.trim() !== '');
 
+  console.log('config', config);
+  console.log('questionTexts', questionTexts);
+
   // 複数の質問文を適切に結合
   let questionText = '';
   if (questionTexts.length === 1) {
     questionText = questionTexts[0];
   } else if (questionTexts.length === 2) {
-    // 例: 文脈 + ネパール語 の場合
-    const [context, nepali] = questionTexts;
-    if (config.questionFields.includes('japanese_question') && config.questionFields.includes('np1')) {
-      questionText = `${context}\n\n意味：${nepali}`;
-    } else {
-      questionText = questionTexts.join(' / ');
+    // 複合質問の場合の適切な結合
+    const fieldNames = config.questionFields;
+    
+    // 文脈 + 他のフィールドの組み合わせ
+    if (fieldNames.includes('japanese_question')) {
+      const contextIndex = fieldNames.indexOf('japanese_question');
+      const otherIndex = contextIndex === 0 ? 1 : 0;
+      const context = questionTexts[contextIndex];
+      const otherField = questionTexts[otherIndex];
+      
+      if (fieldNames.includes('np1')) {
+        questionText = `${context}\n\n意味：${otherField}`;
+      } else if (fieldNames.includes('jp_kanji')) {
+        questionText = `${context}\n\n漢字：${otherField}`;
+      } else if (fieldNames.includes('jp_rubi')) {
+        questionText = `${context}\n\n読み：${otherField}`;
+      } else {
+        questionText = `${context}\n\n${otherField}`;
+      }
+    }
+    // 非文脈の複合質問の場合（新しい組み合わせ）
+    else {
+      const labels: Record<string, string> = {
+        'jp_kanji': '漢字',
+        'jp_rubi': '読み',
+        'np1': 'ネパール語'
+      };
+      
+      const formattedParts = fieldNames.map((field, index) => {
+        const label = labels[field] || field;
+        return `${label}：${questionTexts[index]}`;
+      });
+      
+      questionText = formattedParts.join('\n');
     }
   } else {
     questionText = questionTexts.join(' / ');

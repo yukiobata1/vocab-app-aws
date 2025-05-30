@@ -199,12 +199,45 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
           </div>
           
           <div className="text-center mb-8">
-            <div className="text-2xl font-bold leading-relaxed" style={{ color: colors.crimsonColor }}>
-              {currentQuestion.question.split('\n\n').map((part, index) => (
-                <div key={index} className={index > 0 ? 'mt-4 text-lg text-gray-600' : ''}>
-                  {part}
-                </div>
-              ))}
+            <div className="leading-relaxed">
+              {currentQuestion.question.split('\n').map((part, index) => {
+                // Check if this line contains field labels (for compound questions)
+                const isFieldLabel = part.includes('：') && (
+                  part.includes('漢字：') || 
+                  part.includes('読み：') || 
+                  part.includes('ネパール語：') ||
+                  part.includes('意味：')
+                );
+                
+                // Extract label and value for better formatting
+                if (isFieldLabel) {
+                  const [label, ...valueParts] = part.split('：');
+                  const value = valueParts.join('：');
+                  
+                  return (
+                    <div key={index} className="mb-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="text-sm font-medium text-gray-600 mb-1">{label}</div>
+                      <div className="text-xl font-bold" style={{ color: colors.crimsonColor }}>
+                        {value}
+                      </div>
+                    </div>
+                  );
+                }
+                
+                return (
+                  <div 
+                    key={index} 
+                    className={`${
+                      index === 0 
+                        ? 'text-2xl font-bold mb-4' 
+                        : 'text-lg text-gray-600 mb-2'
+                    }`}
+                    style={{ color: index === 0 ? colors.crimsonColor : undefined }}
+                  >
+                    {part}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

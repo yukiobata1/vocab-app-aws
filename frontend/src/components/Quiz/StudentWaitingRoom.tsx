@@ -79,7 +79,8 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
           bookTitle: books.find(b => b.id === selectedBookId)?.name || '',
           questionCount,
           lessonRange: { start: lessonStart, end: lessonEnd },
-          enabledQuestionTypes: [selectedQuestionType]
+          enabledQuestionTypes: [selectedQuestionType],
+          quizFormat: quizFormat
         };
         await onStartQuiz(studentName.trim(), config);
       } else {
