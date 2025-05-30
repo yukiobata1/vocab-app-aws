@@ -138,15 +138,3 @@ export const vocabService = {
   },
 };
 
-// Custom hooks for React components
-export const useVocabApi = () => {
-  return {
-    getBooks: vocabService.getBooks,
-    getQuestions: vocabService.getQuestions,
-    createBook: vocabService.createBook,
-    createQuestion: vocabService.createQuestion,
-    updateBook: vocabService.updateBook,
-    updateQuestion: vocabService.updateQuestion,
-    runMigration: vocabService.runMigration,
-  };
-};
