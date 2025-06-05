@@ -19,11 +19,9 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [feedbackStates, setFeedbackStates] = useState<{[key: string]: string | null}>({});
   const [sounds, setSounds] = useState<{correct: HTMLAudioElement, incorrect: HTMLAudioElement} | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(30); // 30 seconds default
-  const [clickedOption, setClickedOption] = useState<string | null>(null); // Track which option was clicked for blue border
-  const [hoveredOption, setHoveredOption] = useState<string | null>(null); // Track hovered option
+  const [tappedOption, setTappedOption] = useState<string | null>(null); // Track which option was just tapped
   const [audioInitialized, setAudioInitialized] = useState(false);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
@@ -34,8 +32,8 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
         const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
         setAudioContext(ctx);
         
-        // 音声ファイルをプリロード
-        const [correctBuffer, incorrectBuffer] = await Promise.all([
+        // 音声ファイルをプリロード (AudioContextで将来使用予定)
+        await Promise.all([
           fetch('/right.mp3').then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b)),
           fetch('/wrong.mp3').then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b))
         ]);
@@ -106,17 +104,29 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     setCurrentQuestionIndex(0);
     setScore(0);
     setSelectedOption(null);
-    setFeedbackStates({});
-    setClickedOption(null);
-    setHoveredOption(null);
-    setTimeRemaining(30); // Reset timer
+    setTappedOption(null);
+    setTimeRemaining(30);
   }, [quizData]);
 
   const handleOptionClick = (option: string) => {
     if (selectedOption || !sounds || !audioInitialized) return;
 
+    // 即座にフォーカスとアクティブ状態をクリア (iOS対応強化)
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement) {
+      activeElement.blur();
+      // iOS Safari用の追加クリア
+      activeElement.style.outline = 'none';
+      activeElement.style.webkitAppearance = 'none';
+    }
+
     setSelectedOption(option);
-    setClickedOption(option); // Remember which option was clicked
+    setTappedOption(option); // Brief tap feedback
+    
+    // Clear tap feedback quickly since we're recreating components
+    setTimeout(() => {
+      setTappedOption(null);
+    }, 150);
     
     const isCorrect = option === quizData[currentQuestionIndex].correctAnswer;
     if (isCorrect) {
@@ -150,35 +160,18 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
       playSound(sounds.incorrect);
     }
 
-    const newFeedbackStates: {[key: string]: string | null} = {};
-    quizData[currentQuestionIndex].options.forEach(opt => {
-      if (opt === quizData[currentQuestionIndex].correctAnswer) {
-        newFeedbackStates[opt] = 'correct';
-      } else if (opt === option && option !== quizData[currentQuestionIndex].correctAnswer) {
-        newFeedbackStates[opt] = 'incorrect';
-      } else {
-        newFeedbackStates[opt] = null;
-      }
-    });
-    setFeedbackStates(newFeedbackStates);
+    // No need for feedbackStates - we determine colors directly in render
 
     setTimeout(() => {
-      // 次の問題に移る前にフォーカスをクリア
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-      
       if (currentQuestionIndex < quizData.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption(null);
-        setFeedbackStates({});
-        setClickedOption(null); // Clear clicked option for next question
-        setHoveredOption(null); // Clear hovered option for next question
-        setTimeRemaining(30); // Reset timer for next question
+        setTappedOption(null);
+        setTimeRemaining(30);
       } else {
         onQuizComplete(score + (isCorrect ? 1 : 0), quizData.length);
       }
-    }, 1200); // Reduced from 2000ms to 1200ms for faster feedback
+    }, 1200);
   };
 
   // Timer effect
@@ -186,16 +179,7 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     if (selectedOption) return;
     
     if (timeRemaining === 0) {
-      // Time's up - show correct answer
-      const newFeedbackStates: {[key: string]: string | null} = {};
-      quizData[currentQuestionIndex].options.forEach(opt => {
-        if (opt === quizData[currentQuestionIndex].correctAnswer) {
-          newFeedbackStates[opt] = 'correct';
-        } else {
-          newFeedbackStates[opt] = null;
-        }
-      });
-      setFeedbackStates(newFeedbackStates);
+      // Time's up - mark as timeout to show correct answer
       setSelectedOption('__timeout__'); // Special marker for timeout
       
       // Play incorrect sound for timeout
@@ -204,22 +188,15 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
       }
       
       setTimeout(() => {
-        // 次の問題に移る前にフォーカスをクリア
-        if (document.activeElement instanceof HTMLElement) {
-          document.activeElement.blur();
-        }
-        
         if (currentQuestionIndex < quizData.length - 1) {
           setCurrentQuestionIndex(currentQuestionIndex + 1);
           setSelectedOption(null);
-          setFeedbackStates({});
-          setClickedOption(null); // Clear clicked option for next question
-          setHoveredOption(null); // Clear hovered option for next question
+          setTappedOption(null);
           setTimeRemaining(30);
         } else {
           onQuizComplete(score, quizData.length);
         }
-      }, 2000); // Show correct answer for 2 seconds on timeout
+      }, 2000);
       return;
     }
     
@@ -322,80 +299,104 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
           {/* Options Grid - 2x2 layout like original */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {currentQuestion.options.map((option, index) => {
-              let buttonClass = 'option-button relative p-4 md:p-6 text-lg md:text-xl font-medium rounded-xl border-2 transition-all duration-150 transform hover:md:scale-105 min-h-[80px] md:min-h-[100px] flex items-center justify-center';
-              let buttonStyle: React.CSSProperties = {};
-              
-              // Add blue border for clicked option
-              const isClicked = clickedOption === option;
-              const isHovered = hoveredOption === option;
-              
-              if (selectedOption) {
-                if (feedbackStates[option] === 'correct') {
-                  buttonClass += ' border-green-500 bg-green-50 text-green-800 shadow-lg';
-                } else if (feedbackStates[option] === 'incorrect') {
-                  buttonClass += ' border-red-500 bg-red-50 text-red-800 shadow-lg';
-                } else if (option === currentQuestion.correctAnswer && selectedOption !== currentQuestion.correctAnswer) {
-                  buttonClass += ' border-green-500 bg-green-50 text-green-800 shadow-lg';
-                } else {
-                  buttonClass += ' border-gray-200 bg-gray-50 text-gray-500';
-                }
-              } else {
-                // Handle hover state properly
-                if (isHovered && !('ontouchstart' in window)) {
-                  buttonClass += ' bg-amber-50 shadow-md cursor-pointer text-gray-800 border-gray-200';
-                } else {
-                  buttonClass += ' bg-white shadow-md cursor-pointer text-gray-800 border-gray-200';
-                }
-              }
-              
-              // Apply blue outline if this option was clicked
-              if (isClicked) {
-                buttonStyle.outline = '2px solid #3B82F6';
-                buttonStyle.outlineOffset = '2px';
-              }
+              // Create a new option component every time based on current state
+              const OptionButton = () => {
+                // Determine button style based on current state
+                let baseClass = 'option-button relative p-4 md:p-6 text-lg md:text-xl font-medium rounded-xl border-2 transition-all duration-150 min-h-[80px] md:min-h-[100px] flex items-center justify-center';
+                let buttonStyle: React.CSSProperties = {
+                  WebkitAppearance: 'none',
+                  WebkitTapHighlightColor: 'transparent',
+                  outline: 'none',
+                  outlineStyle: 'none',
+                  outlineWidth: '0'
+                };
 
-              return (
-                <button
-                  key={`${currentQuestionIndex}-${index}`}
-                  className={buttonClass}
-                  style={buttonStyle}
-                  onClick={() => handleOptionClick(option)}
-                  disabled={!!selectedOption || timeRemaining === 0}
-                  onMouseEnter={() => {
-                    // モバイルデバイスまたは選択済みの場合はマウスイベントを無視
-                    if ('ontouchstart' in window || selectedOption) {
-                      return;
-                    }
-                    setHoveredOption(option);
-                  }}
-                  onMouseLeave={() => {
-                    // モバイルデバイスまたは選択済みの場合はマウスイベントを無視
-                    if ('ontouchstart' in window || selectedOption) {
-                      return;
-                    }
-                    setHoveredOption(null);
-                  }}
-                >
-                  <span className="text-center leading-relaxed">{option}</span>
-                  
-                  {/* Feedback Icons */}
-                  {selectedOption && feedbackStates[option] === 'correct' && (
-                    <div className="absolute top-3 right-3">
-                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-lg">✓</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {selectedOption && feedbackStates[option] === 'incorrect' && (
-                    <div className="absolute top-3 right-3">
-                      <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-lg">✗</span>
-                      </div>
-                    </div>
-                  )}
-                </button>
-              );
+                // Determine final style based on current state
+                if (selectedOption) {
+                  // Answer has been selected - show feedback
+                  if (option === currentQuestion.correctAnswer) {
+                    // This is the correct answer
+                    return (
+                      <button
+                        key={`correct-${currentQuestionIndex}-${index}`}
+                        className={baseClass}
+                        style={{
+                          ...buttonStyle,
+                          backgroundColor: '#bbf7d0', // green-200
+                          borderColor: '#10b981', // green-500
+                          color: '#14532d', // green-900
+                          borderWidth: '2px',
+                          borderStyle: 'solid'
+                        }}
+                        disabled={true}
+                      >
+                        <span className="text-center leading-relaxed">{option}</span>
+                      </button>
+                    );
+                  } else if (option === selectedOption) {
+                    // This was the selected (incorrect) answer
+                    return (
+                      <button
+                        key={`incorrect-${currentQuestionIndex}-${index}`}
+                        className={baseClass}
+                        style={{
+                          ...buttonStyle,
+                          backgroundColor: '#fecaca', // red-200
+                          borderColor: '#ef4444', // red-500
+                          color: '#7f1d1d', // red-900
+                          borderWidth: '2px',
+                          borderStyle: 'solid'
+                        }}
+                        disabled={true}
+                      >
+                        <span className="text-center leading-relaxed">{option}</span>
+                      </button>
+                    );
+                  } else {
+                    // Other options (neutral)
+                    return (
+                      <button
+                        key={`neutral-${currentQuestionIndex}-${index}`}
+                        className={`${baseClass} border-gray-200 bg-gray-50 text-gray-500`}
+                        style={buttonStyle}
+                        disabled={true}
+                      >
+                        <span className="text-center leading-relaxed">{option}</span>
+                      </button>
+                    );
+                  }
+                } else {
+                  // No answer selected yet - show default state
+                  const isTapped = tappedOption === option;
+                  if (isTapped) {
+                    return (
+                      <button
+                        key={`tapped-${currentQuestionIndex}-${index}`}
+                        className={`${baseClass} bg-blue-100 shadow-lg cursor-pointer text-gray-800 border-blue-300 transform scale-95`}
+                        style={buttonStyle}
+                        onClick={() => handleOptionClick(option)}
+                        disabled={timeRemaining === 0}
+                      >
+                        <span className="text-center leading-relaxed">{option}</span>
+                      </button>
+                    );
+                  } else {
+                    return (
+                      <button
+                        key={`default-${currentQuestionIndex}-${index}`}
+                        className={`${baseClass} bg-white shadow-md cursor-pointer text-gray-800 border-gray-200`}
+                        style={buttonStyle}
+                        onClick={() => handleOptionClick(option)}
+                        disabled={timeRemaining === 0}
+                      >
+                        <span className="text-center leading-relaxed">{option}</span>
+                      </button>
+                    );
+                  }
+                }
+              };
+
+              return <OptionButton key={`option-${currentQuestionIndex}-${index}-${option}`} />;
             })}
           </div>
         </div>

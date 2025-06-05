@@ -58,7 +58,7 @@
 
 /* Quiz option button tap feedback */
 .option-button {
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -66,31 +66,66 @@
   -ms-user-select: none;
   user-select: none;
   transition: all 0.15s ease;
-}
-
-/* Show blue border on active for tap feedback */
-.option-button:active:not(:disabled) {
-  outline: 2px solid #3B82F6 !important;
-  outline-offset: 2px;
-  transform: scale(0.98);
-}
-
-/* Remove focus state to prevent persistence */
-.option-button:focus {
   outline: none !important;
+  -webkit-appearance: none !important;
+  /* Force override any border styles */
+  outline-style: none !important;
+  outline-width: 0 !important;
+  outline-color: transparent !important;
+  box-shadow: none !important;
 }
 
-/* Allow focus-visible for keyboard navigation */
-.option-button:focus-visible {
-  outline: 2px solid #3B82F6 !important;
-  outline-offset: 2px;
+/* Complete removal of all focus/active/visited states */
+.option-button:active,
+.option-button:focus,
+.option-button:focus-within,
+.option-button:focus-visible,
+.option-button:visited,
+.option-button:target {
+  outline: none !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
+  outline-color: transparent !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
-/* Ensure no hover effects on touch devices */
-@media (hover: none) and (pointer: coarse) {
+/* iOS Safari specific - more aggressive */
+@supports (-webkit-touch-callout: none) {
+  .option-button,
+  .option-button:active,
+  .option-button:focus,
+  .option-button:focus-within,
+  .option-button:focus-visible,
+  .option-button:visited,
+  .option-button:target,
   .option-button:hover {
-    background-color: white !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-appearance: none !important;
+    outline: none !important;
+    outline-style: none !important;
+    outline-width: 0 !important;
+    outline-color: transparent !important;
+    box-shadow: none !important;
+    border-style: solid !important;
   }
+}
+
+/* Active state with scale but no outline */
+.option-button:active:not(:disabled) {
+  transform: scale(0.98);
+  outline: none !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove all hover effects */
+.option-button:hover {
+  background-color: inherit !important;
+  transform: none !important;
+  box-shadow: inherit !important;
 }
 
 /* Custom animations for result card effects */
