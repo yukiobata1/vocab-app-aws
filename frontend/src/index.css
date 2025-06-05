@@ -55,3 +55,52 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Quiz option button tap feedback */
+.option-button {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+/* Show blue border on active for tap feedback */
+.option-button:active:not(:disabled) {
+  outline: 2px solid #3B82F6 !important;
+  outline-offset: 2px;
+  transform: scale(0.98);
+}
+
+/* Remove focus state to prevent persistence */
+.option-button:focus {
+  outline: none !important;
+}
+
+/* Allow focus-visible for keyboard navigation */
+.option-button:focus-visible {
+  outline: 2px solid #3B82F6 !important;
+  outline-offset: 2px;
+}
+
+/* Ensure no hover effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .option-button:hover {
+    background-color: white !important;
+  }
+}
+
+/* Custom animations for result card effects */
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}

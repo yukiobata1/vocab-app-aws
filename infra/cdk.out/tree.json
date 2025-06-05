@@ -2538,7 +2538,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00.zip"
+                      "s3Key": "6a3f11999cfa3081be625f361b0e185856658f1bc1c43d701dc7464d135c9a2a.zip"
                     },
                     "description": "Import vocabulary data from files",
                     "environment": {
@@ -2764,7 +2764,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-                      "s3Key": "d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00.zip"
+                      "s3Key": "6a3f11999cfa3081be625f361b0e185856658f1bc1c43d701dc7464d135c9a2a.zip"
                     },
                     "description": "Cleanup vocabulary books with few questions",
                     "environment": {

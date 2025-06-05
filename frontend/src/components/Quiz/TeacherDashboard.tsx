@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TeacherConfig } from './TeacherConfig';
 import type { QuizConfig, QuizQuestion } from '../../types/quiz';
 import { generateQuiz } from '../../utils/quizGenerator';
@@ -9,6 +9,7 @@ import { roomCodeService } from '../../services/roomCodeService';
 import { Button } from '@/components/ui/button';
 import { QUESTION_TYPE_CONFIGS } from '../../types/quiz';
 import { colors } from '@/config/colors';
+import QRCode from 'qrcode';
 
 type TeacherState = 'config' | 'generating' | 'active' | 'error';
 
@@ -20,6 +21,24 @@ export const TeacherDashboard: React.FC = () => {
   const [expiresAt, setExpiresAt] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
+
+  // Generate QR code when room code changes
+  useEffect(() => {
+    if (roomCode) {
+      const studentUrl = `${window.location.origin}?room=${roomCode}`;
+      QRCode.toDataURL(studentUrl, {
+        width: 300,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      })
+        .then(url => setQrCodeUrl(url))
+        .catch(err => console.error('Failed to generate QR code:', err));
+    }
+  }, [roomCode]);
 
   // Helper function to get question type display name
   const getQuestionTypeDisplayName = (questionType: string): string => {
@@ -153,7 +172,7 @@ export const TeacherDashboard: React.FC = () => {
                   👨‍🏫 クイズルーム開始中
                 </h1>
                 <p className="text-base md:text-xl text-gray-600">
-                  以下のコードを生徒に教えてください
+                  以下のコードを学生に教えてください
                 </p>
               </div>
 
@@ -206,6 +225,23 @@ export const TeacherDashboard: React.FC = () => {
                   </div>
                 </div>
 
+                {/* QR Code Display */}
+                {qrCodeUrl && (
+                  <div className="mb-4 md:mb-6">
+                    <div className="text-sm md:text-base font-medium text-gray-700 mb-2 text-center">
+                      📱 学生はこのQRコードをスキャンできます
+                    </div>
+                    <div className="flex justify-center">
+                      <img 
+                        src={qrCodeUrl} 
+                        alt="Room QR Code" 
+                        className="rounded-lg shadow-lg border-2 border-gray-200"
+                        style={{ width: '200px', height: '200px' }}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Room Info */}
                 <div className="rounded-lg md:rounded-xl p-3 md:p-4 mb-4 md:mb-6 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
                   <p className="text-xs md:text-sm text-gray-700">
@@ -251,15 +287,15 @@ export const TeacherDashboard: React.FC = () => {
                 <div className="space-y-2 md:space-y-3 text-gray-600">
                   <div className="flex items-start space-x-2 md:space-x-3">
                     <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>1</span>
-                    <span className="text-sm md:text-base">上の6桁コードを黒板やプロジェクターで生徒に見せてください</span>
+                    <span className="text-sm md:text-base">上のQRコードまたは6桁コードを黒板やプロジェクターで学生に見せてください</span>
                   </div>
                   <div className="flex items-start space-x-2 md:space-x-3">
                     <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>2</span>
-                    <span className="text-sm md:text-base">生徒に「生徒用」→「教室テスト」モードでアプリを開いてもらいます</span>
+                    <span className="text-sm md:text-base">学生はQRコードをスキャンするか、「学生用」→「教室テスト」でコードを入力します</span>
                   </div>
                   <div className="flex items-start space-x-2 md:space-x-3">
                     <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>3</span>
-                    <span className="text-sm md:text-base">生徒がコードを入力してクイズを開始します</span>
+                    <span className="text-sm md:text-base">学生がクイズを開始します</span>
                   </div>
                   <div className="flex items-start space-x-2 md:space-x-3">
                     <span className="text-white rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0" style={{ backgroundColor: newGoldColor }}>4</span>

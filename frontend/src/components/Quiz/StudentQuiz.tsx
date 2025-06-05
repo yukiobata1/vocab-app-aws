@@ -22,17 +22,83 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
   const [feedbackStates, setFeedbackStates] = useState<{[key: string]: string | null}>({});
   const [sounds, setSounds] = useState<{correct: HTMLAudioElement, incorrect: HTMLAudioElement} | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(30); // 30 seconds default
+  const [clickedOption, setClickedOption] = useState<string | null>(null); // Track which option was clicked for blue border
+  const [hoveredOption, setHoveredOption] = useState<string | null>(null); // Track hovered option
+  const [audioInitialized, setAudioInitialized] = useState(false);
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
   useEffect(() => {
-    const correctSound = new Audio('/right.mp3');
-    const incorrectSound = new Audio('/wrong.mp3');
-    
-    correctSound.load();
-    incorrectSound.load();
-    
-    setSounds({ correct: correctSound, incorrect: incorrectSound });
+    // AudioContextを使った音声プリロード
+    const initAudioContext = async () => {
+      try {
+        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        setAudioContext(ctx);
+        
+        // 音声ファイルをプリロード
+        const [correctBuffer, incorrectBuffer] = await Promise.all([
+          fetch('/right.mp3').then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b)),
+          fetch('/wrong.mp3').then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b))
+        ]);
 
-    console.log("quizData", quizData);
+        // HTMLAudioElementも併用（フォールバック）
+        const correctSound = new Audio('/right.mp3');
+        const incorrectSound = new Audio('/wrong.mp3');
+        
+        correctSound.preload = 'auto';
+        incorrectSound.preload = 'auto';
+        correctSound.volume = 0.7;
+        incorrectSound.volume = 0.7;
+        
+        // 音声を完全にロード
+        await Promise.all([
+          new Promise((resolve) => {
+            correctSound.addEventListener('canplaythrough', resolve, { once: true });
+            correctSound.load();
+          }),
+          new Promise((resolve) => {
+            incorrectSound.addEventListener('canplaythrough', resolve, { once: true });
+            incorrectSound.load();
+          })
+        ]);
+
+        setSounds({ correct: correctSound, incorrect: incorrectSound });
+        setAudioInitialized(true);
+        
+        console.log('音声プリロード完了');
+      } catch (error) {
+        console.log('音声初期化エラー:', error);
+        // フォールバック: 基本的な音声セットアップ
+        const correctSound = new Audio('/right.mp3');
+        const incorrectSound = new Audio('/wrong.mp3');
+        correctSound.preload = 'auto';
+        incorrectSound.preload = 'auto';
+        correctSound.load();
+        incorrectSound.load();
+        setSounds({ correct: correctSound, incorrect: incorrectSound });
+        setAudioInitialized(true);
+      }
+    };
+
+    initAudioContext();
+
+    // ユーザーインタラクションで音声コンテキストを有効化
+    const enableAudio = async () => {
+      if (audioContext && audioContext.state === 'suspended') {
+        await audioContext.resume();
+        console.log('AudioContext resumed');
+      }
+    };
+
+    document.addEventListener('touchstart', enableAudio, { once: true });
+    document.addEventListener('click', enableAudio, { once: true });
+
+    return () => {
+      document.removeEventListener('touchstart', enableAudio);
+      document.removeEventListener('click', enableAudio);
+      if (audioContext) {
+        audioContext.close();
+      }
+    };
   }, []);
 
   // Reset quiz state when quizData changes (for retry functionality)
@@ -41,13 +107,16 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     setScore(0);
     setSelectedOption(null);
     setFeedbackStates({});
+    setClickedOption(null);
+    setHoveredOption(null);
     setTimeRemaining(30); // Reset timer
   }, [quizData]);
 
   const handleOptionClick = (option: string) => {
-    if (selectedOption || !sounds) return;
+    if (selectedOption || !sounds || !audioInitialized) return;
 
     setSelectedOption(option);
+    setClickedOption(option); // Remember which option was clicked
     
     const isCorrect = option === quizData[currentQuestionIndex].correctAnswer;
     if (isCorrect) {
@@ -59,11 +128,26 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
       navigator.vibrate(isCorrect ? 100 : 200);
     }
 
-    // 音声フィードバック
+    // より確実な音声フィードバック
+    const playSound = async (audioElement: HTMLAudioElement) => {
+      try {
+        // 音声をリセットして再生
+        audioElement.currentTime = 0;
+        await audioElement.play();
+      } catch (error) {
+        console.log('音声の再生に失敗しました:', error);
+        // フォールバック: 少し待って再試行
+        setTimeout(() => {
+          audioElement.currentTime = 0;
+          audioElement.play().catch(e => console.log('再試行も失敗:', e));
+        }, 100);
+      }
+    };
+
     if (isCorrect) {
-      sounds.correct.play().catch(e => console.log('音声の再生に失敗しました:', e));
+      playSound(sounds.correct);
     } else {
-      sounds.incorrect.play().catch(e => console.log('音声の再生に失敗しました:', e));
+      playSound(sounds.incorrect);
     }
 
     const newFeedbackStates: {[key: string]: string | null} = {};
@@ -79,20 +163,17 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     setFeedbackStates(newFeedbackStates);
 
     setTimeout(() => {
-      // モバイルでのスタイル状態を完全にクリア
-      document.querySelectorAll('.option-button').forEach(btn => {
-        const element = btn as HTMLElement;
-        element.style.backgroundColor = '';
-        element.style.transform = '';
-        element.style.boxShadow = '';
-        // フォーカス状態もクリア
-        element.blur();
-      });
+      // 次の問題に移る前にフォーカスをクリア
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
       
       if (currentQuestionIndex < quizData.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption(null);
         setFeedbackStates({});
+        setClickedOption(null); // Clear clicked option for next question
+        setHoveredOption(null); // Clear hovered option for next question
         setTimeRemaining(30); // Reset timer for next question
       } else {
         onQuizComplete(score + (isCorrect ? 1 : 0), quizData.length);
@@ -123,20 +204,17 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
       }
       
       setTimeout(() => {
-        // モバイルでのスタイル状態を完全にクリア
-        document.querySelectorAll('.option-button').forEach(btn => {
-          const element = btn as HTMLElement;
-          element.style.backgroundColor = '';
-          element.style.transform = '';
-          element.style.boxShadow = '';
-          // フォーカス状態もクリア
-          element.blur();
-        });
+        // 次の問題に移る前にフォーカスをクリア
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
         
         if (currentQuestionIndex < quizData.length - 1) {
           setCurrentQuestionIndex(currentQuestionIndex + 1);
           setSelectedOption(null);
           setFeedbackStates({});
+          setClickedOption(null); // Clear clicked option for next question
+          setHoveredOption(null); // Clear hovered option for next question
           setTimeRemaining(30);
         } else {
           onQuizComplete(score, quizData.length);
@@ -169,7 +247,7 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Question Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-6">
           {/* Timer header */}
           <div className="flex justify-end items-center mb-2">
             <div className="text-sm text-gray-500">
@@ -242,10 +320,14 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
           </div>
 
           {/* Options Grid - 2x2 layout like original */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {currentQuestion.options.map((option, index) => {
-              let buttonClass = 'option-button relative p-6 text-xl font-medium rounded-xl border-2 transition-all duration-150 transform hover:md:scale-105 min-h-[100px] flex items-center justify-center';
+              let buttonClass = 'option-button relative p-4 md:p-6 text-lg md:text-xl font-medium rounded-xl border-2 transition-all duration-150 transform hover:md:scale-105 min-h-[80px] md:min-h-[100px] flex items-center justify-center';
               let buttonStyle: React.CSSProperties = {};
+              
+              // Add blue border for clicked option
+              const isClicked = clickedOption === option;
+              const isHovered = hoveredOption === option;
               
               if (selectedOption) {
                 if (feedbackStates[option] === 'correct') {
@@ -258,30 +340,40 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                   buttonClass += ' border-gray-200 bg-gray-50 text-gray-500';
                 }
               } else {
-                buttonClass += ' bg-white shadow-md cursor-pointer text-gray-800 border-gray-200';
-                buttonStyle = {};
+                // Handle hover state properly
+                if (isHovered && !('ontouchstart' in window)) {
+                  buttonClass += ' bg-amber-50 shadow-md cursor-pointer text-gray-800 border-gray-200';
+                } else {
+                  buttonClass += ' bg-white shadow-md cursor-pointer text-gray-800 border-gray-200';
+                }
+              }
+              
+              // Apply blue outline if this option was clicked
+              if (isClicked) {
+                buttonStyle.outline = '2px solid #3B82F6';
+                buttonStyle.outlineOffset = '2px';
               }
 
               return (
                 <button
-                  key={index}
+                  key={`${currentQuestionIndex}-${index}`}
                   className={buttonClass}
                   style={buttonStyle}
                   onClick={() => handleOptionClick(option)}
                   disabled={!!selectedOption || timeRemaining === 0}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={() => {
                     // モバイルデバイスまたは選択済みの場合はマウスイベントを無視
                     if ('ontouchstart' in window || selectedOption) {
                       return;
                     }
-                    e.currentTarget.style.backgroundColor = '#FFFBEB';
+                    setHoveredOption(option);
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={() => {
                     // モバイルデバイスまたは選択済みの場合はマウスイベントを無視
                     if ('ontouchstart' in window || selectedOption) {
                       return;
                     }
-                    e.currentTarget.style.backgroundColor = 'white';
+                    setHoveredOption(null);
                   }}
                 >
                   <span className="text-center leading-relaxed">{option}</span>

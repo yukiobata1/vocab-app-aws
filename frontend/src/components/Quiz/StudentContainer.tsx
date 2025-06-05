@@ -6,6 +6,7 @@ import { generateQuiz } from '../../utils/quizGenerator';
 import { vocabService } from '../../services/vocabService';
 import { roomCodeService } from '../../services/roomCodeService';
 import type { QuizConfig, StudentMode } from '../../types/quiz';
+import { colors } from '../../config/colors';
 
 interface QuizData {
   question: string;
@@ -15,7 +16,11 @@ interface QuizData {
 
 type StudentState = 'waiting' | 'loading' | 'quiz' | 'result' | 'error';
 
-export const StudentContainer: React.FC = () => {
+interface StudentContainerProps {
+  roomCodeFromUrl?: string;
+}
+
+export const StudentContainer: React.FC<StudentContainerProps> = ({ roomCodeFromUrl }) => {
   const [state, setState] = useState<StudentState>('waiting');
   const [studentName, setStudentName] = useState('');
   const [mode, setMode] = useState<StudentMode>('study');
@@ -106,6 +111,11 @@ export const StudentContainer: React.FC = () => {
       // Join the room
       await roomCodeService.joinRoom(code, name);
 
+      // Clear URL parameters after successful room join
+      const url = new URL(window.location.href);
+      url.searchParams.delete('room');
+      window.history.replaceState({}, '', url.toString());
+
       // Use the pre-generated questions from the room
       const convertedQuizData = room.questions.map(question => ({
         question: question.questionText,
@@ -142,17 +152,17 @@ export const StudentContainer: React.FC = () => {
   const renderContent = () => {
     switch (state) {
       case 'waiting':
-        return <StudentWaitingRoom onStartQuiz={handleStartQuiz} onJoinRoom={handleJoinRoom} />;
+        return <StudentWaitingRoom onStartQuiz={handleStartQuiz} onJoinRoom={handleJoinRoom} roomCodeFromUrl={roomCodeFromUrl} />;
 
       case 'loading':
         return (
-          <div className="min-h-screen">
+          <div className="min-h-screen flex items-center justify-center p-4">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-6"></div>
-              <div className="text-2xl font-medium text-gray-700 mb-2">
+              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-4 mx-auto mb-4 md:mb-6" style={{ borderColor: colors.newGoldColor }}></div>
+              <div className="text-xl md:text-2xl font-medium text-gray-700 mb-2">
                 {mode === 'study' ? 'クイズを準備中...' : 'ルームに参加中...'}
               </div>
-              <div className="text-gray-500">
+              <div className="text-sm md:text-base text-gray-500">
                 {mode === 'study' ? '問題を生成しています' : '問題を取得しています'}
               </div>
             </div>

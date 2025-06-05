@@ -7,20 +7,21 @@ import { colors } from '../../config/colors';
 interface StudentWaitingRoomProps {
   onStartQuiz: (studentName: string, config: QuizConfig) => void;
   onJoinRoom: (studentName: string, roomCode: string) => void;
+  roomCodeFromUrl?: string;
 }
 
-export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQuiz, onJoinRoom }) => {
+export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQuiz, onJoinRoom, roomCodeFromUrl }) => {
   const [mode, setMode] = useState<StudentMode>('classroom');
   const [studentName, setStudentName] = useState('');
-  const [roomCode, setRoomCode] = useState('');
+  const [roomCode, setRoomCode] = useState(roomCodeFromUrl || '');
   const [isStarting, setIsStarting] = useState(false);
   
   // Study mode states
   const [books, setBooks] = useState<VocabBook[]>([]);
   const [selectedBookId, setSelectedBookId] = useState<number>(1);
-  const [questionCount, setQuestionCount] = useState<number>(10);
-  const [lessonStart, setLessonStart] = useState<number>(1);
-  const [lessonEnd, setLessonEnd] = useState<number>(5);
+  const [questionCount, setQuestionCount] = useState<string>('10');
+  const [lessonStart, setLessonStart] = useState<string>('1');
+  const [lessonEnd, setLessonEnd] = useState<string>('5');
   const [selectedQuestionType, setSelectedQuestionType] = useState<QuestionType>('nepali_to_kanji');
   const [quizFormat, setQuizFormat] = useState({
     input1: 'ネパール語',
@@ -29,6 +30,13 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
   });
   const [isLoading, setIsLoading] = useState(true);
   const [vocabularyQuestions, setVocabularyQuestions] = useState<VocabQuestion[]>([]);
+
+  // Set classroom mode when room code is provided from URL
+  useEffect(() => {
+    if (roomCodeFromUrl) {
+      setMode('classroom');
+    }
+  }, [roomCodeFromUrl]);
 
   useEffect(() => {
     const loadBooks = async () => {
@@ -67,7 +75,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
   };
 
   const handleStart = async () => {
-    if (!studentName.trim()) {
+    if (mode === 'classroom' && !studentName.trim()) {
       return;
     }
 
@@ -77,12 +85,12 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
         const config: QuizConfig = {
           bookId: selectedBookId,
           bookTitle: books.find(b => b.id === selectedBookId)?.name || '',
-          questionCount,
-          lessonRange: { start: lessonStart, end: lessonEnd },
+          questionCount: parseInt(questionCount) || 10,
+          lessonRange: { start: parseInt(lessonStart) || 1, end: parseInt(lessonEnd) || 1 },
           enabledQuestionTypes: [selectedQuestionType],
           quizFormat: quizFormat
         };
-        await onStartQuiz(studentName.trim(), config);
+        await onStartQuiz('勉強中の学生', config);
       } else {
         // Classroom mode
         if (!roomCode.trim()) {
@@ -109,6 +117,15 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     }
   };
 
+  const handleNumberChange = (value: string, setter: (val: string) => void) => {
+    // Allow only digits
+    if (/^\d*$/.test(value)) {
+      // Remove leading zeros but keep at least one digit
+      const cleanValue = value.replace(/^0+/, '') || (value === '' ? '' : '0');
+      setter(cleanValue);
+    }
+  };
+
   const { newGoldColor, crimsonColor } = colors;
 
   if (isLoading) {
@@ -131,7 +148,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
         <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8">
           {/* Header */}
           <h2 className="text-3xl font-bold text-center mb-8" style={{ color: crimsonColor }}>
-            {mode === 'study' ? '単語クイズ設定' : '教室テスト参加'}
+            {mode === 'study' ? '単語クイズ作成' : '教室テスト参加'}
           </h2>
 
           {/* Mode Selection */}
@@ -170,40 +187,42 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
 
           {/* Input Form */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-            <div className="md:col-span-2">
-              <label htmlFor="studentName" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-                あなたの名前
-              </label>
-              <input
-                id="studentName"
-                type="text"
-                value={studentName}
-                onChange={(e) => setStudentName(e.target.value)}
-                placeholder="山田太郎"
-                className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-                disabled={isStarting}
-              />
-            </div>
-
             {mode === 'classroom' && (
-              <div className="md:col-span-2">
-                <label htmlFor="roomCode" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-                  クイズコード
-                </label>
-                <input
-                  id="roomCode"
-                  type="text"
-                  value={roomCode}
-                  onChange={handleRoomCodeChange}
-                  placeholder="ABC123"
-                  className="w-full p-3 text-center font-mono border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 tracking-wider"
-                  disabled={isStarting}
-                  style={{ fontSize: '1.25rem' }}
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  先生から教えてもらった6文字のコードを入力してください
-                </p>
-              </div>
+              <>
+                <div className="md:col-span-2">
+                  <label htmlFor="studentName" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
+                    あなたの名前
+                  </label>
+                  <input
+                    id="studentName"
+                    type="text"
+                    value={studentName}
+                    onChange={(e) => setStudentName(e.target.value)}
+                    placeholder="山田太郎"
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
+                    disabled={isStarting}
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label htmlFor="roomCode" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
+                    クイズコード
+                  </label>
+                  <input
+                    id="roomCode"
+                    type="text"
+                    value={roomCode}
+                    onChange={handleRoomCodeChange}
+                    placeholder="ABC123"
+                    className="w-full p-3 text-center font-mono border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 tracking-wider"
+                    disabled={isStarting}
+                    style={{ fontSize: '1.25rem' }}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    先生から教えてもらった6文字のコードを入力してください
+                  </p>
+                </div>
+              </>
             )}
 
             {mode === 'study' && (
@@ -220,11 +239,12 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                     disabled={isStarting}
                   >
                     {books.map(book => (
-                      <option key={book.id} value={book.id}>{book.name}</option>
+                      <option key={book.id} value={book.id}>
+                        {book.name} - {book.level} ({book.question_count}問)
+                      </option>
                     ))}
                   </select>
                 </div>
-
 
                 <div>
                   <label htmlFor="lessonStart" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
@@ -232,11 +252,11 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                   </label>
                   <input
                     id="lessonStart"
-                    type="number"
-                    min={1}
-                    max={50}
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="1"
                     value={lessonStart}
-                    onChange={(e) => setLessonStart(Number(e.target.value))}
+                    onChange={(e) => handleNumberChange(e.target.value, setLessonStart)}
                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
                     disabled={isStarting}
                   />
@@ -247,11 +267,11 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                   </label>
                   <input
                     id="lessonEnd"
-                    type="number"
-                    min={lessonStart}
-                    max={50}
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="5"
                     value={lessonEnd}
-                    onChange={(e) => setLessonEnd(Number(e.target.value))}
+                    onChange={(e) => handleNumberChange(e.target.value, setLessonEnd)}
                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
                     disabled={isStarting}
                   />
@@ -259,20 +279,18 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
 
                 <div className="md:col-span-2">
                   <label htmlFor="questionCount" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-                    出題数
+                    出題数 (最大50問)
                   </label>
-                  <select
+                  <input
                     id="questionCount"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="10"
                     value={questionCount}
-                    onChange={(e) => setQuestionCount(Number(e.target.value))}
+                    onChange={(e) => handleNumberChange(e.target.value, setQuestionCount)}
                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
                     disabled={isStarting}
-                  >
-                    <option value={5}>5問</option>
-                    <option value={10}>10問</option>
-                    <option value={15}>15問</option>
-                    <option value={20}>20問</option>
-                  </select>
+                  />
                 </div>
 
                 <FieldAwareQuizFormatSelector
@@ -289,9 +307,8 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
             <button
               onClick={handleStart}
               disabled={
-                !studentName.trim() || 
                 isStarting ||
-                  (mode === 'classroom' && !roomCode.trim())
+                (mode === 'classroom' && (!studentName.trim() || !roomCode.trim()))
               }
               className="w-full text-white py-3.5 px-6 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{ backgroundColor: isStarting ? '#9CA3AF' : newGoldColor }}

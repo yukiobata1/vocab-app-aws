@@ -100,9 +100,6 @@ function generateSingleQuestion(
     return value || '';
   }).filter(text => text.trim() !== '');
 
-  console.log('config', config);
-  console.log('questionTexts', questionTexts);
-
   // 複数の質問文を適切に結合
   let questionText = '';
   if (questionTexts.length === 1) {

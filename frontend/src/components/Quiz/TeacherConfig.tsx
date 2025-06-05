@@ -31,8 +31,6 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
   const handleFormatChange = (format: { input1: string; input2: string | undefined; output: string }) => {
     setQuizFormat(format);
     setSelectedQuestionType(getQuestionTypeFromFormat(format.input1, format.output, format.input2));
-    console.log('format', format);
-    console.log('questionType', getQuestionTypeFromFormat(format.input1, format.output, format.input2));
   };
 
 

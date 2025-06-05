@@ -1734,7 +1734,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-     "S3Key": "d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00.zip"
+     "S3Key": "6a3f11999cfa3081be625f361b0e185856658f1bc1c43d701dc7464d135c9a2a.zip"
     },
     "Description": "Import vocabulary data from files",
     "Environment": {
@@ -1799,7 +1799,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "VocabAppDevStack/VocabApp-Import-Lambda-dev/Resource",
-    "aws:asset:path": "asset.d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00",
+    "aws:asset:path": "asset.6a3f11999cfa3081be625f361b0e185856658f1bc1c43d701dc7464d135c9a2a",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -1896,7 +1896,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-982722143806-ap-northeast-1",
-     "S3Key": "d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00.zip"
+     "S3Key": "6a3f11999cfa3081be625f361b0e185856658f1bc1c43d701dc7464d135c9a2a.zip"
     },
     "Description": "Cleanup vocabulary books with few questions",
     "Environment": {
@@ -1961,7 +1961,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "VocabAppDevStack/VocabApp-Cleanup-Lambda-dev/Resource",
-    "aws:asset:path": "asset.d87f4515b0ce47c01da8e77e5f81205d3e3e524f14bbd505b07c2b72016f8d00",
+    "aws:asset:path": "asset.6a3f11999cfa3081be625f361b0e185856658f1bc1c43d701dc7464d135c9a2a",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -4350,7 +4350,7 @@
      "cdk-hnb659fds-assets-982722143806-ap-northeast-1"
     ],
     "SourceObjectKeys": [
-     "80cea924c19a143ed124c0da480c6281b1c4760e90af5fa9aa01bd4ad0aa03f9.zip"
+     "251b34f072da48410474c35ca74b7581ec464bf5110c5bf3701ffb8fde5bc6de.zip"
     ],
     "DestinationBucketName": {
      "Ref": "VocabAppFrontenddevAE3D26D4"

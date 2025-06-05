@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TeacherDashboard } from './components/Quiz/TeacherDashboard';
 import { StudentContainer } from './components/Quiz/StudentContainer';
 import { colors } from './config/colors';
@@ -8,7 +8,18 @@ type AppMode = 'teacher' | 'student';
 
 function App() {
   const [mode, setMode] = useState<AppMode>('teacher');
+  const [roomCodeFromUrl, setRoomCodeFromUrl] = useState<string>('');
   const { crimsonColor } = colors;
+
+  useEffect(() => {
+    // Check for room code in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const room = urlParams.get('room');
+    if (room) {
+      setRoomCodeFromUrl(room.toUpperCase());
+      setMode('student');
+    }
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 発展したヘッダー */}
@@ -73,7 +84,7 @@ function App() {
                 >
                   <span className="flex items-center space-x-2">
                     <span>👨‍🎓</span>
-                    <span>生徒用</span>
+                    <span>学生用</span>
                   </span>
                 </button>
               </div>
@@ -84,7 +95,7 @@ function App() {
 
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-6 py-8">
-        {mode === 'teacher' ? <TeacherDashboard /> : <StudentContainer />}
+        {mode === 'teacher' ? <TeacherDashboard /> : <StudentContainer roomCodeFromUrl={roomCodeFromUrl} />}
       </main>
     </div>
   );
