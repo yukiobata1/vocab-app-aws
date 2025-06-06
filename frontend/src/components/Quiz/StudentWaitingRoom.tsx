@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { vocabService } from '../../services/vocabService';
 import type { QuizConfig, VocabBook, QuestionType, StudentMode, VocabQuestion } from '../../types/quiz';
 import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
+import { BookSelector } from './BookSelector';
+import { LessonRangeSelector } from './LessonRangeSelector';
+import { QuestionCountSelector } from './QuestionCountSelector';
 import { colors } from '../../config/colors';
 
 interface StudentWaitingRoomProps {
@@ -117,14 +120,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
     }
   };
 
-  const handleNumberChange = (value: string, setter: (val: string) => void) => {
-    // Allow only digits
-    if (/^\d*$/.test(value)) {
-      // Remove leading zeros but keep at least one digit
-      const cleanValue = value.replace(/^0+/, '') || (value === '' ? '' : '0');
-      setter(cleanValue);
-    }
-  };
+  // Number change handling is now in shared components
 
   const { newGoldColor, crimsonColor } = colors;
 
@@ -156,7 +152,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
             <div className="flex rounded-xl p-1 bg-gray-100">
               <button
                 onClick={() => setMode('classroom')}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 no-focus-border ${
                   mode === 'classroom'
                     ? 'shadow-sm'
                     : ''
@@ -170,7 +166,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
               </button>
               <button
                 onClick={() => setMode('study')}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 no-focus-border ${
                   mode === 'study'
                     ? 'shadow-sm'
                     : ''
@@ -198,8 +194,8 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                     type="text"
                     value={studentName}
                     onChange={(e) => setStudentName(e.target.value)}
-                    placeholder="山田太郎"
-                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
+                    placeholder="早稲田太郎"
+                    className="w-full p-3 text-center border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
                     disabled={isStarting}
                   />
                 </div>
@@ -227,71 +223,37 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
 
             {mode === 'study' && (
               <>
-                <div className="md:col-span-2">
-                  <label htmlFor="bookSelect" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-                    教材選択
-                  </label>
-                  <select
-                    id="bookSelect"
-                    value={selectedBookId}
-                    onChange={(e) => setSelectedBookId(Number(e.target.value))}
-                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-                    disabled={isStarting}
-                  >
-                    {books.map(book => (
-                      <option key={book.id} value={book.id}>
-                        {book.name} - {book.level} ({book.question_count}問)
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <BookSelector
+                  books={books}
+                  selectedBookId={selectedBookId}
+                  onBookChange={setSelectedBookId}
+                  disabled={isStarting}
+                  loading={isLoading}
+                />
 
-                <div>
-                  <label htmlFor="lessonStart" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-                    開始課
-                  </label>
-                  <input
-                    id="lessonStart"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="1"
-                    value={lessonStart}
-                    onChange={(e) => handleNumberChange(e.target.value, setLessonStart)}
-                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-                    disabled={isStarting}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="lessonEnd" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-                    終了課
-                  </label>
-                  <input
-                    id="lessonEnd"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="5"
-                    value={lessonEnd}
-                    onChange={(e) => handleNumberChange(e.target.value, setLessonEnd)}
-                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-                    disabled={isStarting}
-                  />
-                </div>
+                <LessonRangeSelector
+                  lessonStart={lessonStart}
+                  lessonEnd={lessonEnd}
+                  onLessonStartChange={() => {}} // Not used in string mode
+                  onLessonEndChange={() => {}} // Not used in string mode
+                  disabled={isStarting}
+                  useStringState={true}
+                  onStringChange={(value, type) => {
+                    if (type === 'start') {
+                      setLessonStart(value);
+                    } else {
+                      setLessonEnd(value);
+                    }
+                  }}
+                />
 
-                <div className="md:col-span-2">
-                  <label htmlFor="questionCount" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-                    出題数 (最大50問)
-                  </label>
-                  <input
-                    id="questionCount"
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="10"
-                    value={questionCount}
-                    onChange={(e) => handleNumberChange(e.target.value, setQuestionCount)}
-                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-                    disabled={isStarting}
-                  />
-                </div>
+                <QuestionCountSelector
+                  questionCount={questionCount}
+                  onQuestionCountChange={() => {}} // Not used in string mode
+                  disabled={isStarting}
+                  useStringState={true}
+                  onStringChange={setQuestionCount}
+                />
 
                 <FieldAwareQuizFormatSelector
                   value={quizFormat}
@@ -310,7 +272,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                 isStarting ||
                 (mode === 'classroom' && (!studentName.trim() || !roomCode.trim()))
               }
-              className="w-full text-white py-3.5 px-6 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full text-white py-3.5 px-6 rounded-lg font-semibold no-focus-border transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{ backgroundColor: isStarting ? '#9CA3AF' : newGoldColor }}
             >
               {isStarting ? (

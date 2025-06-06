@@ -93,22 +93,7 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
     });
   };
 
-  const renderOption = (option: string) => {
-    const isAvailable = isFormatAvailable(option);
-    return (
-      <option 
-        key={option} 
-        value={option}
-        disabled={!isAvailable}
-        style={{ 
-          color: isAvailable ? 'inherit' : '#999',
-          fontStyle: isAvailable ? 'normal' : 'italic'
-        }}
-      >
-        {option}{!isAvailable ? ' (利用不可)' : ''}
-      </option>
-    );
-  };
+  // renderOption function moved inline to select elements
 
   // Warning message if current combination is invalid
   const showWarning = vocabularyQuestions.length > 0 && !isCurrentCombinationValid();
@@ -125,7 +110,19 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
           onChange={(e) => handleInput1Change(e.target.value)}
           className="p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 min-w-0 flex-shrink"
         >
-          {formatOptions.map((option) => renderOption(option))}
+          {formatOptions.map((option) => (
+            <option 
+              key={option} 
+              value={option}
+              disabled={!isFormatAvailable(option)}
+              style={{ 
+                color: isFormatAvailable(option) ? 'inherit' : '#999',
+                fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
+              }}
+            >
+              {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
+            </option>
+          ))}
         </select>
 
         {/* Optional second input */}
@@ -141,9 +138,19 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
               className="p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 min-w-0 flex-shrink"
             >
               <option value="なし">なし</option>
-              {formatOptions.filter(option => option !== value.input1).map((option) => 
-                renderOption(option)
-              )}
+              {formatOptions.filter(option => option !== value.input1).map((option) => (
+                <option 
+                  key={option} 
+                  value={option}
+                  disabled={!isFormatAvailable(option)}
+                  style={{ 
+                    color: isFormatAvailable(option) ? 'inherit' : '#999',
+                    fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
+                  }}
+                >
+                  {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
+                </option>
+              ))}
             </select>
           </>
         )}
@@ -159,9 +166,19 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
           onChange={(e) => handleOutputChange(e.target.value)}
           className="p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 min-w-0 flex-shrink"
         >
-          {formatOptions.filter(option => option !== '文脈').map((option) => 
-            renderOption(option)
-          )}
+          {formatOptions.filter(option => option !== '文脈').map((option) => (
+            <option 
+              key={option} 
+              value={option}
+              disabled={!isFormatAvailable(option)}
+              style={{ 
+                color: isFormatAvailable(option) ? 'inherit' : '#999',
+                fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
+              }}
+            >
+              {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
+            </option>
+          ))}
         </select>
       </div>
       

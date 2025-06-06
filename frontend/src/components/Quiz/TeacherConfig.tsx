@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { type QuizConfig, QuestionType, type VocabBook, type VocabQuestion } from '../../types/quiz';
 import { vocabService } from '../../services/vocabService';
 import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
+import { BookSelector } from './BookSelector';
+import { LessonRangeSelector } from './LessonRangeSelector';
+import { QuestionCountSelector } from './QuestionCountSelector';
 import { colors } from '@/config/colors';
 
 interface TeacherConfigProps {
@@ -158,84 +161,37 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-          <div className="md:col-span-2">
-            <label htmlFor="materialSelect" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
-              教材選択
-            </label>
-            <select
-              id="materialSelect"
-              value={selectedBookId ?? ''} 
-              onChange={(e) => {
-                const newBookId = Number(e.target.value);
-                if (newBookId) setSelectedBookId(newBookId);
-                setError(null); 
-              }}
-              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out disabled:bg-gray-100 focus:outline-none focus:border-gray-500"
-              required
-              disabled={loading}
-            >
-              <option value="" disabled>教材を選択してください</option> 
-              {books.map(book => (
-                <option key={book.id} value={book.id}>
-                  {book.name} - {book.level} ({book.question_count}問)
-                </option>
-              ))}
-            </select>
-          </div>
+          <BookSelector
+            books={books}
+            selectedBookId={selectedBookId}
+            onBookChange={(bookId) => {
+              setSelectedBookId(bookId);
+              setError(null);
+            }}
+            disabled={loading}
+            loading={loading}
+          />
 
-          <div>
-            <label htmlFor="lessonStartInput" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
-              開始課
-            </label>
-            <input
-              id="lessonStartInput"
-              type="number"
-              min="1"
-              value={lessonStart}
-              onChange={(e) => {
-                  setLessonStart(Number(e.target.value));
-                  setError(null);
-              }}
-              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="lessonEndInput" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
-              終了課
-            </label>
-            <input
-              id="lessonEndInput"
-              type="number"
-              min="1"
-              value={lessonEnd}
-              onChange={(e) => {
-                  setLessonEnd(Number(e.target.value));
-                  setError(null);
-              }}
-              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-              required
-            />
-          </div>
+          <LessonRangeSelector
+            lessonStart={lessonStart}
+            lessonEnd={lessonEnd}
+            onLessonStartChange={(value) => {
+              setLessonStart(value);
+              setError(null);
+            }}
+            onLessonEndChange={(value) => {
+              setLessonEnd(value);
+              setError(null);
+            }}
+          />
           
-          <div className="md:col-span-2">
-            <label htmlFor="questionCountInput" className="block text-sm font-medium mb-1" style={{color: crimsonColor}}>
-              出題数 (最大50問)
-            </label>
-            <input
-              id="questionCountInput"
-              type="number"
-              min="1"
-              max="50"
-              value={questionCount}
-              onChange={(e) => {
-                  setQuestionCount(Number(e.target.value));
-                  setError(null);
-              }}
-              className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
-              required
-            />
-          </div>
+          <QuestionCountSelector
+            questionCount={questionCount}
+            onQuestionCountChange={(value) => {
+              setQuestionCount(value);
+              setError(null);
+            }}
+          />
 
           <FieldAwareQuizFormatSelector
             value={quizFormat}

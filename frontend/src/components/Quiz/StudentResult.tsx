@@ -57,10 +57,10 @@ export const StudentResult: React.FC<StudentResultProps> = ({
     
     if (personalBestRecord) {
       setPersonalBest(personalBestRecord.percentage);
-      setIsNewRecord(currentPercentage >= personalBestRecord.percentage);
+      setIsNewRecord(currentPercentage >= personalBestRecord.percentage && currentPercentage > 50);
     } else {
       setPersonalBest(currentPercentage);
-      setIsNewRecord(true);
+      setIsNewRecord(currentPercentage > 50);
     }
 
     // Play audio and show effects
@@ -102,7 +102,7 @@ export const StudentResult: React.FC<StudentResultProps> = ({
   const getMotivationalMessage = () => {
     if (totalQuestions === 0) return "問題がありませんでした。";
     
-    if (isNewRecord && percentage > 0) {
+    if (isNewRecord && percentage > 50) {
       if (percentage === 100) return "🎉 完璧！新記録達成！";
       if (percentage >= 80) return "🚀 素晴らしい！新記録です！";
       if (percentage >= 60) return "🎯 新記録達成！よくできました！";
@@ -125,7 +125,7 @@ export const StudentResult: React.FC<StudentResultProps> = ({
   };
 
   const getScoreIcon = () => {
-    if (isNewRecord && percentage > 0) {
+    if (isNewRecord && percentage > 50) {
       return <div className="text-8xl mb-4 animate-bounce">🏆</div>;
     } else if (percentage === 100) {
       return <div className="text-8xl mb-4 animate-bounce">🎉</div>;
@@ -208,7 +208,7 @@ export const StudentResult: React.FC<StudentResultProps> = ({
             <div className="text-xl opacity-90">
               {totalQuestions}問中 {score}問正解
             </div>
-            {isNewRecord && percentage > 0 && (
+            {isNewRecord && percentage > 50 && (
               <div className="mt-3 bg-white bg-opacity-20 rounded-full px-4 py-2 inline-block">
                 <span className="text-sm font-medium">🏆 新記録！</span>
               </div>

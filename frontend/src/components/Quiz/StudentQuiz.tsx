@@ -302,13 +302,17 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
               // Create a new option component every time based on current state
               const OptionButton = () => {
                 // Determine button style based on current state
-                let baseClass = 'option-button relative p-4 md:p-6 text-lg md:text-xl font-medium rounded-xl border-2 transition-all duration-150 min-h-[80px] md:min-h-[100px] flex items-center justify-center';
+                let baseClass = 'option-button p-4 md:p-6 text-lg md:text-xl font-medium rounded-xl transition-all duration-150 min-h-[80px] md:min-h-[100px] flex items-center justify-center';
                 let buttonStyle: React.CSSProperties = {
                   WebkitAppearance: 'none',
                   WebkitTapHighlightColor: 'transparent',
                   outline: 'none',
                   outlineStyle: 'none',
-                  outlineWidth: '0'
+                  outlineWidth: '0',
+                  WebkitTouchCallout: 'none',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                  boxSizing: 'border-box'
                 };
 
                 // Determine final style based on current state
@@ -317,52 +321,61 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                   if (option === currentQuestion.correctAnswer) {
                     // This is the correct answer
                     return (
-                      <button
+                      <div
                         key={`correct-${currentQuestionIndex}-${index}`}
-                        className={baseClass}
+                        className={`${baseClass} cursor-default select-none`}
                         style={{
                           ...buttonStyle,
                           backgroundColor: '#bbf7d0', // green-200
                           borderColor: '#10b981', // green-500
                           color: '#14532d', // green-900
                           borderWidth: '2px',
-                          borderStyle: 'solid'
+                          borderStyle: 'solid',
+                          animation: 'pulse 1s ease-in-out infinite'
                         }}
-                        disabled={true}
                       >
-                        <span className="text-center leading-relaxed">{option}</span>
-                      </button>
+                        <span className="flex items-center justify-center gap-2">
+                          <span>✓</span>
+                          <span className="text-center">{option}</span>
+                        </span>
+                      </div>
                     );
                   } else if (option === selectedOption) {
                     // This was the selected (incorrect) answer
                     return (
-                      <button
+                      <div
                         key={`incorrect-${currentQuestionIndex}-${index}`}
-                        className={baseClass}
+                        className={`${baseClass} cursor-default select-none`}
                         style={{
                           ...buttonStyle,
                           backgroundColor: '#fecaca', // red-200
                           borderColor: '#ef4444', // red-500
                           color: '#7f1d1d', // red-900
                           borderWidth: '2px',
-                          borderStyle: 'solid'
+                          borderStyle: 'solid',
+                          transition: 'all 0.3s ease-in-out'
                         }}
-                        disabled={true}
                       >
-                        <span className="text-center leading-relaxed">{option}</span>
-                      </button>
+                        <span className="flex items-center justify-center gap-2">
+                          <span>✗</span>
+                          <span className="text-center">{option}</span>
+                        </span>
+                      </div>
                     );
                   } else {
                     // Other options (neutral)
                     return (
-                      <button
+                      <div
                         key={`neutral-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} border-gray-200 bg-gray-50 text-gray-500`}
-                        style={buttonStyle}
-                        disabled={true}
+                        className={`${baseClass} bg-gray-50 text-gray-500 cursor-default select-none opacity-50`}
+                        style={{
+                          ...buttonStyle,
+                          border: '2px solid #E5E7EB',
+                          borderColor: '#E5E7EB'
+                        }}
                       >
-                        <span className="text-center leading-relaxed">{option}</span>
-                      </button>
+                        <span className="block text-center w-full">{option}</span>
+                      </div>
                     );
                   }
                 } else {
@@ -370,27 +383,41 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                   const isTapped = tappedOption === option;
                   if (isTapped) {
                     return (
-                      <button
+                      <div
                         key={`tapped-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} bg-blue-100 shadow-lg cursor-pointer text-gray-800 border-blue-300 transform scale-95`}
-                        style={buttonStyle}
+                        className={`${baseClass} bg-blue-100 shadow-lg cursor-pointer text-gray-800 transform scale-95 select-none`}
+                        style={{
+                          ...buttonStyle,
+                          border: '2px solid #93C5FD',
+                          borderColor: '#93C5FD'
+                        }}
                         onClick={() => handleOptionClick(option)}
-                        disabled={timeRemaining === 0}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.currentTarget.style.webkitTapHighlightColor = 'transparent';
+                        }}
                       >
-                        <span className="text-center leading-relaxed">{option}</span>
-                      </button>
+                        <span className="block text-center w-full">{option}</span>
+                      </div>
                     );
                   } else {
                     return (
-                      <button
+                      <div
                         key={`default-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} bg-white shadow-md cursor-pointer text-gray-800 border-gray-200`}
-                        style={buttonStyle}
-                        onClick={() => handleOptionClick(option)}
-                        disabled={timeRemaining === 0}
+                        className={`${baseClass} bg-white shadow-md cursor-pointer text-gray-800 active:scale-95 select-none`}
+                        style={{
+                          ...buttonStyle,
+                          border: '2px solid #E5E7EB',
+                          borderColor: '#E5E7EB'
+                        }}
+                        onClick={() => !selectedOption && timeRemaining > 0 && handleOptionClick(option)}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          e.currentTarget.style.webkitTapHighlightColor = 'transparent';
+                        }}
                       >
-                        <span className="text-center leading-relaxed">{option}</span>
-                      </button>
+                        <span className="block text-center w-full">{option}</span>
+                      </div>
                     );
                   }
                 }

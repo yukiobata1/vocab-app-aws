@@ -2,6 +2,119 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Animation for correct answers */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* Removed fade-in animation - using simple transition instead */
+
+/* Remove all focus outlines and tap highlights */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Specific iOS Safari fixes */
+div, button {
+  -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* iOS Safari text selection fixes */
+div:active, div:focus {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure quiz option buttons don't get iOS styling */
+.option-button {
+  -webkit-appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  outline: none !important;
+  border-style: solid !important;
+  box-sizing: border-box !important;
+}
+
+.option-button:active,
+.option-button:focus,
+.option-button:hover {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+  border-style: solid !important;
+}
+
+/* React Select custom styles */
+.react-select-container .react-select__control {
+  min-height: 48px;
+  border-radius: 0.375rem;
+  background-color: #FFFFFF;
+  transition: all 150ms;
+}
+
+.react-select-container .react-select__value-container {
+  text-align: center;
+}
+
+.react-select-container .react-select__single-value {
+  text-align: center;
+  width: 100%;
+}
+
+.react-select-container .react-select__control:hover {
+  border-color: #6B7280;
+}
+
+.react-select-container .react-select__control--is-focused {
+  border-color: #6B7280 !important;
+  box-shadow: 0 0 0 1px #6B7280 !important;
+}
+
+.react-select-container .react-select__menu {
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.react-select-container .react-select__option--is-focused {
+  background-color: #F3F4F6;
+}
+
+.react-select-container .react-select__option--is-selected {
+  background-color: #E5E7EB;
+  color: #1F2937;
+}
+
+.react-select-container .react-select__placeholder {
+  color: #9CA3AF;
+}
+
+.react-select-container .react-select__single-value {
+  color: #1F2937;
+}
+
 :root {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
@@ -89,6 +202,7 @@
   box-shadow: none !important;
   -webkit-appearance: none !important;
   -webkit-tap-highlight-color: transparent !important;
+  border-color: inherit !important;
 }
 
 /* iOS Safari specific - more aggressive */
@@ -109,6 +223,7 @@
     outline-color: transparent !important;
     box-shadow: none !important;
     border-style: solid !important;
+    border-color: inherit !important;
   }
 }
 
@@ -138,4 +253,47 @@
     transform: scale(1.02);
     opacity: 0.9;
   }
+}
+
+/* Global button focus fix - prevent blue borders on all buttons */
+button:focus,
+button:focus-visible,
+button:active {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Specific fix for mobile Safari */
+@media (hover: none) and (pointer: coarse) {
+  button {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+  }
+  
+  button:focus,
+  button:focus-visible,
+  button:active {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Utility class for buttons that need extra protection against focus borders */
+.no-focus-border {
+  outline: none !important;
+  outline-offset: 0 !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-appearance: none !important;
+  -webkit-focus-ring-color: transparent !important;
+}
+
+.no-focus-border:focus,
+.no-focus-border:focus-visible,
+.no-focus-border:focus-within,
+.no-focus-border:active {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  border-color: inherit !important;
 }
