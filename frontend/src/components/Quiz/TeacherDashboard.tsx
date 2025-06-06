@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { QUESTION_TYPE_CONFIGS } from '../../types/quiz';
 import { colors } from '@/config/colors';
 import QRCode from 'qrcode';
+import { LoadingScreen } from '../common/LoadingScreen';
 
 type TeacherState = 'config' | 'generating' | 'active' | 'error';
 
@@ -148,18 +149,11 @@ export const TeacherDashboard: React.FC = () => {
         return <TeacherConfig onConfigSubmit={handleConfigSubmit} />;
 
       case 'generating':
-          return (
-          <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-4 mx-auto mb-4 md:mb-6" style={{ borderColor: newGoldColor }}></div>
-              <div className="text-xl md:text-2xl font-medium text-gray-700 mb-2">
-                クイズルームを作成中...
-              </div>
-              <div className="text-sm md:text-base text-gray-500">
-                問題を生成してコードを発行しています
-              </div>
-            </div>
-          </div>
+        return (
+          <LoadingScreen 
+            message="クイズルームを作成中..."
+            subMessage="問題を生成してコードを発行しています"
+          />
         );
 
       case 'active':
@@ -176,56 +170,9 @@ export const TeacherDashboard: React.FC = () => {
                 </p>
               </div>
 
-              {/* Quiz Config Summary - Mobile Optimized */}
-              <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">                
-    
-    <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4" style={{ color: crimsonColor }}>📚 クイズ設定</h3>
-                {quizConfig && (
-                  <div className="grid grid-cols-2 gap-2 md:gap-4 text-center">
-                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
-                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>教材</div>
-                      <div className="text-sm md:text-base font-bold text-gray-800 truncate">{quizConfig.bookTitle}</div>
-                    </div>
-                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
-                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>範囲</div>
-                      <div className="text-sm md:text-base font-bold text-gray-800">課{quizConfig.lessonRange.start}-{quizConfig.lessonRange.end}</div>
-                    </div>
-                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
-                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>問題数</div>
-                      <div className="text-sm md:text-base font-bold text-gray-800">{quizConfig.questionCount}問</div>
-                    </div>
-                    <div className="rounded-lg p-2 md:p-3 border border-gray-200 col-span-2" style={{ backgroundColor: '#FFFBEB' }}>
-                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>出題形式</div>
-                      <div className="text-sm md:text-base font-bold text-gray-800 truncate">
-                        {quizConfig.quizFormat ? 
-                          getQuizFormatDisplayName(quizConfig.quizFormat) : 
-                          getQuestionTypeDisplayName(quizConfig.enabledQuestionTypes[0])
-                        }
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Room Code Display - Mobile Optimized */}
+              {/* Main Card with QR Code and Room Code */}
               <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-12 text-center">
-                <div 
-                  className="rounded-xl md:rounded-2xl p-4 md:p-8 mb-4 md:mb-8 border-4 cursor-pointer hover:opacity-90 transition-opacity duration-200" 
-                  style={{ backgroundColor: newGoldColor, borderColor: crimsonColor }}
-                  onClick={copyRoomCode}
-                  title="クリックでコピー"
-                >
-                  <div className="text-white text-center">
-                    <div className="text-xs md:text-sm mb-1 md:mb-2" style={{ color: 'white' }}>
-                      {isCopied ? '✅ コピーしました' : 'クイズコードをコピー'}
-                    </div>
-                    <div className="text-4xl sm:text-5xl md:text-8xl font-mono font-bold tracking-wider" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
-                      {roomCode}
-                    </div>
-                  </div>
-                </div>
-
-                {/* QR Code Display */}
+                {/* QR Code Display - Now at the top */}
                 {qrCodeUrl && (
                   <div className="mb-4 md:mb-6">
                     <div className="text-sm md:text-base font-medium text-gray-700 mb-2 text-center">
@@ -241,6 +188,23 @@ export const TeacherDashboard: React.FC = () => {
                     </div>
                   </div>
                 )}
+
+                {/* Room Code Display */}
+                <div 
+                  className="rounded-xl md:rounded-2xl p-4 md:p-8 mb-4 md:mb-8 border-4 cursor-pointer hover:opacity-90 transition-opacity duration-200" 
+                  style={{ backgroundColor: newGoldColor, borderColor: crimsonColor }}
+                  onClick={copyRoomCode}
+                  title="クリックでコピー"
+                >
+                  <div className="text-white text-center">
+                    <div className="text-xs md:text-sm mb-1 md:mb-2" style={{ color: 'white' }}>
+                      {isCopied ? '✅ コピーしました' : 'クイズコードをコピー'}
+                    </div>
+                    <div className="text-4xl sm:text-5xl md:text-8xl font-mono font-bold tracking-wider" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
+                      {roomCode}
+                    </div>
+                  </div>
+                </div>
 
                 {/* Room Info */}
                 <div className="rounded-lg md:rounded-xl p-3 md:p-4 mb-4 md:mb-6 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
@@ -302,6 +266,36 @@ export const TeacherDashboard: React.FC = () => {
                     <span className="text-sm md:text-base">終了したら「ルームを終了」で新しいクイズを設定できます</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Quiz Config Summary - Now at the bottom */}
+              <div className="bg-white rounded-lg shadow-lg p-4 md:p-6">                
+                <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4" style={{ color: crimsonColor }}>📚 クイズ設定</h3>
+                {quizConfig && (
+                  <div className="grid grid-cols-2 gap-2 md:gap-4 text-center">
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>教材</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800 truncate">{quizConfig.bookTitle}</div>
+                    </div>
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>範囲</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800">課{quizConfig.lessonRange.start}-{quizConfig.lessonRange.end}</div>
+                    </div>
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>問題数</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800">{quizConfig.questionCount}問</div>
+                    </div>
+                    <div className="rounded-lg p-2 md:p-3 border border-gray-200 col-span-2" style={{ backgroundColor: '#FFFBEB' }}>
+                      <div className="text-xs md:text-sm" style={{ color: crimsonColor }}>出題形式</div>
+                      <div className="text-sm md:text-base font-bold text-gray-800 truncate">
+                        {quizConfig.quizFormat ? 
+                          getQuizFormatDisplayName(quizConfig.quizFormat) : 
+                          getQuestionTypeDisplayName(quizConfig.enabledQuestionTypes[0])
+                        }
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

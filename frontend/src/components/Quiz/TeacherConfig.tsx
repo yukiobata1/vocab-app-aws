@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
 import { type QuizConfig, QuestionType, type VocabBook, type VocabQuestion } from '../../types/quiz';
 import { vocabService } from '../../services/vocabService';
 import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
@@ -6,6 +7,7 @@ import { BookSelector } from './BookSelector';
 import { LessonRangeSelector } from './LessonRangeSelector';
 import { QuestionCountSelector } from './QuestionCountSelector';
 import { colors } from '@/config/colors';
+import { LoadingScreen } from '../common/LoadingScreen';
 
 interface TeacherConfigProps {
   onConfigSubmit: (config: QuizConfig) => void;
@@ -129,22 +131,13 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
 
   const { newGoldColor, crimsonColor } = colors;
   if (loading && books.length === 0) {
-    return (
-      <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center p-4 text-center">
-        <div 
-          className="animate-spin rounded-full h-12 w-12 border-b-4 mb-4"
-          style={{ borderColor: newGoldColor }}
-        ></div>
-        <p className="text-xl font-medium" style={{ color: crimsonColor }}>教材を読み込み中...</p>
-        <p className="text-gray-500">しばらくお待ちください。</p>
-      </div>
-    );
+    return <LoadingScreen message="教材を読み込み中..." />;
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8 max-w-2xl mx-auto mt-8">
+    <div className="bg-white rounded-lg shadow-2xl p-3 md:p-8 max-w-2xl mx-auto mt-2 md:mt-8">
       <h2 
-        className="text-3xl font-bold text-center mb-8"
+        className="text-2xl md:text-3xl font-bold text-center mb-4 md:mb-8"
         style={{ color: crimsonColor }}
       >
         単語クイズ作成
@@ -160,7 +153,7 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 md:gap-x-6 gap-y-3 md:gap-y-6">
           <BookSelector
             books={books}
             selectedBookId={selectedBookId}
@@ -201,17 +194,39 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
           />
         </div>
 
-        <div className="mt-10 pt-2">
-          <button
+        <div className="mt-4 md:mt-10 pt-1 md:pt-2">
+          <Button
             type="submit"
-            className="w-full text-white py-3.5 px-6 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
-            style={{ 
-                backgroundColor: newGoldColor, 
+            variant="contained"
+            disabled={loading || !selectedBookId}
+            sx={{
+              width: '100%',
+              backgroundColor: newGoldColor,
+              color: 'white',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              textTransform: 'none',
+              borderRadius: '8px',
+              padding: '14px 24px',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.15s ease-in-out',
+              '&:hover': {
+                backgroundColor: newGoldColor,
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                transform: 'translateY(-2px)',
+              },
+              '&:active': {
+                transform: 'translateY(0)',
+              },
+              '&.Mui-disabled': {
+                backgroundColor: '#9CA3AF',
+                color: 'white',
+                opacity: 0.6,
+              }
             }}
-            disabled={loading || !selectedBookId} 
           >
             {loading ? '処理中...' : 'クイズを発行'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -7,6 +7,7 @@ import { BookSelector } from './BookSelector';
 import { LessonRangeSelector } from './LessonRangeSelector';
 import { QuestionCountSelector } from './QuestionCountSelector';
 import { colors } from '../../config/colors';
+import { LoadingScreen } from '../common/LoadingScreen';
 
 interface StudentWaitingRoomProps {
   onStartQuiz: (studentName: string, config: QuizConfig) => void;
@@ -131,16 +132,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
   const { newGoldColor, crimsonColor } = colors;
 
   if (isLoading) {
-    return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center p-4 text-center bg-white">
-        <div 
-          className="animate-spin rounded-full h-12 w-12 border-b-4 mb-4"
-          style={{ borderColor: newGoldColor }}
-        ></div>
-        <p className="text-xl font-medium" style={{ color: crimsonColor }}>教材を読み込み中...</p>
-        <p className="text-gray-500">しばらくお待ちください。</p>
-      </div>
-    );
+    return <LoadingScreen message="教材を読み込み中..." />;
   }
 
 

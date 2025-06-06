@@ -7,6 +7,7 @@ import { vocabService } from '../../services/vocabService';
 import { roomCodeService } from '../../services/roomCodeService';
 import type { QuizConfig, StudentMode } from '../../types/quiz';
 import { colors } from '../../config/colors';
+import { LoadingScreen } from '../common/LoadingScreen';
 
 interface QuizData {
   question: string;
@@ -156,17 +157,10 @@ export const StudentContainer: React.FC<StudentContainerProps> = ({ roomCodeFrom
 
       case 'loading':
         return (
-          <div className="fixed inset-0 flex items-center justify-center p-4 bg-white">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-4 mx-auto mb-4 md:mb-6" style={{ borderColor: colors.newGoldColor }}></div>
-              <div className="text-xl md:text-2xl font-medium text-gray-700 mb-2">
-                {mode === 'study' ? 'クイズを準備中...' : 'ルームに参加中...'}
-              </div>
-              <div className="text-sm md:text-base text-gray-500">
-                {mode === 'study' ? '問題を生成しています' : '問題を取得しています'}
-              </div>
-            </div>
-          </div>
+          <LoadingScreen 
+            message={mode === 'study' ? 'クイズを準備中...' : 'ルームに参加中...'}
+            subMessage={mode === 'study' ? '問題を生成しています' : '問題を取得しています'}
+          />
         );
 
       case 'quiz':

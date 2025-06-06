@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextField } from '@mui/material';
 import { colors } from '../../config/colors';
 
 interface QuestionCountSelectorProps {
@@ -36,21 +37,40 @@ export const QuestionCountSelector: React.FC<QuestionCountSelectorProps> = ({
 
   return (
     <div className="md:col-span-2">
-      <label htmlFor="questionCountInput" className="block text-sm font-medium mb-1" style={{ color: crimsonColor }}>
-        出題数 (最大{maxQuestions}問)
-      </label>
-      <input
-        id="questionCountInput"
+      <TextField
+        label={`出題数 (最大${maxQuestions}問)`}
         type={useStringState ? "text" : "number"}
-        inputMode="numeric"
-        min="1"
-        max={maxQuestions}
+        inputProps={{ 
+          inputMode: "numeric",
+          min: "1",
+          max: maxQuestions
+        }}
         placeholder="10"
         value={questionCount}
         onChange={(e) => handleChange(e.target.value)}
-        className="w-full p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500"
         disabled={disabled}
         required={!useStringState}
+        fullWidth
+        sx={{
+          '& .MuiInputLabel-root': {
+            color: crimsonColor,
+            '&.Mui-focused': {
+              color: crimsonColor,
+            }
+          },
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '6px',
+            '& fieldset': {
+              borderColor: '#D1D5DB',
+            },
+            '&:hover fieldset': {
+              borderColor: '#9CA3AF',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#9CA3AF',
+            }
+          }
+        }}
       />
     </div>
   );

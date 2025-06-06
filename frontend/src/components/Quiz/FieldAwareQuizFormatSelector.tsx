@@ -101,10 +101,10 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
 
   return (
     <div className="md:col-span-2">
-      <label className="block text-sm font-medium mb-1" style={{ color: colors.crimsonColor }}>
+      {/* <label className="block text-sm font-medium mb-1" style={{ color: colors.crimsonColor }}>
         出題情報
-      </label>
-      <div className="space-y-3">
+      </label> */}
+      <div>
         {/* First row: 出題1 and 出題2 side by side */}
         <div className="grid grid-cols-2 gap-3">
           {/* First input */}
@@ -218,8 +218,8 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
         </div>
 
         {/* Down arrow */}
-        <div className="flex items-center justify-center py-1">
-          <span className="text-gray-400 text-xl">↓</span>
+        <div className="flex items-center justify-center">
+          <span className="text-gray-400 text-xl py-1">↓</span>
         </div>
 
         {/* Second row: Answer output */}
