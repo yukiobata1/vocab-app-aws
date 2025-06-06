@@ -153,7 +153,7 @@ export const TeacherConfig: React.FC<TeacherConfigProps> = ({ onConfigSubmit }) 
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 md:gap-x-6 gap-y-3 md:gap-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 md:gap-x-6 gap-y-4 md:gap-y-8">
           <BookSelector
             books={books}
             selectedBookId={selectedBookId}
