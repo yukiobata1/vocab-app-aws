@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import Button from '@mui/material/Button';
 import { ScoreManager } from '../../utils/scoreManager';
 import { colors } from '../../config/colors';
 
@@ -20,6 +21,11 @@ export const StudentResult: React.FC<StudentResultProps> = ({
   const [showEffect, setShowEffect] = useState(false);
   const audioRefs = useRef<{ [key: string]: HTMLAudioElement }>({});
   const hasPlayedAudio = useRef(false);
+
+  // Auto-scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   // Preload audio files
   useEffect(() => {
@@ -98,6 +104,22 @@ export const StudentResult: React.FC<StudentResultProps> = ({
   };
 
   const percentage = Math.round((score / totalQuestions) * 100);
+
+  const getEndingMessage = () => {
+    if (percentage === 100) return "完璧です";
+    if (percentage >= 90) return "素晴らしい結果です";
+    if (percentage >= 80) return "よく頑張りました";
+    if (percentage >= 70) return "良い調子です";
+    if (percentage >= 60) return "お疲れ様でした";
+    if (percentage >= 50) return "頑張りました";
+    if (percentage >= 40) return "もう少しです";
+    return "次回頑張りましょう";
+  };
+
+  // 目標設定: 前回最高得点が80%未満 => 80%が目標、80%以上 => 100%が目標
+  const getTargetScore = () => {
+    return personalBest < 80 ? 80 : 100;
+  };
 
   const getMotivationalMessage = () => {
     if (totalQuestions === 0) return "問題がありませんでした。";
@@ -189,23 +211,23 @@ export const StudentResult: React.FC<StudentResultProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-2 md:p-4">
       <div className="max-w-2xl mx-auto w-full">
         <div 
-          className="rounded-2xl p-4 md:p-8 text-center transition-all duration-500"
+          className="rounded-2xl p-3 md:p-8 text-center transition-all duration-500"
           style={getCardStyle()}
         >
           {/* Icon and Title */}
-          <div className="mb-8">
+          <div className="mb-4 md:mb-8">
             {getScoreIcon()}
-            <h2 className="text-3xl font-bold mb-2" style={{ color: colors.crimsonColor }}>クイズ終了！</h2>
-            <p className="text-lg text-gray-600">{studentName}さん、お疲れ様でした！</p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-1 md:mb-2" style={{ color: colors.crimsonColor }}>クイズ終了！</h2>
+            <p className="text-base md:text-lg text-gray-600">{studentName}さん、{getEndingMessage()}！</p>
           </div>
 
           {/* Current Score */}
-          <div className={`bg-gradient-to-r ${getScoreColor()} rounded-2xl p-6 md:p-8 text-white mb-8`}>
-            <div className="text-6xl font-bold mb-2">{percentage}%</div>
-            <div className="text-xl opacity-90">
+          <div className={`bg-gradient-to-r ${getScoreColor()} rounded-2xl p-4 md:p-8 text-white mb-4 md:mb-8`}>
+            <div className="text-5xl md:text-6xl font-bold mb-1 md:mb-2">{percentage}%</div>
+            <div className="text-lg md:text-xl opacity-90">
               {totalQuestions}問中 {score}問正解
             </div>
             {isNewRecord && percentage > 50 && (
@@ -216,54 +238,56 @@ export const StudentResult: React.FC<StudentResultProps> = ({
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-green-50 rounded-xl p-4">
-              <div className="text-2xl text-green-600 mb-1">✓</div>
-              <div className="text-2xl font-bold text-green-800">{score}</div>
-              <div className="text-sm text-green-600">正解</div>
+          <div className="grid grid-cols-3 gap-2 md:gap-4 mb-4 md:mb-8">
+            <div className="bg-green-50 rounded-xl p-2 md:p-4">
+              <div className="text-xl md:text-2xl text-green-600 mb-1">✓</div>
+              <div className="text-xl md:text-2xl font-bold text-green-800">{score}</div>
+              <div className="text-xs md:text-sm text-green-600">正解</div>
             </div>
-            <div className="bg-red-50 rounded-xl p-4">
-              <div className="text-2xl text-red-600 mb-1">✗</div>
-              <div className="text-2xl font-bold text-red-800">{totalQuestions - score}</div>
-              <div className="text-sm text-red-600">不正解</div>
+            <div className="bg-red-50 rounded-xl p-2 md:p-4">
+              <div className="text-xl md:text-2xl text-red-600 mb-1">✗</div>
+              <div className="text-xl md:text-2xl font-bold text-red-800">{totalQuestions - score}</div>
+              <div className="text-xs md:text-sm text-red-600">不正解</div>
             </div>
-            <div className="bg-blue-50 rounded-xl p-4">
-              <div className="text-2xl text-blue-600 mb-1">🏆</div>
-              <div className="text-2xl font-bold text-blue-800">{personalBest}%</div>
-              <div className="text-sm text-blue-600">自己ベスト</div>
+            <div className="bg-blue-50 rounded-xl p-2 md:p-4">
+              <div className="text-xl md:text-2xl text-blue-600 mb-1">🏆</div>
+              <div className="text-xl md:text-2xl font-bold text-blue-800">{personalBest}%</div>
+              <div className="text-xs md:text-sm text-blue-600">自己ベスト</div>
             </div>
           </div>
 
           {/* Motivational Message */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 md:p-6 mb-8">
-            <p className="text-xl font-medium text-gray-800">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-3 md:p-6 mb-4 md:mb-8">
+            <p className="text-lg md:text-xl font-medium text-gray-800">
               {getMotivationalMessage()}
             </p>
           </div>
 
           {/* Personal Progress */}
-          <div className="bg-gray-50 rounded-2xl p-4 md:p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">📈 あなたの成長記録</h3>
+          <div className="bg-gray-50 rounded-2xl p-3 md:p-6 mb-4 md:mb-8">
+            <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-2 md:mb-4 text-center">📈 あなたの成長記録</h3>
             
             {/* Score comparison */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="bg-white rounded-xl p-4 text-center border-2" style={{ borderColor: colors.newGoldColor }}>
-                <div className="text-3xl font-bold" style={{ color: colors.crimsonColor }}>{percentage}%</div>
-                <div className="text-sm text-gray-600 font-medium">今回のスコア</div>
+            <div className="grid grid-cols-2 gap-2 md:gap-4 mb-3 md:mb-4">
+              <div className="bg-white rounded-xl p-2 md:p-4 text-center border-2" style={{ borderColor: colors.newGoldColor }}>
+                <div className="text-2xl md:text-3xl font-bold" style={{ color: colors.crimsonColor }}>{percentage}%</div>
+                <div className="text-xs md:text-sm text-gray-600 font-medium">今回のスコア</div>
               </div>
-              <div className="bg-white rounded-xl p-4 text-center border-2 border-blue-300">
-                <div className="text-3xl font-bold text-blue-600">{personalBest}%</div>
-                <div className="text-sm text-gray-600 font-medium">自己ベスト記録</div>
+              <div className="bg-white rounded-xl p-2 md:p-4 text-center border-2 border-blue-300">
+                <div className="text-2xl md:text-3xl font-bold text-blue-600">{personalBest}%</div>
+                <div className="text-xs md:text-sm text-gray-600 font-medium">自己ベスト記録</div>
               </div>
             </div>
 
             {/* Progress bar */}
-            <div className="bg-white rounded-xl p-4">
+            <div className="bg-white rounded-xl p-3 md:p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-600">進歩状況</span>
-                <span className="text-sm font-medium" style={{ color: colors.crimsonColor }}>
-                  {percentage >= personalBest ? '🎉 新記録達成！' : `あと${personalBest - percentage}%で目標達成`}
-                </span>
+                {percentage >= getTargetScore() && (
+                  <span className="text-sm font-medium" style={{ color: colors.crimsonColor }}>
+                    🎉 目標達成！
+                  </span>
+                )}
               </div>
               <div className="relative">
                 <div className="w-full bg-gray-200 rounded-full h-4">
@@ -275,19 +299,19 @@ export const StudentResult: React.FC<StudentResultProps> = ({
                     }}
                   ></div>
                 </div>
-                {personalBest > percentage && personalBest <= 95 && (
+                {getTargetScore() > percentage && getTargetScore() <= 95 && (
                   <div 
                     className="absolute top-0 h-4 w-1 bg-blue-500 rounded"
-                    style={{ left: `${personalBest}%` }}
+                    style={{ left: `${getTargetScore()}%` }}
                   >
                     <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded whitespace-nowrap">
-                      {personalBest}%
+                      目標: {getTargetScore()}%
                     </div>
                   </div>
                 )}
-                {personalBest > percentage && personalBest > 95 && (
+                {getTargetScore() > percentage && getTargetScore() > 95 && (
                   <div className="absolute -top-6 right-0 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-                    目標: {personalBest}%
+                    目標: {getTargetScore()}%
                   </div>
                 )}
               </div>
@@ -296,20 +320,42 @@ export const StudentResult: React.FC<StudentResultProps> = ({
                 <span>50%</span>
                 <span>100%</span>
               </div>
+              {percentage < getTargetScore() && (
+                <div className="text-center mt-3">
+                  <span className="text-sm font-medium" style={{ color: colors.crimsonColor }}>
+                    あと{getTargetScore() - percentage}%で目標達成
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Action Button */}
-          <button
+          <Button
             onClick={onRestart}
-            className="text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            style={{ backgroundColor: colors.newGoldColor }}
+            variant="contained"
+            sx={{
+              backgroundColor: colors.newGoldColor,
+              color: 'white',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              textTransform: 'none',
+              borderRadius: '12px',
+              padding: '16px 32px',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: colors.newGoldColor,
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                transform: 'scale(1.05)',
+              }
+            }}
           >
             <span className="flex items-center justify-center space-x-2">
               <span>🚀</span>
               <span>もう一度挑戦する</span>
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

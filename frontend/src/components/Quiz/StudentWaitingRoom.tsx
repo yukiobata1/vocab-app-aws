@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
 import { vocabService } from '../../services/vocabService';
 import type { QuizConfig, VocabBook, QuestionType, StudentMode, VocabQuestion } from '../../types/quiz';
 import { FieldAwareQuizFormatSelector, getQuestionTypeFromFormat } from './FieldAwareQuizFormatSelector';
@@ -18,6 +19,11 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
   const [studentName, setStudentName] = useState('');
   const [roomCode, setRoomCode] = useState(roomCodeFromUrl || '');
   const [isStarting, setIsStarting] = useState(false);
+
+  // Auto-scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   
   // Study mode states
   const [books, setBooks] = useState<VocabBook[]>([]);
@@ -126,63 +132,77 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
 
   if (isLoading) {
     return (
-      <div className="min-h-[calc(100vh-200px)] flex flex-col justify-center items-center p-4 text-center">
-      <div 
-        className="animate-spin rounded-full h-12 w-12 border-b-4 mb-4"
-        style={{ borderColor: newGoldColor }}
-      ></div>
-      <p className="text-xl font-medium" style={{ color: crimsonColor }}>教材を読み込み中...</p>
-      <p className="text-gray-500">しばらくお待ちください。</p>
-    </div>
+      <div className="fixed inset-0 flex flex-col items-center justify-center p-4 text-center bg-white">
+        <div 
+          className="animate-spin rounded-full h-12 w-12 border-b-4 mb-4"
+          style={{ borderColor: newGoldColor }}
+        ></div>
+        <p className="text-xl font-medium" style={{ color: crimsonColor }}>教材を読み込み中...</p>
+        <p className="text-gray-500">しばらくお待ちください。</p>
+      </div>
     );
   }
 
 
   return (
-    <div className="min-h-screen p-4 pt-8">
+    <div className="min-h-screen p-2 md:p-4 pt-4 md:pt-8">
       <div className="max-w-2xl w-full mx-auto">
-        <div className="bg-white rounded-lg shadow-2xl p-6 md:p-8">
+        <div className="bg-white rounded-lg shadow-2xl p-3 md:p-8">
           {/* Header */}
-          <h2 className="text-3xl font-bold text-center mb-8" style={{ color: crimsonColor }}>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 md:mb-8" style={{ color: crimsonColor }}>
             {mode === 'study' ? '単語クイズ作成' : '教室テスト参加'}
           </h2>
 
           {/* Mode Selection */}
-          <div className="mb-6">
+          <div className="mb-4 md:mb-8">
             <div className="flex rounded-xl p-1 bg-gray-100">
-              <button
+              <Button
                 onClick={() => setMode('classroom')}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 no-focus-border ${
-                  mode === 'classroom'
-                    ? 'shadow-sm'
-                    : ''
-                }`}
-                style={{
+                variant={mode === 'classroom' ? 'contained' : 'text'}
+                sx={{
+                  flex: 1,
                   backgroundColor: mode === 'classroom' ? 'white' : 'transparent',
-                  color: mode === 'classroom' ? crimsonColor : '#6B7280'
+                  color: mode === 'classroom' ? crimsonColor : '#6B7280',
+                  fontSize: '14px',
+                  fontWeight: 'medium',
+                  textTransform: 'none',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  boxShadow: mode === 'classroom' ? '0 1px 3px 0 rgba(0, 0, 0, 0.1)' : 'none',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: mode === 'classroom' ? 'white' : 'rgba(107, 114, 128, 0.1)',
+                  }
                 }}
               >
                 🏫 教室テスト
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setMode('study')}
-                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 no-focus-border ${
-                  mode === 'study'
-                    ? 'shadow-sm'
-                    : ''
-                }`}
-                style={{
+                variant={mode === 'study' ? 'contained' : 'text'}
+                sx={{
+                  flex: 1,
                   backgroundColor: mode === 'study' ? 'white' : 'transparent',
-                  color: mode === 'study' ? crimsonColor : '#6B7280'
+                  color: mode === 'study' ? crimsonColor : '#6B7280',
+                  fontSize: '14px',
+                  fontWeight: 'medium',
+                  textTransform: 'none',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  boxShadow: mode === 'study' ? '0 1px 3px 0 rgba(0, 0, 0, 0.1)' : 'none',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: mode === 'study' ? 'white' : 'rgba(107, 114, 128, 0.1)',
+                  }
                 }}
               >
                 📖 勉強モード
-              </button>
+              </Button>
             </div>
           </div>
 
           {/* Input Form */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 md:gap-x-6 gap-y-3 md:gap-y-6">
             {mode === 'classroom' && (
               <>
                 <div className="md:col-span-2">
@@ -231,6 +251,14 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                   loading={isLoading}
                 />
 
+                <QuestionCountSelector
+                  questionCount={questionCount}
+                  onQuestionCountChange={() => {}} // Not used in string mode
+                  disabled={isStarting}
+                  useStringState={true}
+                  onStringChange={setQuestionCount}
+                />
+
                 <LessonRangeSelector
                   lessonStart={lessonStart}
                   lessonEnd={lessonEnd}
@@ -247,14 +275,6 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
                   }}
                 />
 
-                <QuestionCountSelector
-                  questionCount={questionCount}
-                  onQuestionCountChange={() => {}} // Not used in string mode
-                  disabled={isStarting}
-                  useStringState={true}
-                  onStringChange={setQuestionCount}
-                />
-
                 <FieldAwareQuizFormatSelector
                   value={quizFormat}
                   onChange={handleFormatChange}
@@ -265,15 +285,39 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
             )}
           </div>
 
-          <div className="mt-10 pt-2">
-            <button
+          <div className="mt-4 md:mt-10 pt-1 md:pt-2">
+            <Button
               onClick={handleStart}
+              variant="contained"
               disabled={
                 isStarting ||
                 (mode === 'classroom' && (!studentName.trim() || !roomCode.trim()))
               }
-              className="w-full text-white py-3.5 px-6 rounded-lg font-semibold no-focus-border transition-all duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ backgroundColor: isStarting ? '#9CA3AF' : newGoldColor }}
+              sx={{
+                width: '100%',
+                backgroundColor: isStarting ? '#9CA3AF' : newGoldColor,
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                borderRadius: '8px',
+                padding: '14px 24px',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                transition: 'all 0.15s ease-in-out',
+                '&:hover': {
+                  backgroundColor: isStarting ? '#9CA3AF' : newGoldColor,
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                  transform: 'translateY(-2px)',
+                },
+                '&:active': {
+                  transform: 'translateY(0)',
+                },
+                '&.Mui-disabled': {
+                  backgroundColor: '#9CA3AF',
+                  color: 'white',
+                  opacity: 0.6,
+                }
+              }}
             >
               {isStarting ? (
                 <div className="flex items-center justify-center space-x-2">
@@ -283,7 +327,7 @@ export const StudentWaitingRoom: React.FC<StudentWaitingRoomProps> = ({ onStartQ
               ) : (
                 <span>{mode === 'study' ? 'クイズを開始' : 'ルームに参加'}</span>
               )}
-            </button>
+            </Button>
           </div>
 
         </div>

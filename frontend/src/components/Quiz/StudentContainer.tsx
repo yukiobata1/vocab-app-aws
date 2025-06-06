@@ -156,7 +156,7 @@ export const StudentContainer: React.FC<StudentContainerProps> = ({ roomCodeFrom
 
       case 'loading':
         return (
-          <div className="min-h-screen flex items-center justify-center p-4">
+          <div className="fixed inset-0 flex items-center justify-center p-4 bg-white">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-4 mx-auto mb-4 md:mb-6" style={{ borderColor: colors.newGoldColor }}></div>
               <div className="text-xl md:text-2xl font-medium text-gray-700 mb-2">

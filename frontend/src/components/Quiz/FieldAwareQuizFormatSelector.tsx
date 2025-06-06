@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { colors } from '../../config/colors';
 import { QuestionType, type VocabQuestion } from '../../types/quiz';
 import { detectAvailableFields, isQuestionTypeCompatible, isCompoundFormatCompatible } from '../../utils/fieldDetection';
@@ -101,85 +102,181 @@ export const FieldAwareQuizFormatSelector: React.FC<FieldAwareQuizFormatSelector
   return (
     <div className="md:col-span-2">
       <label className="block text-sm font-medium mb-1" style={{ color: colors.crimsonColor }}>
-        出題形式
+        出題情報
       </label>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center sm:space-x-2 space-y-2 sm:space-y-0 p-4 bg-gray-50 rounded-md">
-        {/* First input */}
-        <select
-          value={value.input1}
-          onChange={(e) => handleInput1Change(e.target.value)}
-          className="p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 min-w-0 flex-shrink"
-        >
-          {formatOptions.map((option) => (
-            <option 
-              key={option} 
-              value={option}
-              disabled={!isFormatAvailable(option)}
-              style={{ 
-                color: isFormatAvailable(option) ? 'inherit' : '#999',
-                fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
+      <div className="space-y-3">
+        {/* First row: 出題1 and 出題2 side by side */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* First input */}
+          <FormControl 
+            sx={{ 
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '6px',
+              }
+            }}
+          >
+            <InputLabel 
+              id="input1-select-label"
+              sx={{ 
+                color: colors.crimsonColor,
+                '&.Mui-focused': {
+                  color: colors.crimsonColor,
+                }
               }}
             >
-              {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
-            </option>
-          ))}
-        </select>
-
-        {/* Optional second input */}
-        {allowMultipleInputs && (
-          <>
-            <div className="flex items-center justify-center">
-              <span className="text-gray-400 text-sm sm:hidden">+</span>
-              <span className="text-gray-400 text-sm self-center hidden sm:inline">+</span>
-            </div>
-            <select
-              value={value.input2 || 'なし'}
-              onChange={(e) => handleInput2Change(e.target.value)}
-              className="p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 min-w-0 flex-shrink"
+              出題情報1
+            </InputLabel>
+            <Select
+              labelId="input1-select-label"
+              value={value.input1}
+              label="出題情報1"
+              onChange={(e) => handleInput1Change(e.target.value)}
+              sx={{
+                backgroundColor: 'white',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#D1D5DB',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#9CA3AF',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#9CA3AF',
+                }
+              }}
             >
-              <option value="なし">なし</option>
-              {formatOptions.filter(option => option !== value.input1).map((option) => (
-                <option 
+              {formatOptions.map((option) => (
+                <MenuItem 
                   key={option} 
                   value={option}
                   disabled={!isFormatAvailable(option)}
-                  style={{ 
+                  sx={{
                     color: isFormatAvailable(option) ? 'inherit' : '#999',
                     fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
                   }}
                 >
                   {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </>
-        )}
+            </Select>
+          </FormControl>
 
-        <div className="flex items-center justify-center">
-          <span className="text-gray-400 text-lg sm:hidden">↓</span>
-          <span className="text-gray-400 text-lg self-center hidden sm:inline">→</span>
-        </div>
-
-        {/* Output */}
-        <select
-          value={value.output}
-          onChange={(e) => handleOutputChange(e.target.value)}
-          className="p-3 border border-gray-300 rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:border-gray-500 min-w-0 flex-shrink"
-        >
-          {formatOptions.filter(option => option !== '文脈').map((option) => (
-            <option 
-              key={option} 
-              value={option}
-              disabled={!isFormatAvailable(option)}
-              style={{ 
-                color: isFormatAvailable(option) ? 'inherit' : '#999',
-                fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
+          {/* Optional second input */}
+          {allowMultipleInputs && (
+            <FormControl 
+              sx={{ 
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '6px',
+                }
               }}
             >
-              {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
-            </option>
-          ))}
-        </select>
+              <InputLabel 
+                id="input2-select-label"
+                sx={{ 
+                  color: colors.crimsonColor,
+                  '&.Mui-focused': {
+                    color: colors.crimsonColor,
+                  }
+                }}
+              >
+                出題情報2
+              </InputLabel>
+              <Select
+                labelId="input2-select-label"
+                value={value.input2 || 'なし'}
+                label="出題情報2"
+                onChange={(e) => handleInput2Change(e.target.value)}
+                sx={{
+                  backgroundColor: 'white',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#D1D5DB',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#9CA3AF',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#9CA3AF',
+                  }
+                }}
+              >
+                <MenuItem value="なし">なし</MenuItem>
+                {formatOptions.filter(option => option !== value.input1).map((option) => (
+                  <MenuItem 
+                    key={option} 
+                    value={option}
+                    disabled={!isFormatAvailable(option)}
+                    sx={{
+                      color: isFormatAvailable(option) ? 'inherit' : '#999',
+                      fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
+                    }}
+                  >
+                    {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        </div>
+
+        {/* Down arrow */}
+        <div className="flex items-center justify-center py-1">
+          <span className="text-gray-400 text-xl">↓</span>
+        </div>
+
+        {/* Second row: Answer output */}
+        <div className="flex justify-center">
+          <FormControl 
+            sx={{ 
+              minWidth: '50%',
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '6px',
+              }
+            }}
+          >
+            <InputLabel 
+              id="output-select-label"
+              sx={{ 
+                color: colors.crimsonColor,
+                '&.Mui-focused': {
+                  color: colors.crimsonColor,
+                }
+              }}
+            >
+              答え
+            </InputLabel>
+            <Select
+              labelId="output-select-label"
+              value={value.output}
+              label="答え"
+              onChange={(e) => handleOutputChange(e.target.value)}
+              sx={{
+                backgroundColor: 'white',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#D1D5DB',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#9CA3AF',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#9CA3AF',
+                }
+              }}
+            >
+              {formatOptions.filter(option => option !== '文脈').map((option) => (
+                <MenuItem 
+                  key={option} 
+                  value={option}
+                  disabled={!isFormatAvailable(option)}
+                  sx={{
+                    color: isFormatAvailable(option) ? 'inherit' : '#999',
+                    fontStyle: isFormatAvailable(option) ? 'normal' : 'italic'
+                  }}
+                >
+                  {option}{!isFormatAvailable(option) ? ' (利用不可)' : ''}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
       </div>
       
       {/* Warning message */}

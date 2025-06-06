@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
 import { colors } from '../../config/colors';
 
 interface QuizData {
@@ -20,82 +21,53 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [sounds, setSounds] = useState<{correct: HTMLAudioElement, incorrect: HTMLAudioElement} | null>(null);
-  const [timeRemaining, setTimeRemaining] = useState(30); // 30 seconds default
-  const [tappedOption, setTappedOption] = useState<string | null>(null); // Track which option was just tapped
+  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [tappedOption, setTappedOption] = useState<string | null>(null);
   const [audioInitialized, setAudioInitialized] = useState(false);
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [userInteracted, setUserInteracted] = useState(false); // Track user interaction for audio context
+
+  // Auto-scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   useEffect(() => {
-    // AudioContextを使った音声プリロード
-    const initAudioContext = async () => {
+    const initAudio = () => {
       try {
-        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        setAudioContext(ctx);
+        // シンプルな単一インスタンス音声作成
+        const correctAudio = new Audio('/right.mp3');
+        const incorrectAudio = new Audio('/wrong.mp3');
         
-        // 音声ファイルをプリロード (AudioContextで将来使用予定)
-        await Promise.all([
-          fetch('/right.mp3').then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b)),
-          fetch('/wrong.mp3').then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b))
-        ]);
+        // 基本設定
+        correctAudio.preload = 'auto';
+        incorrectAudio.preload = 'auto';
+        correctAudio.volume = 1.0; // 最大音量
+        incorrectAudio.volume = 1.0; // 最大音量
 
-        // HTMLAudioElementも併用（フォールバック）
-        const correctSound = new Audio('/right.mp3');
-        const incorrectSound = new Audio('/wrong.mp3');
-        
-        correctSound.preload = 'auto';
-        incorrectSound.preload = 'auto';
-        correctSound.volume = 0.7;
-        incorrectSound.volume = 0.7;
-        
-        // 音声を完全にロード
-        await Promise.all([
-          new Promise((resolve) => {
-            correctSound.addEventListener('canplaythrough', resolve, { once: true });
-            correctSound.load();
-          }),
-          new Promise((resolve) => {
-            incorrectSound.addEventListener('canplaythrough', resolve, { once: true });
-            incorrectSound.load();
-          })
-        ]);
-
-        setSounds({ correct: correctSound, incorrect: incorrectSound });
+        setSounds({ correct: correctAudio, incorrect: incorrectAudio });
         setAudioInitialized(true);
         
-        console.log('音声プリロード完了');
+        console.log('音声初期化完了');
       } catch (error) {
         console.log('音声初期化エラー:', error);
-        // フォールバック: 基本的な音声セットアップ
-        const correctSound = new Audio('/right.mp3');
-        const incorrectSound = new Audio('/wrong.mp3');
-        correctSound.preload = 'auto';
-        incorrectSound.preload = 'auto';
-        correctSound.load();
-        incorrectSound.load();
-        setSounds({ correct: correctSound, incorrect: incorrectSound });
         setAudioInitialized(true);
       }
     };
 
-    initAudioContext();
+    initAudio();
 
-    // ユーザーインタラクションで音声コンテキストを有効化
-    const enableAudio = async () => {
-      if (audioContext && audioContext.state === 'suspended') {
-        await audioContext.resume();
-        console.log('AudioContext resumed');
-      }
+    // ユーザーインタラクションの検出（スマートフォン音声再生のため）
+    const handleFirstInteraction = () => {
+      setUserInteracted(true);
+      console.log('ユーザーインタラクション検出 - 音声再生可能');
     };
 
-    document.addEventListener('touchstart', enableAudio, { once: true });
-    document.addEventListener('click', enableAudio, { once: true });
+    document.addEventListener('touchstart', handleFirstInteraction, { once: true });
+    document.addEventListener('click', handleFirstInteraction, { once: true });
 
     return () => {
-      document.removeEventListener('touchstart', enableAudio);
-      document.removeEventListener('click', enableAudio);
-      if (audioContext) {
-        audioContext.close();
-      }
+      document.removeEventListener('touchstart', handleFirstInteraction);
+      document.removeEventListener('click', handleFirstInteraction);
     };
   }, []);
 
@@ -108,8 +80,54 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     setTimeRemaining(30);
   }, [quizData]);
 
+  // 問題が変わったときの処理
+  useEffect(() => {
+    // 音声を停止
+    if (sounds) {
+      sounds.correct.pause();
+      sounds.correct.currentTime = 0;
+      sounds.incorrect.pause();
+      sounds.incorrect.currentTime = 0;
+    }
+  }, [currentQuestionIndex, sounds]);
+
+  // 音声再生関数
+  const playSound = async (audio: HTMLAudioElement, type: 'correct' | 'incorrect') => {
+    // ユーザーインタラクションがない場合は再生しない（スマートフォン対応）
+    if (!userInteracted) {
+      console.log(`音声再生スキップ (ユーザーインタラクションなし): ${type}`);
+      return;
+    }
+
+    try {
+      // 音声を停止してリセット
+      audio.pause();
+      audio.currentTime = 0;
+      
+      // 再生を試行
+      await audio.play();
+      console.log(`${type} sound played successfully`);
+    } catch (error) {
+      console.log(`音声再生失敗 (${type}):`, error);
+      // スマートフォンでは特定の条件下で音声再生が失敗することがある
+      // - autoplay policy violations
+      // - insufficient user gesture
+      // - audio context suspended
+    }
+  };
+
   const handleOptionClick = (option: string) => {
-    if (selectedOption || !sounds || !audioInitialized) return;
+    // クリックできない条件をチェック
+    if (selectedOption || !sounds || !audioInitialized || timeRemaining === 0) {
+      return;
+    }
+
+    console.log('オプションクリック:', option);
+    
+    // ユーザーインタラクションを記録
+    if (!userInteracted) {
+      setUserInteracted(true);
+    }
 
     // 即座にフォーカスとアクティブ状態をクリア (iOS対応強化)
     const activeElement = document.activeElement as HTMLElement;
@@ -138,26 +156,11 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
       navigator.vibrate(isCorrect ? 100 : 200);
     }
 
-    // より確実な音声フィードバック
-    const playSound = async (audioElement: HTMLAudioElement) => {
-      try {
-        // 音声をリセットして再生
-        audioElement.currentTime = 0;
-        await audioElement.play();
-      } catch (error) {
-        console.log('音声の再生に失敗しました:', error);
-        // フォールバック: 少し待って再試行
-        setTimeout(() => {
-          audioElement.currentTime = 0;
-          audioElement.play().catch(e => console.log('再試行も失敗:', e));
-        }, 100);
-      }
-    };
-
+    // 音声再生
     if (isCorrect) {
-      playSound(sounds.correct);
+      playSound(sounds.correct, 'correct');
     } else {
-      playSound(sounds.incorrect);
+      playSound(sounds.incorrect, 'incorrect');
     }
 
     // No need for feedbackStates - we determine colors directly in render
@@ -174,17 +177,17 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     }, 1200);
   };
 
-  // Timer effect
+  // Timer effect - 正確な1秒間隔を保つ
   useEffect(() => {
     if (selectedOption) return;
     
-    if (timeRemaining === 0) {
+    if (timeRemaining <= 0) {
       // Time's up - mark as timeout to show correct answer
       setSelectedOption('__timeout__'); // Special marker for timeout
       
       // Play incorrect sound for timeout
-      if (sounds) {
-        sounds.incorrect.play().catch(e => console.log('音声の再生に失敗しました:', e));
+      if (sounds && userInteracted) {
+        playSound(sounds.incorrect, 'incorrect');
       }
       
       setTimeout(() => {
@@ -200,12 +203,18 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
       return;
     }
     
+    // より正確なタイマー：1000msではなく実際の経過時間をチェック
+    const startTime = Date.now();
     const timer = setTimeout(() => {
-      setTimeRemaining(timeRemaining - 1);
+      const elapsed = Date.now() - startTime;
+      // 実際の経過時間が1000ms以上の場合のみタイマーを減らす
+      if (elapsed >= 950) { // 50msの余裕を持たせる
+        setTimeRemaining(prev => Math.max(0, prev - 1));
+      }
     }, 1000);
     
     return () => clearTimeout(timer);
-  }, [timeRemaining, selectedOption, currentQuestionIndex, quizData, score, sounds]);
+  }, [timeRemaining, selectedOption, currentQuestionIndex, quizData, score, sounds, userInteracted]);
 
   if (quizData.length === 0) {
     return (
@@ -218,13 +227,14 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
     );
   }
 
+
   const currentQuestion = quizData[currentQuestionIndex];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 p-2 md:p-4">
       <div className="max-w-4xl mx-auto">
         {/* Question Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-lg p-3 md:p-6 mb-3 md:mb-6">
           {/* Timer header */}
           <div className="flex justify-end items-center mb-2">
             <div className="text-sm text-gray-500">
@@ -247,13 +257,13 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
           </div>
           
           {/* Question Counter */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-3 md:mb-6">
             <span className="text-sm font-medium" style={{ color: colors.crimsonColor }}>
               {currentQuestionIndex + 1}/{quizData.length}
             </span>
           </div>
           
-          <div className="text-center mb-8">
+          <div className="text-center mb-4 md:mb-8">
             <div className="leading-relaxed">
               {currentQuestion.question.split('\n').map((part, index) => {
                 // Check if this line contains field labels (for compound questions)
@@ -270,9 +280,9 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                   const value = valueParts.join('：');
                   
                   return (
-                    <div key={index} className="mb-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="text-sm font-medium text-gray-600 mb-1">{label}</div>
-                      <div className="text-xl font-bold" style={{ color: colors.crimsonColor }}>
+                    <div key={index} className="mb-2 md:mb-3 p-2 md:p-3 bg-gray-50 rounded-lg">
+                      <div className="text-xs md:text-sm font-medium text-gray-600 mb-1">{label}</div>
+                      <div className="text-lg md:text-xl font-bold" style={{ color: colors.crimsonColor }}>
                         {value}
                       </div>
                     </div>
@@ -284,8 +294,8 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                     key={index} 
                     className={`${
                       index === 0 
-                        ? 'text-2xl font-bold mb-4' 
-                        : 'text-lg text-gray-600 mb-2'
+                        ? 'text-xl md:text-2xl font-bold mb-2 md:mb-4' 
+                        : 'text-base md:text-lg text-gray-600 mb-1 md:mb-2'
                     }`}
                     style={{ color: index === 0 ? colors.crimsonColor : undefined }}
                   >
@@ -297,23 +307,11 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
           </div>
 
           {/* Options Grid - 2x2 layout like original */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
             {currentQuestion.options.map((option, index) => {
               // Create a new option component every time based on current state
               const OptionButton = () => {
-                // Determine button style based on current state
-                let baseClass = 'option-button p-4 md:p-6 text-lg md:text-xl font-medium rounded-xl transition-all duration-150 min-h-[80px] md:min-h-[100px] flex items-center justify-center';
-                let buttonStyle: React.CSSProperties = {
-                  WebkitAppearance: 'none',
-                  WebkitTapHighlightColor: 'transparent',
-                  outline: 'none',
-                  outlineStyle: 'none',
-                  outlineWidth: '0',
-                  WebkitTouchCallout: 'none',
-                  WebkitUserSelect: 'none',
-                  userSelect: 'none',
-                  boxSizing: 'border-box'
-                };
+                // Material-UI buttons don't need these custom styles
 
                 // Determine final style based on current state
                 if (selectedOption) {
@@ -321,61 +319,103 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                   if (option === currentQuestion.correctAnswer) {
                     // This is the correct answer
                     return (
-                      <div
+                      <Button
                         key={`correct-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} cursor-default select-none`}
-                        style={{
-                          ...buttonStyle,
-                          backgroundColor: '#bbf7d0', // green-200
-                          borderColor: '#10b981', // green-500
-                          color: '#14532d', // green-900
-                          borderWidth: '2px',
-                          borderStyle: 'solid',
-                          animation: 'pulse 1s ease-in-out infinite'
+                        variant="contained"
+                        disabled={true}
+                        sx={{
+                          backgroundColor: '#bbf7d0',
+                          color: '#14532d',
+                          border: '2px solid #10b981',
+                          borderRadius: '12px',
+                          minHeight: { xs: '60px', md: '100px' },
+                          fontSize: { xs: '18px', md: '20px' },
+                          fontWeight: 'medium',
+                          textTransform: 'none',
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          animation: 'pulse 1s ease-in-out infinite',
+                          '&:hover': {
+                            backgroundColor: '#bbf7d0',
+                          },
+                          '&.Mui-disabled': {
+                            backgroundColor: '#bbf7d0',
+                            color: '#14532d',
+                            border: '2px solid #10b981',
+                          }
                         }}
                       >
-                        <span className="flex items-center justify-center gap-2">
-                          <span>✓</span>
-                          <span className="text-center">{option}</span>
-                        </span>
-                      </div>
+                        <span>✓</span>
+                        <span>{option}</span>
+                      </Button>
                     );
                   } else if (option === selectedOption) {
                     // This was the selected (incorrect) answer
                     return (
-                      <div
+                      <Button
                         key={`incorrect-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} cursor-default select-none`}
-                        style={{
-                          ...buttonStyle,
-                          backgroundColor: '#fecaca', // red-200
-                          borderColor: '#ef4444', // red-500
-                          color: '#7f1d1d', // red-900
-                          borderWidth: '2px',
-                          borderStyle: 'solid',
-                          transition: 'all 0.3s ease-in-out'
+                        variant="contained"
+                        disabled={true}
+                        sx={{
+                          backgroundColor: '#fecaca',
+                          color: '#7f1d1d',
+                          border: '2px solid #ef4444',
+                          borderRadius: '12px',
+                          minHeight: { xs: '60px', md: '100px' },
+                          fontSize: { xs: '18px', md: '20px' },
+                          fontWeight: 'medium',
+                          textTransform: 'none',
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          transition: 'all 0.3s ease-in-out',
+                          '&:hover': {
+                            backgroundColor: '#fecaca',
+                          },
+                          '&.Mui-disabled': {
+                            backgroundColor: '#fecaca',
+                            color: '#7f1d1d',
+                            border: '2px solid #ef4444',
+                          }
                         }}
                       >
-                        <span className="flex items-center justify-center gap-2">
-                          <span>✗</span>
-                          <span className="text-center">{option}</span>
-                        </span>
-                      </div>
+                        <span>✗</span>
+                        <span>{option}</span>
+                      </Button>
                     );
                   } else {
                     // Other options (neutral)
                     return (
-                      <div
+                      <Button
                         key={`neutral-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} bg-gray-50 text-gray-500 cursor-default select-none opacity-50`}
-                        style={{
-                          ...buttonStyle,
+                        variant="outlined"
+                        disabled={true}
+                        sx={{
+                          backgroundColor: '#F9FAFB',
+                          color: '#6B7280',
                           border: '2px solid #E5E7EB',
-                          borderColor: '#E5E7EB'
+                          borderRadius: '12px',
+                          minHeight: { xs: '60px', md: '100px' },
+                          fontSize: { xs: '18px', md: '20px' },
+                          fontWeight: 'medium',
+                          textTransform: 'none',
+                          width: '100%',
+                          opacity: 0.5,
+                          '&.Mui-disabled': {
+                            backgroundColor: '#F9FAFB',
+                            color: '#6B7280',
+                            border: '2px solid #E5E7EB',
+                            opacity: 0.5,
+                          }
                         }}
                       >
-                        <span className="block text-center w-full">{option}</span>
-                      </div>
+                        {option}
+                      </Button>
                     );
                   }
                 } else {
@@ -383,41 +423,73 @@ export const StudentQuiz: React.FC<StudentQuizProps> = ({
                   const isTapped = tappedOption === option;
                   if (isTapped) {
                     return (
-                      <div
+                      <Button
                         key={`tapped-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} bg-blue-100 shadow-lg cursor-pointer text-gray-800 transform scale-95 select-none`}
-                        style={{
-                          ...buttonStyle,
-                          border: '2px solid #93C5FD',
-                          borderColor: '#93C5FD'
-                        }}
+                        variant="contained"
                         onClick={() => handleOptionClick(option)}
-                        onTouchStart={(e) => {
-                          e.preventDefault();
-                          e.currentTarget.style.webkitTapHighlightColor = 'transparent';
+                        disabled={timeRemaining === 0 || selectedOption !== null}
+                        sx={{
+                          backgroundColor: '#DBEAFE',
+                          color: '#1F2937',
+                          border: '2px solid #93C5FD',
+                          borderRadius: '12px',
+                          minHeight: { xs: '60px', md: '100px' },
+                          fontSize: { xs: '18px', md: '20px' },
+                          fontWeight: 'medium',
+                          textTransform: 'none',
+                          width: '100%',
+                          transform: 'scale(0.95)',
+                          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                          '&:hover': {
+                            backgroundColor: '#DBEAFE',
+                          },
+                          '&.Mui-disabled': {
+                            backgroundColor: '#F3F4F6',
+                            color: '#9CA3AF',
+                            border: '2px solid #E5E7EB',
+                            opacity: 0.6,
+                          }
                         }}
                       >
-                        <span className="block text-center w-full">{option}</span>
-                      </div>
+                        {option}
+                      </Button>
                     );
                   } else {
                     return (
-                      <div
+                      <Button
                         key={`default-${currentQuestionIndex}-${index}`}
-                        className={`${baseClass} bg-white shadow-md cursor-pointer text-gray-800 active:scale-95 select-none`}
-                        style={{
-                          ...buttonStyle,
+                        variant="outlined"
+                        onClick={() => handleOptionClick(option)}
+                        disabled={timeRemaining === 0 || selectedOption !== null}
+                        sx={{
+                          backgroundColor: '#FFFFFF',
+                          color: '#1F2937',
                           border: '2px solid #E5E7EB',
-                          borderColor: '#E5E7EB'
-                        }}
-                        onClick={() => !selectedOption && timeRemaining > 0 && handleOptionClick(option)}
-                        onTouchStart={(e) => {
-                          e.preventDefault();
-                          e.currentTarget.style.webkitTapHighlightColor = 'transparent';
+                          borderRadius: '12px',
+                          minHeight: { xs: '60px', md: '100px' },
+                          fontSize: { xs: '18px', md: '20px' },
+                          fontWeight: 'medium',
+                          textTransform: 'none',
+                          width: '100%',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                          transition: 'all 0.15s ease-in-out',
+                          '&:hover': {
+                            backgroundColor: '#F9FAFB',
+                            borderColor: '#D1D5DB',
+                          },
+                          '&:active': {
+                            transform: 'scale(0.95)',
+                          },
+                          '&.Mui-disabled': {
+                            backgroundColor: '#F3F4F6',
+                            color: '#9CA3AF',
+                            border: '2px solid #E5E7EB',
+                            opacity: 0.6,
+                          }
                         }}
                       >
-                        <span className="block text-center w-full">{option}</span>
-                      </div>
+                        {option}
+                      </Button>
                     );
                   }
                 }
