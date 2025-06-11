@@ -183,7 +183,7 @@ export const TeacherDashboard: React.FC = () => {
                         src={qrCodeUrl} 
                         alt="Room QR Code" 
                         className="rounded-lg shadow-lg border-2 border-gray-200"
-                        style={{ width: '200px', height: '200px' }}
+                        style={{ width: '300px', height: '300px' }}
                       />
                     </div>
                   </div>
@@ -200,7 +200,7 @@ export const TeacherDashboard: React.FC = () => {
                     <div className="text-xs md:text-sm mb-1 md:mb-2" style={{ color: 'white' }}>
                       {isCopied ? '✅ コピーしました' : 'クイズコードをコピー'}
                     </div>
-                    <div className="text-4xl sm:text-5xl md:text-8xl font-mono font-bold tracking-wider" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-mono font-bold tracking-wider" style={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
                       {roomCode}
                     </div>
                   </div>

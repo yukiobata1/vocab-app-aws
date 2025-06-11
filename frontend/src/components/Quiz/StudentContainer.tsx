@@ -6,7 +6,6 @@ import { generateQuiz } from '../../utils/quizGenerator';
 import { vocabService } from '../../services/vocabService';
 import { roomCodeService } from '../../services/roomCodeService';
 import type { QuizConfig, StudentMode } from '../../types/quiz';
-import { colors } from '../../config/colors';
 import { LoadingScreen } from '../common/LoadingScreen';
 
 interface QuizData {

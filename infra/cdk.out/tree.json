@@ -7596,8 +7596,8 @@
                     "preferredBackupWindow": "03:00-04:00",
                     "preferredMaintenanceWindow": "Sun:04:00-Sun:05:00",
                     "serverlessV2ScalingConfiguration": {
-                      "minCapacity": 1,
-                      "maxCapacity": 16
+                      "minCapacity": 0.5,
+                      "maxCapacity": 2
                     },
                     "storageEncrypted": true,
                     "vpcSecurityGroupIds": [

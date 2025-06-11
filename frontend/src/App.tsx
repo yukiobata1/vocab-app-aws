@@ -94,7 +94,7 @@ function App() {
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="max-w-4xl mx-auto px-6 py-4">
         {mode === 'teacher' ? <TeacherDashboard /> : <StudentContainer roomCodeFromUrl={roomCodeFromUrl} />}
       </main>
     </div>

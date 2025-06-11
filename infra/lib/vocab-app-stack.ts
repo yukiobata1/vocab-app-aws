@@ -92,8 +92,8 @@ export class VocabAppStack extends cdk.Stack {
         scaleWithWriter: true,
       }),
       readers: [],
-      serverlessV2MinCapacity: environment === 'dev' ? 0.5 : 1,
-      serverlessV2MaxCapacity: environment === 'dev' ? 2 : 16,
+      serverlessV2MinCapacity: 0.5, // 開発環境と同じ設定
+      serverlessV2MaxCapacity: 2,   // 開発環境と同じ設定
       vpc,
       securityGroups: [dbSecurityGroup],
       subnetGroup: dbSubnetGroup,
